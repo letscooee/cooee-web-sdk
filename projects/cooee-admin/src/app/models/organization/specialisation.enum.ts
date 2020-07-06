@@ -1,0 +1,9 @@
+export enum Specialisation {
+
+    FINANCE = 'FINANCE',
+    MARKETING = 'MARKETING',
+    HR = 'HR',
+    SALES = 'SALES',
+    INTERNATIONAL_TRADE = 'INTERNATIONAL_TRADE',
+    OPERATIONS = 'OPERATIONS'
+}

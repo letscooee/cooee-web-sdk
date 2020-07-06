@@ -1,0 +1,38 @@
+<mat-form-field appearance="outline">
+    <mat-label>{{label}}</mat-label>
+
+    <mat-select [required]="required" [(ngModel)]="_selectedCompetency" name="_selectedIndustry" (selectionChange)="onSelected()">
+
+        <mat-option [value]="">None</mat-option>
+
+        <ng-container *ngFor="let competencyMapping of competencyMappings; let parentIndex = index;">
+
+            <!-- For competencies having children -->
+            <ng-container *ngIf="competencyMapping.hasChildren()">
+                <mat-optgroup [label]="competencyMapping.getLabelForMatSelect(parentIndex)">
+
+                    <mat-option [value]="subMapping.competency"
+                                *ngFor="let subMapping of competencyMapping.children; let childIndex = index">
+
+                        {{subMapping.getLabelForMatSelect(childIndex, parentIndex)}}
+                    </mat-option>
+
+                </mat-optgroup>
+
+            </ng-container>
+
+            <!-- For competencies which does not have children so directly render the "mat-option" -->
+            <ng-container *ngIf="!competencyMapping.hasChildren()">
+
+                <mat-option [value]="competencyMapping.competency">
+                    {{competencyMapping.getLabelForMatSelect(parentIndex)}}
+                </mat-option>
+
+            </ng-container>
+
+        </ng-container>
+
+    </mat-select>
+
+    <mat-error>Competency is required!</mat-error>
+</mat-form-field>

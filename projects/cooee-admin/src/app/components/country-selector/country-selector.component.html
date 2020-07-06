@@ -1,0 +1,10 @@
+<mat-form-field appearance="outline" >
+    <mat-label>Country</mat-label>
+    <mat-select [(ngModel)]="countryCode" name="country" (selectionChange)="selectedCountry()">
+        <mat-option [value]="country.name" *ngFor="let country of countryList">
+            {{country.flag}} {{country.name}}
+        </mat-option>
+    </mat-select>
+    <mat-icon matSuffix class="secondary-text">outlined_flag</mat-icon>
+    <mat-error>Country is required!</mat-error>
+</mat-form-field>

@@ -1,0 +1,29 @@
+.swal2-modal, .swal2-toast {
+    font-size: 15px !important;
+}
+
+.mat-form-field {
+    font-size: 14px;
+}
+
+mat-expansion-panel {
+    mat-expansion-panel-header {
+        min-height: 50px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;;
+    }
+}
+
+// TODO Keeping it here because the "mat-expansion-panel-body" is not being encapsulated
+.sub-question-panel {
+    .mat-expansion-panel-body {
+        padding: 16px;
+    }
+}
+
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}

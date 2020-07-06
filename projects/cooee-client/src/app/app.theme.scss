@@ -1,0 +1,160 @@
+// -----------------------------------------------------------------------------------------------------
+// @ Custom color maps for Fuse
+// -----------------------------------------------------------------------------------------------------
+$fuse-white: (
+        500: white,
+        contrast: (
+                500: $dark-primary-text
+        )
+);
+
+$fuse-black: (
+        500: black,
+        contrast: (
+                500: $light-primary-text,
+        )
+);
+
+$fuse-navy: (
+        50: #ECECEE,
+        100: #C5C6CB,
+        200: #9EA1A9,
+        300: #7D818C,
+        400: #5C616F,
+        500: #3C4252,
+        600: #353A48,
+        700: #2D323E,
+        800: #262933,
+        900: #1E2129,
+        A100: #C5C6CB,
+        A200: #9EA1A9,
+        A400: #5C616F,
+        A700: #2D323E,
+        contrast: (
+                50: $dark-primary-text,
+                100: $dark-primary-text,
+                200: $dark-primary-text,
+                300: $light-primary-text,
+                400: $light-primary-text,
+                500: $light-primary-text,
+                600: $light-primary-text,
+                700: $light-primary-text,
+                800: $light-primary-text,
+                900: $light-primary-text,
+                A100: $dark-primary-text,
+                A200: $light-primary-text,
+                A400: $light-primary-text,
+                A700: $light-primary-text,
+        )
+);
+
+$app-logo-blue: (
+        50 : #e0eefb,
+        100 : #b3d4f6,
+        200 : #80b8f0,
+        300 : #4d9be9,
+        400 : #2685e5,
+        500 : #0070e0,
+        600 : #0068dc,
+        700 : #005dd8,
+        800 : #0053d3,
+        900 : #0041cb,
+        A100 : #f3f6ff,
+        A200 : #c0d0ff,
+        A400 : #8daaff,
+        A700 : #7496ff,
+        contrast: (
+                50 : #000000,
+                100 : #000000,
+                200 : #000000,
+                300 : #000000,
+                400 : #ffffff,
+                500 : #ffffff,
+                600 : #ffffff,
+                700 : #ffffff,
+                800 : #ffffff,
+                900 : #ffffff,
+                A100 : #000000,
+                A200 : #000000,
+                A400 : #000000,
+                A700 : #000000,
+        )
+);
+
+// Generate Fuse color classes for custom palettes
+$custom_palettes: (
+        fuse-white: $fuse-white,
+        fuse-black: $fuse-black,
+        fuse-navy: $fuse-navy
+);
+
+@include fuse-color-classes($custom_palettes);
+
+// -----------------------------------------------------------------------------------------------------
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
+
+// Angular Material typography
+$typography: mat-typography-config(
+        $font-family: 'Muli, Helvetica Neue, Arial, sans-serif',
+        $title: mat-typography-level(20px, 32px, 600),
+        $body-2: mat-typography-level(14px, 24px, 600),
+        $button: mat-typography-level(14px, 14px, 600),
+        $input: mat-typography-level(16px, 1.125, 400) // line-height must be unitless !!!
+);
+
+// Setup the typography
+@include angular-material-typography($typography);
+
+// -----------------------------------------------------------------------------------------------------
+// @ Component theming
+// -----------------------------------------------------------------------------------------------------
+
+// Import app and page component themes here to enable theming for them
+@import "layout/components/toolbar/toolbar.theme";
+
+// Define a mixin for easier access
+@mixin components-theme($theme) {
+    @include toolbar-theme($theme);
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define the default theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$default-primary-palette: mat-palette($fuse-navy);
+$default-accent-palette: mat-palette($app-logo-blue, 600, 400, 700);
+$default-warn-palette: mat-palette($mat-red);
+
+// Create the Material theme object
+$theme: mat-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+
+// Add ".theme-default" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-default {
+
+    // Create an Angular Material theme from the $theme map
+    @include angular-material-theme($theme);
+
+    // Apply the theme to the Fuse Core
+    @include fuse-core-theme($theme);
+
+    // Apply the theme to the user components
+    @include components-theme($theme);
+
+    // Generate Fuse color classes for primary, accent and warn colors
+    $palettes: (
+            primary: $default-primary-palette,
+            accent: $default-accent-palette,
+            warn: $default-warn-palette
+    );
+
+    @include fuse-color-classes($palettes);
+}
+
+$appMatPalettes: (
+        'cerulean': $app-logo-blue
+);
+
+@include fuse-color-classes($appMatPalettes);

@@ -1,0 +1,44 @@
+export enum Competency {
+
+    // Competency 1
+    DOMAIN = 'DOMAIN',
+
+    // Competency 2
+    EMOTIONAL_INTELLIGENCE = 'EMOTIONAL_INTELLIGENCE',
+
+    // Competency 3
+    SELF_LEADERSHIP = 'SELF_LEADERSHIP',
+
+    // Competency 4
+    GENERAL_AWARENESS = 'GENERAL_AWARENESS',
+
+    // Competency 5
+    APTITUDE = 'APTITUDE',
+    // Competency 5.1
+    APTITUDE_WORD_FORMATION = 'APTITUDE_WORD_FORMATION',
+    // Competency 5.2
+    APTITUDE_LINGUISTIC_REASONING = 'APTITUDE_LINGUISTIC_REASONING',
+    // Competency 5.3
+    APTITUDE_ANALOGIES = 'APTITUDE_ANALOGIES',
+    // Competency 5.4
+    APTITUDE_NUMBER_SEQUENCE = 'APTITUDE_NUMBER_SEQUENCE',
+    // Competency 5.5
+    APTITUDE_WORD_SEQUENCE = 'APTITUDE_WORD_SEQUENCE',
+    // Competency 5.6
+    APTITUDE_RECALLING_TEXT = 'APTITUDE_RECALLING_TEXT',
+
+    // Competency 6
+    SOCIAL_MEDIA_INTELLIGENCE = 'SOCIAL_MEDIA_INTELLIGENCE',
+
+    // Competency 7
+    CREATIVITY = 'CREATIVITY',
+
+    // Competency 8
+    RESILIENCY = 'RESILIENCY',
+
+    // Competency 9
+    ADAPTABILITY = 'ADAPTABILITY',
+
+    // Competency 10
+    CREATIVE_THINKING = 'CREATIVE_THINKING'
+}

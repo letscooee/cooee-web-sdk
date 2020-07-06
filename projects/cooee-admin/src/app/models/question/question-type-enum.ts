@@ -1,0 +1,7 @@
+export enum QuestionType {
+
+    MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+    EXACT_ANSWER = 'EXACT_ANSWER',
+    SUB_QUESTIONS = 'SUB_QUESTIONS',
+    VIDEO = 'VIDEO'
+}

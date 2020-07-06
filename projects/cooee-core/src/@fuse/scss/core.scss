@@ -1,0 +1,34 @@
+// This file meant to be imported only once! Use fuse.scss to access
+// to the core Fuse and Angular Material mixins
+
+// Perfect scrollbar
+//@import 'node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+
+// Fuse
+@import "fuse";
+
+// Theme
+@import "theme";
+
+// Include core Angular Material styles
+@include mat-core();
+
+// Partials
+@import "@fuse/scss/partials/normalize";
+@import "@fuse/scss/partials/scrollbars";
+@import "@fuse/scss/partials/helpers";
+@import "@fuse/scss/partials/general";
+@import "@fuse/scss/partials/icons";
+@import "@fuse/scss/partials/colors";
+@import "@fuse/scss/partials/material";
+@import "@fuse/scss/partials/angular-material-fix";
+@import "@fuse/scss/partials/typography";
+@import "@fuse/scss/partials/docs";
+@import "@fuse/scss/partials/page-layouts";
+@import "@fuse/scss/partials/cards";
+@import "@fuse/scss/partials/navigation";
+@import "@fuse/scss/partials/forms";
+@import "@fuse/scss/partials/print";
+
+// Plugins
+@import "@fuse/scss/partials/plugins/plugins";

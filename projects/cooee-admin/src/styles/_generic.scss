@@ -1,0 +1,158 @@
+@import "@fuse/scss/fuse";
+
+.boxed-container {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.dark-header {
+    flex: 1 0 auto;
+    background: #1A237E;
+    background: linear-gradient(to right, #0E2A3B 0%, #34306B 100%);
+
+    @include media-breakpoint('xs') {
+        height: 240px;
+        padding: 16px;
+    }
+
+    .hero-text {
+        > * {
+            color: white;
+            font-size: 36px;
+            text-align: center;
+
+            @include media-breakpoint('xs') {
+                font-size: 24px;
+            }
+        }
+    }
+}
+
+.tabular-info {
+    tr {
+        td:first-child {
+            padding-right: 16px;
+            font-weight: 600;
+        }
+
+        td:last-child {
+            color: rgba(0, 0, 0, .54)
+        }
+    }
+}
+
+.custom-table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border: 1px solid #dee2e6;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 1.25rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    thead th {
+        border: 1px solid #dee2e6;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    td {
+        padding: 1rem;
+        vertical-align: top;
+        border: 1px solid #dee2e6;
+    }
+}
+
+.info-line {
+    margin-bottom: 16px;
+
+    .title {
+        font-size: 15px;
+        font-weight: 600;
+        padding-bottom: 4px;
+    }
+}
+
+.abs-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Questions related styles */
+
+.score-chip {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 12px;
+    align-items: center;
+    cursor: default;
+    min-height: 25px;
+    height: 1px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 12px;
+}
+
+.question-title {
+    white-space: pre-line;
+}
+
+mat-list-item.question-choice {
+    height: 44px !important;
+    font-size: 15px !important;
+    border-radius: 8px;
+
+    & + & {
+        margin-top: 4px;
+    }
+}
+
+/* Assessment test related styles */
+
+.qualification-status {
+    font-weight: 600;
+
+    &.qualified {
+        color: map-get($mat-green, 500);
+    }
+
+    &.disqualified {
+        color: map-get($mat-red, 500);
+    }
+}
+
+.test-status {
+    font-weight: 600;
+
+    &.created {
+        color: map-get($mat-purple, 500);
+    }
+
+    &.candidate_submitted {
+        color: map-get($mat-red, 500);
+    }
+
+    &.in_review {
+        color: map-get($mat-teal, 500);
+    }
+
+    &.assessment_done {
+        color: map-get($mat-green, 500);
+    }
+
+    &.scores_calculated {
+        color: map-get($mat-orange, 500);
+    }
+
+    &.report_generated {
+        color: map-get($mat-amber, 700);
+    }
+}
