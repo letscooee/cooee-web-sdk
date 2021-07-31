@@ -1,7 +1,16 @@
 {
     "name": "cooee-web-sdk",
     "version": "0.0.1",
+    "scripts": {
+        "prepare": "npm run build",
+        "build": "tsc"
+    },
     "devDependencies": {
-        "typescript": "^4.2.4"
+        "ts-loader": "^9.2.4",
+        "typescript": "^4.3.5"
+    },
+    "dependencies": {
+        "webpack": "^5.47.1",
+        "webpack-cli": "^4.7.2"
     }
 }
