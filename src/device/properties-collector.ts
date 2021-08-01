@@ -16,8 +16,21 @@ export class DevicePropertiesCollector {
         result.availableRAM = this.getDeviceMemory();
         result.networkType = this.getNetworkType();
         result.locale = this.getDeviceLocale();
-        // TODO add others
+        result.orientation = this.getOrientation();
+        result.dpi = this.getDPI();
 
+        result.display = {
+            w: screen.width,
+            h: screen.height,
+            pd: screen.pixelDepth
+        };
+        result.window = {
+            ow: window.outerWidth,
+            oh: window.outerHeight,
+            iw: window.innerWidth,
+            ih: window.innerHeight,
+            dpr: window.devicePixelRatio
+        };
         result.browser = {
             name: this.parser.getBrowser().name,
             version: this.parser.getBrowser().version
@@ -36,48 +49,49 @@ export class DevicePropertiesCollector {
     }
 
     private getDeviceMemory(): number | undefined {
-        if (!navigator.deviceMemory) {
+        const _navigator: any = navigator;
+        if (!_navigator.deviceMemory) {
             return undefined;
         }
 
-        const mem = navigator.deviceMemory
+        const mem = _navigator.deviceMemory
         return mem * 1024
     }
 
+    // noinspection JSMethodCanBeStatic
     private getNetworkType(): string | undefined {
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const _navigator: any = navigator;
+        const connection = _navigator.connection || _navigator.mozConnection || _navigator.webkitConnection;
         if (connection)
             return connection.effectiveType;
     }
 
+    // noinspection JSMethodCanBeStatic
     private getDeviceLocale() {
-        return window.navigator.language
+        return navigator.language
     }
 
-    private getScreenResolution() {
-        let sr = window.screen.width + "X" + window.screen.height
-        return sr
-    }
-
+    // noinspection JSMethodCanBeStatic
     private getOrientation() {
-        return window.screen.orientation.type
+        return screen.orientation?.type
     }
 
-    private getDPI() {
-        let tesDiv = document.createElement("div")
+    private getDPI(): number {
+        const tesDiv = document.createElement("div")
         tesDiv.setAttribute("style", "height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;")
         document.body.appendChild(tesDiv)
-        var devicePixelRatio = window.devicePixelRatio || 1;
-        let dpi_x = tesDiv.offsetWidth * devicePixelRatio;
-        let dpi_y = tesDiv.offsetHeight * devicePixelRatio;
+
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        let dpi = tesDiv.offsetWidth * devicePixelRatio;
         document.body.removeChild(tesDiv)
-        return dpi_x
+        return dpi;
     }
 
-    private async getLocation(callback: Function) {
+    public async getLocation(callback: Function) {
         let a = await navigator.permissions.query({name: 'geolocation'})
 
         if (a.state == "granted") {
+            // TODO convert to promise
             navigator.geolocation.getCurrentPosition(position => {
                 var returnValue = {
                     latitude: position.coords.latitude,
@@ -87,23 +101,24 @@ export class DevicePropertiesCollector {
             }, err => {
                 console.log(err)
             })
-        } else {
-            var returnValue = {
-                latitude: "Unknown",
-                longitude: "Unknown"
-            }
-            callback(returnValue)
         }
     }
 
-    private getBatteryPercentage(callback: Function) {
-        let isBatterySupported = 'getBattery' in navigator;
-        if (!isBatterySupported) {
-            callback(-1)
-        } else {
-            let battery = navigator.getBattery().then((bat: any) => {
-                callback(bat.level * 100)
+    public async getBatteryInfo(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let isBatterySupported = 'getBattery' in navigator;
+            if (!isBatterySupported) {
+                reject();
+                return;
+            }
+
+            // @ts-ignore
+            navigator.getBattery().then((info: any) => {
+                return {
+                    level: info * 100,
+                    charging: info.charging
+                }
             });
-        }
+        });
     }
 }
