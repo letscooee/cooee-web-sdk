@@ -7,4 +7,5 @@ export class TriggerData {
         this.id = data.id;
         this.duration = data.duration;
     }
+
 }

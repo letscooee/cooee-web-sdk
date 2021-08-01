@@ -1,4 +1,4 @@
-import CooeeSDK from "./cooee-sdk";
+import CooeeSDK from './cooee-sdk';
 
 // noinspection JSUnusedGlobalSymbols
 export default CooeeSDK;

@@ -1,5 +1,5 @@
-import {Event} from "../models/event";
-import {Constants} from "../constants";
+import {Event} from '../models/event';
+import {Constants} from '../constants';
 
 export class HttpAPIService {
 
@@ -11,12 +11,12 @@ export class HttpAPIService {
         const requestOptions = {
             method: 'POST',
             body: JSON.stringify(event),
-            headers: this.getDefaultHeaders()
+            headers: this.getDefaultHeaders(),
         };
 
-        const response = await fetch(Constants.API_URL + "/v1/event/track", requestOptions)
+        const response = await fetch(Constants.API_URL + '/v1/event/track', requestOptions);
 
-        return response.json()
+        return response.json();
     }
 
     private getDefaultHeaders(): Headers {
@@ -28,4 +28,5 @@ export class HttpAPIService {
 
         return headers;
     }
+
 }
