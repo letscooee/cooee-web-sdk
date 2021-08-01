@@ -1,9 +1,10 @@
-import {sendEvent, userInit} from "./api-call-methods/api-call-methods.js";
-import {getOSVersion} from "./init/PropertyCollector.js";
-import {CooeeEvent} from "./models/CooeeEvent.js";
-import {InitParams} from "./models/InitParams.js"
+import {sendEvent, userInit} from "./api-call-methods/api-call-methods";
+import {getOSVersion} from "./init/PropertyCollector";
+import {CooeeEvent} from "./models/CooeeEvent";
+import {InitParams} from "./models/InitParams"
 
 export class CooeeSDK {
+
     constructor() {
     }
 

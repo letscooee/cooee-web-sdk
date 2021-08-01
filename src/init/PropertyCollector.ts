@@ -1,4 +1,4 @@
-import { details } from "./OsAndBrowser.js"
+import { details } from "./OsAndBrowser"
 
 declare global {
     interface Navigator { getBattery: Function, connection: any, mozConnection: any, webkitConnection: any, deviceMemory: any }

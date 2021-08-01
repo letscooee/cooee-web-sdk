@@ -1,6 +1,6 @@
-import { getBatteryPercentage, getBrowser, getBrowserVersion, getNetworkType, getOSVersion, getDeviceMemory, getOS, getModel, getDeviceLocale, getScreenResolution, getDpi, getOrientation, getLocation } from "../init/PropertyCollector.js";
-import { CooeeEvent } from "../models/CooeeEvent.js";
-import { InitParams } from "../models/InitParams.js";
+import { getBatteryPercentage, getBrowser, getBrowserVersion, getNetworkType, getOSVersion, getDeviceMemory, getOS, getModel, getDeviceLocale, getScreenResolution, getDpi, getOrientation, getLocation } from "../init/PropertyCollector";
+import { CooeeEvent } from "../models/CooeeEvent";
+import { InitParams } from "../models/InitParams";
 
 const myUrl = "http://127.0.0.1:3003"
 
