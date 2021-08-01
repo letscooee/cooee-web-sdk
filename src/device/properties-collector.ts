@@ -1,3 +1,5 @@
+import UAParser from 'ua-parser-js'
+
 /**
  * Collects basic information about the device and browser.
  *
@@ -6,24 +8,31 @@
  */
 export class DevicePropertiesCollector {
 
+    private parser = new UAParser();
+
     async get(): Promise<{ [key: string]: any }> {
         const result: { [key: string]: any } = {}
 
         result.availableRAM = this.getDeviceMemory();
         result.networkType = this.getNetworkType();
         result.locale = this.getDeviceLocale();
+        // TODO add others
+
+        result.browser = {
+            name: this.parser.getBrowser().name,
+            version: this.parser.getBrowser().version
+        };
+        result.device = {
+            model: this.parser.getDevice().model,
+            type: this.parser.getDevice().type,
+            vendor: this.parser.getDevice().vendor
+        };
+        result.os = {
+            name: this.parser.getOS().name,
+            version: this.parser.getOS().version
+        };
 
         return result;
-    }
-
-    private getModel() {
-        let s = navigator.userAgent.split(" ")
-        let i = s.indexOf(this.getOS())
-
-        let x = s.slice(i + 2, i + 5).join(" ");
-        let y = x.split("Build") || x.split("like Mac") || x.split("App")
-
-        return y[0]
     }
 
     private getDeviceMemory(): number | undefined {
