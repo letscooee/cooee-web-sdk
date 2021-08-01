@@ -17,6 +17,7 @@ module.exports = {
     'rules': {
         // By pass Google's indentation & use 'eslint-recommended'
         'indent': 'off',
+        'prefer-promise-reject-errors': ['error', {'allowEmptyReject': true}],
         'max-len': ['error', {'code': 120}],
         'padded-blocks': ['error', {'classes': 'always'}],
         'no-multiple-empty-lines': ['error', {max: 1, maxEOF: 0}],

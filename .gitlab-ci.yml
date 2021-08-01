@@ -1,0 +1,19 @@
+image: node:12
+
+stages:
+  - build
+  - test
+
+before_script:
+  - npm install
+
+cache:
+  paths:
+    - node_modules/
+
+Lint Changes:
+  stage: test
+  script:
+    - npm run lint
+  only:
+    - merge_requests

@@ -2,6 +2,7 @@
     "name": "cooee-web-sdk",
     "version": "0.0.1",
     "scripts": {
+        "lint": "eslint 'src/**'",
         "prepare": "npm run build",
         "build": "tsc"
     },
