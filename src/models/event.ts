@@ -1,4 +1,4 @@
-export class CooeeEvent {
+export class Event {
     public sessionID: string = "";
     public sessionNumber: string = "0";
     public screenName: string = "";
