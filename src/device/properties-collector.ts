@@ -1,4 +1,5 @@
 import UAParser from 'ua-parser-js';
+import {Props} from '../session/type';
 
 /**
  * Collects basic information about the device and browser.
@@ -10,7 +11,12 @@ export class DevicePropertiesCollector {
 
     private parser = new UAParser();
 
-    async get(): Promise<{ [key: string]: any }> {
+    /**
+     * Get all the device properties.
+     *
+     * @return {Promise}
+     */
+    public async get(): Promise<Props> {
         const result: { [key: string]: any } = {};
 
         result.availableRAM = this.getDeviceMemory();
@@ -18,6 +24,8 @@ export class DevicePropertiesCollector {
         result.locale = this.getDeviceLocale();
         result.orientation = this.getOrientation();
         result.dpi = this.getDPI();
+        result.battery = await this.getBatteryInfo();
+        result.location = await this.getLocation();
 
         result.display = {
             w: screen.width,
@@ -48,6 +56,12 @@ export class DevicePropertiesCollector {
         return result;
     }
 
+    /**
+     * Get device RAM memory.
+     *
+     * @return {number | undefined}
+     * @private
+     */
     private getDeviceMemory(): number | undefined {
         const _navigator: any = navigator;
         if (!_navigator.deviceMemory) {
@@ -59,6 +73,12 @@ export class DevicePropertiesCollector {
     }
 
     // noinspection JSMethodCanBeStatic
+    /**
+     * Get network type.
+     *
+     * @return {string | undefined}
+     * @private
+     */
     private getNetworkType(): string | undefined {
         const _navigator: any = navigator;
         const connection = _navigator.connection || _navigator.mozConnection || _navigator.webkitConnection;
@@ -68,15 +88,33 @@ export class DevicePropertiesCollector {
     }
 
     // noinspection JSMethodCanBeStatic
+    /**
+     * Get device locale.
+     *
+     * @return {string}
+     * @private
+     */
     private getDeviceLocale() {
         return navigator.language;
     }
 
     // noinspection JSMethodCanBeStatic
+    /**
+     * Get device orientation.
+     *
+     * @return {string}
+     * @private
+     */
     private getOrientation() {
         return screen.orientation?.type;
     }
 
+    /**
+     * Get device DPI.
+     *
+     * @return {number}
+     * @private
+     */
     private getDPI(): number {
         const tesDiv = document.createElement('div');
         tesDiv.setAttribute('style', 'height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;');
@@ -88,38 +126,51 @@ export class DevicePropertiesCollector {
         return dpi;
     }
 
-    public async getLocation(callback: Function) {
+    /**
+     * Get device location, if web-app asks for it.
+     *
+     * @return {Promise}
+     * @private
+     */
+    private async getLocation(): Promise<any> {
+        if (!navigator.geolocation) {
+            return null;
+        }
+
         const a = await navigator.permissions.query({name: 'geolocation'});
 
         if (a.state == 'granted') {
-            // TODO convert to promise
-            navigator.geolocation.getCurrentPosition((position) => {
-                const returnValue = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                };
-                callback(returnValue);
-            }, (err) => {
-                console.log(err);
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    });
+                }, reject);
             });
+        } else {
+            return null;
         }
     }
 
-    public async getBatteryInfo(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            const isBatterySupported = 'getBattery' in navigator;
-            if (!isBatterySupported) {
-                reject();
-                return;
-            }
+    /**
+     * Get device battery info, if browser supports it.
+     *
+     * @return {Promise}
+     * @private
+     */
+    private async getBatteryInfo(): Promise<any> {
+        const isBatterySupported = 'getBattery' in navigator;
+        if (!isBatterySupported) {
+            return null;
+        }
 
-            // @ts-ignore
-            navigator.getBattery().then((info: any) => {
-                return {
-                    level: info * 100,
-                    charging: info.charging,
-                };
-            });
+        // @ts-ignore
+        return navigator.getBattery().then((info: any) => {
+            return {
+                level: info.level * 100,
+                charging: info.charging,
+            };
         });
     }
 
