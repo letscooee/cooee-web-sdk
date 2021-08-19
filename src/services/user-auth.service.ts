@@ -174,7 +174,7 @@ export class UserAuthService {
     async getDevice() {
         const results = await new DevicePropertiesCollector().get();
 
-        const os = results.os.name;
+        const os = this.getBackendRequiredOSName(results.os.name);
         const osVersion = results.os.version;
         // TODO How to get app version and cooee sdk version?
         const appVersion = '0.0.1';
@@ -209,6 +209,33 @@ export class UserAuthService {
         }
 
         return uuid;
+    }
+
+    /**
+     * Get backend required OS name
+     *
+     * @param {string} os
+     * @return {string}
+     * @private
+     */
+    private getBackendRequiredOSName(os: string): string {
+        switch (os) {
+            case 'Mac OS':
+                return 'MAC_OS';
+            case 'Android':
+                return 'ANDROID';
+            case 'iPhone OS':
+                return 'IOS';
+            case 'Windows':
+            case 'Win64':
+            case 'Win32':
+                return 'WINDOWS';
+            case 'Ubuntu':
+                return 'UBUNTU';
+            default:
+                return 'UNKNOWN';
+        }
+
     }
 
 }
