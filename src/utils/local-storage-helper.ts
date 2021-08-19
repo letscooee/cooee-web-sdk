@@ -72,4 +72,13 @@ export class LocalStorageHelper {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 
+    /**
+     * Remove the specified key from storage.
+     *
+     * @param {string} key to be removed.
+     */
+    static remove(key: string) {
+        LocalStorageHelper.LOCAL_STORAGE.removeItem(key);
+    }
+
 }

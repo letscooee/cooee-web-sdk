@@ -55,7 +55,7 @@ export class NewSessionExecutor {
     /**
      * This method is executed at the beginning of the web app launch.
      */
-    private execute() {
+    execute() {
         this.sessionManager.checkForNewSession();
 
         if (this.isAppFirstTimeLaunch()) {

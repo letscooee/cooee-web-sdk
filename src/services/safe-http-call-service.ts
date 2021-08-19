@@ -56,6 +56,21 @@ export class SafeHttpCallService {
     }
 
     /**
+     * Safely send conclude session events.
+     *
+     * @param {Props} data conclude session event properties
+     */
+    public concludeSession(data: Props) {
+        NewSessionExecutor.replaySubject.subscribe({
+            complete: () => {
+                Log.l('Conclude Session', data);
+
+                this.httpApiService.concludeSession(data);
+            },
+        });
+    }
+
+    /**
      * Add values to event variables.
      *
      * @param {Event} event

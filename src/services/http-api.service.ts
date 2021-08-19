@@ -93,6 +93,31 @@ export class HttpAPIService {
     }
 
     /**
+     * Send conclude session events.
+     *
+     * @param {Props} data conclude session event properties
+     */
+    concludeSession(data: Props) {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', HttpAPIService.apiToken);
+
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: headers,
+        };
+
+        fetch(Constants.API_URL + '/v1/session/conclude', requestOptions)
+            .then((response) => response.json())
+            .then((json) => {
+                Log.l('Conclude Session', json);
+            })
+            .catch((error) => {
+                Log.e(error);
+            });
+    }
+
+    /**
      * Get all the default headers for the http calls.
      *
      * @private

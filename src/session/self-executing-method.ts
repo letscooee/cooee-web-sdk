@@ -2,7 +2,13 @@ import {Event} from '../models/event/event';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 import {SafeHttpCallService} from '../services/safe-http-call-service';
 import {RuntimeData} from '../utils/runtime-data';
+import {SessionManager} from './session-manager';
+import {NewSessionExecutor} from './new-session-executor';
+import {Constants} from '../constants';
 
+/**
+ * Self executing function which implement onvisibilitychange method and onpageshow method.
+ */
 (
     function() {
         const apiService: SafeHttpCallService = new SafeHttpCallService();
@@ -12,6 +18,12 @@ import {RuntimeData} from '../utils/runtime-data';
             if (document.visibilityState === 'visible') {
                 runtimeData.setActive();
                 const duration = runtimeData.getTimeForInactiveInSeconds();
+
+                if (duration > Constants.IDLE_TIME_IN_SECONDS) {
+                    SessionManager.getInstance().conclude();
+
+                    new NewSessionExecutor().execute();
+                }
 
                 const event = new Event('CE Web Active', {'InActive Duration': duration});
                 event.deviceProps = await new DevicePropertiesCollector().get();

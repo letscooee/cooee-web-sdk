@@ -1,3 +1,6 @@
+import {LocalStorageHelper} from './local-storage-helper';
+import {Constants} from '../constants';
+
 /**
  * A simple data holder class that contains runtime state of the application/SDK.
  *
@@ -8,9 +11,9 @@ export class RuntimeData {
 
     private static instance: RuntimeData | null = null;
 
-    private inBackground: boolean = true;
-    private lastEnterForeground: Date = new Date();
-    private lastEnterBackground: Date | null = null;
+    private inInactive: boolean = true;
+    private lastEnterActive: Date = new Date();
+    private lastEnterInactive: Date | null = null;
 
     /**
      * Get instance of the class.
@@ -31,23 +34,24 @@ export class RuntimeData {
      * @return {boolean}
      */
     public isInactive(): boolean {
-        return this.inBackground;
+        return this.inInactive;
     }
 
     /**
      * Set data when inactive.
      */
     public setInactive() {
-        this.inBackground = true;
-        this.lastEnterBackground = new Date();
+        this.inInactive = true;
+        this.lastEnterInactive = new Date();
+        LocalStorageHelper.setNumber(Constants.STORAGE_LAST_ACTIVE, this.lastEnterInactive.getTime());
     }
 
     /**
      * Set data when active.
      */
     public setActive() {
-        this.inBackground = false;
-        this.lastEnterForeground = new Date();
+        this.inInactive = false;
+        this.lastEnterActive = new Date();
     }
 
     /**
@@ -56,7 +60,7 @@ export class RuntimeData {
      * @return {boolean}
      */
     public isFirstActive(): boolean {
-        return this.lastEnterBackground == null;
+        return this.lastEnterInactive == null;
     }
 
     /**
@@ -65,7 +69,7 @@ export class RuntimeData {
      * @return {Date}
      */
     public getLastEnterInactive(): Date | null {
-        return this.lastEnterBackground;
+        return this.lastEnterInactive;
     }
 
     /**
@@ -75,7 +79,7 @@ export class RuntimeData {
      */
     public getTimeForActiveInSeconds(): number {
         // @ts-ignore
-        return ((this.lastEnterBackground?.getTime() - this.lastEnterForeground?.getTime()) / 1000);
+        return ((this.lastEnterInactive?.getTime() - this.lastEnterActive?.getTime()) / 1000);
     }
 
     /**
@@ -84,11 +88,11 @@ export class RuntimeData {
      * @return {number}
      */
     public getTimeForInactiveInSeconds(): number {
-        if (this.lastEnterBackground == null) {
+        if (this.lastEnterInactive == null) {
             return 0;
         }
 
-        return ((new Date().getTime() - this.lastEnterBackground.getTime()) / 1000);
+        return ((new Date().getTime() - this.lastEnterInactive.getTime()) / 1000);
     }
 
 }

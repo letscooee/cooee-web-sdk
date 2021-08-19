@@ -18,6 +18,7 @@ export class Constants {
     static STORAGE_SESSION_START_TIME: string = 'session_start_time';
     static STORAGE_SESSION_ID: string = 'session_id';
     static STORAGE_LAST_TOKEN_ATTEMPT: string = 'last_token_check_attempt';
+    static STORAGE_LAST_ACTIVE: string = 'last_active';
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
 
