@@ -1,0 +1,70 @@
+import {Event} from '../models/event/event';
+import {SessionManager} from '../session/session-manager';
+import {NewSessionExecutor} from '../session/new-session-executor';
+import {HttpAPIService} from './http-api.service';
+import {Log} from '../utils/log';
+import {Props} from '../utils/type';
+
+/**
+ * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.
+ *
+ * @author Abhishek Taparia
+ * @version 0.0.1
+ */
+export class SafeHttpCallService {
+
+    private sessionManager: SessionManager;
+    private httpApiService: HttpAPIService;
+
+    /**
+     * Public constructor
+     */
+    constructor() {
+        this.sessionManager = SessionManager.getInstance();
+        this.httpApiService = new HttpAPIService();
+    }
+
+    /**
+     * Queue events till the sdk token is fetch for safe call.
+     *
+     * @param {Event} event
+     */
+    public sendEvent(event: Event) {
+        NewSessionExecutor.replaySubject.subscribe({
+            complete: () => {
+                this.addEventVariable(event);
+                Log.l('Event', event);
+
+                this.httpApiService.sendEvent(event);
+            },
+        });
+    }
+
+    /**
+     * Queue events till the sdk token is fetch for safe call.
+     *
+     * @param {Props} data
+     */
+    public updateProfile(data: Props) {
+        NewSessionExecutor.replaySubject.subscribe({
+            complete: () => {
+                Log.l('User Profile', data);
+
+                this.httpApiService.updateUserData(data);
+            },
+        });
+    }
+
+    /**
+     * Add values to event variables.
+     *
+     * @param {Event} event
+     * @private
+     */
+    private addEventVariable(event: Event) {
+        event.screenName = location.pathname;
+        event.sessionID = this.sessionManager.getCurrentSessionID();
+        event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
+    }
+
+}

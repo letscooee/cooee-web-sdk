@@ -1,5 +1,5 @@
 import UAParser from 'ua-parser-js';
-import {Props} from '../session/type';
+import {Props} from '../utils/type';
 
 /**
  * Collects basic information about the device and browser.
