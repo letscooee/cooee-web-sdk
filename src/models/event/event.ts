@@ -1,4 +1,4 @@
-import {Props} from '../../session/type';
+import {Props} from '../../utils/type';
 
 /**
  * Event class is sent as body to server when a user event needs to be tracked.

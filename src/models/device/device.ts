@@ -1,4 +1,4 @@
-import {Props} from '../../session/type';
+import {Props} from '../../utils/type';
 
 /**
  * Class to store Device data.
