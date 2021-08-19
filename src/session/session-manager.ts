@@ -38,9 +38,6 @@ export class SessionManager {
      * @return {string} The current or new session id.
      */
     public getCurrentSessionID(): string | null {
-        if (!this.currentSessionID) {
-            this.startNewSession();
-        }
         return this.currentSessionID || null;
     }
 

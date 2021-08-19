@@ -134,8 +134,8 @@ export class HttpAPIService {
 
         // TODO add condition
         if (2 > 7) {
-            headers.set('debug-sdk', String(1));
-            headers.set('debug-app', String(1));
+            headers.set('sdk-debug', String(1));
+            headers.set('app-debug', String(1));
         }
 
         return headers;

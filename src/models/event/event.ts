@@ -24,7 +24,7 @@ export class Event {
      */
     constructor(
         readonly name: string,
-        readonly properties: Props,
+        readonly properties: Props = {},
     ) {
         this.occurred = new Date().toUTCString();
     }
