@@ -14,7 +14,7 @@ export class DevicePropertiesCollector {
     /**
      * Get all the device properties.
      *
-     * @return {Promise}
+     * @return {Promise} with device properties.
      */
     public async get(): Promise<Props> {
         const result: { [key: string]: any } = {};
@@ -59,7 +59,7 @@ export class DevicePropertiesCollector {
     /**
      * Get device RAM memory.
      *
-     * @return {number | undefined}
+     * @return {number | undefined} total RAM in MB
      * @private
      */
     private getDeviceMemory(): number | undefined {
@@ -76,7 +76,7 @@ export class DevicePropertiesCollector {
     /**
      * Get network type.
      *
-     * @return {string | undefined}
+     * @return {string | undefined} network type like 4g etc.
      * @private
      */
     private getNetworkType(): string | undefined {
@@ -91,7 +91,7 @@ export class DevicePropertiesCollector {
     /**
      * Get device locale.
      *
-     * @return {string}
+     * @return {string} locale of the device.
      * @private
      */
     private getDeviceLocale() {
@@ -102,7 +102,7 @@ export class DevicePropertiesCollector {
     /**
      * Get device orientation.
      *
-     * @return {string}
+     * @return {string} orientation
      * @private
      */
     private getOrientation() {
@@ -112,7 +112,7 @@ export class DevicePropertiesCollector {
     /**
      * Get device DPI.
      *
-     * @return {number}
+     * @return {number} DPI
      * @private
      */
     private getDPI(): number {
@@ -127,9 +127,9 @@ export class DevicePropertiesCollector {
     }
 
     /**
-     * Get device location, if web-app asks for it.
+     * Get device location, if web-app asks for it and permission is granted.
      *
-     * @return {Promise}
+     * @return {Promise} with location data, if permitted
      * @private
      */
     private async getLocation(): Promise<any> {
@@ -156,7 +156,7 @@ export class DevicePropertiesCollector {
     /**
      * Get device battery info, if browser supports it.
      *
-     * @return {Promise}
+     * @return {Promise} with battery data, if available.
      * @private
      */
     private async getBatteryInfo(): Promise<any> {

@@ -8,13 +8,13 @@ export class Device {
     /**
      * Public constructor
      *
-     * @param {string} os
-     * @param {string} cooeeSdkVersion
-     * @param {string} appVersion
-     * @param {string} osVersion
-     * @param {string} sdk
-     * @param {string} uuid
-     * @param {Props} props
+     * @param {string} os operating system
+     * @param {string} cooeeSdkVersion cooee version integrated
+     * @param {string} appVersion app version integrated
+     * @param {string} osVersion operating system version
+     * @param {string} sdk sdk here 'WEB'
+     * @param {string} uuid device id generated/fetched
+     * @param {Props} props device properties
      */
     constructor(
         readonly os: string,

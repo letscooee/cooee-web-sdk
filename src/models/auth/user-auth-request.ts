@@ -11,9 +11,9 @@ export class UserAuthRequest {
     /**
      * Public constructor
      *
-     * @param {string} appID
-     * @param {string} appSecret
-     * @param {Device} deviceData
+     * @param {string} appID provided to the client.
+     * @param {string} appSecret provided to the client.
+     * @param {Device} deviceData basic property of the device.
      */
     constructor(
         readonly appID: string,

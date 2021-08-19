@@ -19,8 +19,8 @@ export class Event {
     /**
      * Public constructor
      *
-     * @param {string} name
-     * @param {props} properties
+     * @param {string} name event name
+     * @param {props} properties event properties.
      */
     constructor(
         readonly name: string,

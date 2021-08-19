@@ -43,9 +43,9 @@ export class UserAuthService {
     /**
      * Initialize the service with credentials to be sent on http call.
      *
-     * @param {string} appID
-     * @param {string} appSecret
-     * @return {Promise}
+     * @param {string} appID provided to client
+     * @param {string} appSecret provided to client
+     * @return {Promise} to confirm token is fetched
      */
     init(appID: string, appSecret: string): Promise<boolean> {
         this.appID = appID;
@@ -57,7 +57,7 @@ export class UserAuthService {
     /**
      * Check if localstorage has sdk token
      *
-     * @return {boolean}
+     * @return {boolean} true, if token is there in local storage
      */
     hasToken() {
         return LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
@@ -66,7 +66,7 @@ export class UserAuthService {
     /**
      * Return User ID.
      *
-     * @return {string}
+     * @return {string} user id
      */
     getUserID() {
         return this.userID;
@@ -107,7 +107,7 @@ export class UserAuthService {
     /**
      * Method will ensure that the SDK has acquired the token.
      *
-     * @return {Promise}
+     * @return {Promise} to confirm token is fetched
      */
     async acquireSDKToken(): Promise<boolean> {
         if (this.hasToken()) {
@@ -124,7 +124,7 @@ export class UserAuthService {
      * Make user registration with server (if not already) and acquire a SDK token
      * which will be later used to authenticate other endpoints.
      *
-     * @return {Promise}
+     * @return {Promise} to confirm token is fetched
      */
     private async getSDKTokenFromServer(): Promise<boolean> {
         const userAuthRequest = await this.getUserAuthRequest();
@@ -145,7 +145,7 @@ export class UserAuthService {
     /**
      * Save sdk token and user id to local storage and update for http calls.
      *
-     * @param {UserAuthResponse} data
+     * @param {UserAuthResponse} data contain user-id and token
      */
     saveUserDataInStorage(data: UserAuthResponse) {
         this.sdkToken = data.sdkToken;
@@ -197,7 +197,7 @@ export class UserAuthService {
     /**
      * Get or Create UUID
      *
-     * @return {string}
+     * @return {string} device id
      * @private
      */
     private getCreateUUID(): string {
@@ -214,8 +214,8 @@ export class UserAuthService {
     /**
      * Get backend required OS name
      *
-     * @param {string} os
-     * @return {string}
+     * @param {string} os operating system name
+     * @return {string} backend compatible operating system name
      * @private
      */
     private getBackendRequiredOSName(os: string): string {

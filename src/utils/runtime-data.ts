@@ -57,7 +57,7 @@ export class RuntimeData {
     /**
      * Check if it first active after web launch.
      *
-     * @return {boolean}
+     * @return {boolean} true on web launch
      */
     public isFirstActive(): boolean {
         return this.lastEnterInactive == null;
@@ -66,7 +66,7 @@ export class RuntimeData {
     /**
      * Get time of when last inactive occurred.
      *
-     * @return {Date}
+     * @return {Date} when last inactive occurred
      */
     public getLastEnterInactive(): Date | null {
         return this.lastEnterInactive;
@@ -75,7 +75,7 @@ export class RuntimeData {
     /**
      * Get active time in seconds.
      *
-     * @return {number}
+     * @return {number} total active seconds
      */
     public getTimeForActiveInSeconds(): number {
         // @ts-ignore
@@ -85,7 +85,7 @@ export class RuntimeData {
     /**
      * Get inactive time in seconds.
      *
-     * @return {number}
+     * @return {number} total inactive seconds
      */
     public getTimeForInactiveInSeconds(): number {
         if (this.lastEnterInactive == null) {

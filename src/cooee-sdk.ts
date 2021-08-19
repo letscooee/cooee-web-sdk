@@ -32,8 +32,8 @@ export default class CooeeSDK {
     /**
      * Initialize with credentials.
      *
-     * @param {string} appID
-     * @param {string} appSecret
+     * @param {string} appID total active seconds
+     * @param {string} appSecret total active seconds
      */
     static init(appID: string, appSecret: string) {
         this.INSTANCE.newSessionExecutor.init(appID, appSecret);

@@ -43,7 +43,7 @@ export class SafeHttpCallService {
     /**
      * Queue events till the sdk token is fetch for safe call.
      *
-     * @param {Props} data
+     * @param {Props} data user data and property.
      */
     public updateProfile(data: Props) {
         NewSessionExecutor.replaySubject.subscribe({

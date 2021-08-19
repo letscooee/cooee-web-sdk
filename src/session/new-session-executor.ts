@@ -33,8 +33,8 @@ export class NewSessionExecutor {
     /**
      * Initialize the SDK using credentials.
      *
-     * @param {string} appID
-     * @param {string} appSecret
+     * @param {string} appID provided to client
+     * @param {string} appSecret provided to client
      */
     init(appID: string, appSecret: string) {
         this.userAuthService.init(appID, appSecret)

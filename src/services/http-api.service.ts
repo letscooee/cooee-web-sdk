@@ -28,7 +28,7 @@ export class HttpAPIService {
     /**
      * Async call for registering device by making a call to backend
      *
-     * @param {UserAuthRequest} userAuthRequest
+     * @param {UserAuthRequest} userAuthRequest contains credentials
      */
     async registerDevice(userAuthRequest: UserAuthRequest) {
         const requestOptions = {
@@ -45,7 +45,7 @@ export class HttpAPIService {
     /**
      * Create/Send event call to the server.
      *
-     * @param {Event} event
+     * @param {Event} event event to be sent
      */
     sendEvent(event: Event) {
         const headers = this.getDefaultHeaders();
@@ -121,7 +121,7 @@ export class HttpAPIService {
      * Get all the default headers for the http calls.
      *
      * @private
-     * @return {Headers}
+     * @return {Headers} required headers
      */
     private getDefaultHeaders(): Headers {
         const headers = new Headers();
