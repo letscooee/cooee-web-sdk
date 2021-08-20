@@ -224,7 +224,7 @@ export class UserAuthService {
                 return 'MAC_OS';
             case 'Android':
                 return 'ANDROID';
-            case 'iPhone OS':
+            case 'iOS':
                 return 'IOS';
             case 'Windows':
             case 'Win64':
