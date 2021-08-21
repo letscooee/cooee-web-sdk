@@ -15,5 +15,6 @@ Lint Changes:
   stage: test
   script:
     - npm run lint
+    - npx tsc
   only:
     - merge_requests

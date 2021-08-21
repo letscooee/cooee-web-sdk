@@ -1,24 +1,127 @@
-import {Event} from '../models/event';
+import {Event} from '../models/event/event';
 import {Constants} from '../constants';
+import {UserAuthRequest} from '../models/auth/user-auth-request';
+import {SessionManager} from '../session/session-manager';
+import {Log} from '../utils/log';
+import {Props} from '../utils/type';
 
+/**
+ * A base or lower level HTTP service which simply hits the backend for given request.
+ *
+ * @author Abhishek Taparia
+ * @version 0.0.1
+ */
 export class HttpAPIService {
 
-    async registerDevice() {
-        // TODO implement me
+    private static apiToken: string;
+    private static userID: string;
+
+    private sessionManager: SessionManager;
+
+    /**
+     * Public constructor
+     */
+    constructor() {
+        this.sessionManager = SessionManager.getInstance();
     }
 
-    async sendEvent(event: Event) {
+    /**
+     * Async call for registering device by making a call to backend
+     *
+     * @param {UserAuthRequest} userAuthRequest contains credentials
+     */
+    async registerDevice(userAuthRequest: UserAuthRequest): Promise<any> {
         const requestOptions = {
             method: 'POST',
-            body: JSON.stringify(event),
+            body: JSON.stringify(userAuthRequest),
             headers: this.getDefaultHeaders(),
         };
 
-        const response = await fetch(Constants.API_URL + '/v1/event/track', requestOptions);
-
+        const response = await fetch(Constants.API_URL + '/v1/device/validate', requestOptions);
         return response.json();
     }
 
+    /**
+     * Create/Send event call to the server.
+     *
+     * @param {Event} event event to be sent
+     */
+    sendEvent(event: Event): void {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', HttpAPIService.apiToken);
+
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify(event),
+            headers: headers,
+        };
+
+        fetch(Constants.API_URL + '/v1/event/track', requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                Log.l('Sent', event.name, 'with response', data);
+            })
+            .catch((error) => {
+                Log.e(error);
+            });
+    }
+
+    /**
+     * Create/Send user data/property call to the server.
+     *
+     * @param {Props} data user data and property.
+     */
+    updateUserData(data: Props): void {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', HttpAPIService.apiToken);
+
+        const requestOptions = {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: headers,
+        };
+
+        fetch(Constants.API_URL + '/v1/user/update', requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                Log.l('Sent User Data with response', data);
+            })
+            .catch((error) => {
+                Log.e(error);
+            });
+    }
+
+    /**
+     * Send conclude session events.
+     *
+     * @param {Props} data conclude session event properties
+     */
+    concludeSession(data: Props): void {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', HttpAPIService.apiToken);
+
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: headers,
+        };
+
+        fetch(Constants.API_URL + '/v1/session/conclude', requestOptions)
+            .then((response) => response.json())
+            .then((json) => {
+                Log.l('Conclude Session', json);
+            })
+            .catch((error) => {
+                Log.e(error);
+            });
+    }
+
+    /**
+     * Get all the default headers for the http calls.
+     *
+     * @private
+     * @return {Headers} required headers
+     */
     private getDefaultHeaders(): Headers {
         const headers = new Headers();
 
@@ -26,7 +129,33 @@ export class HttpAPIService {
         headers.set('sdk-version', '1.0.0');
         headers.set('sdk-version-code', '1');
 
+        headers.set('user-id', HttpAPIService.userID);
+
+        // TODO add condition
+        if (2 > 7) {
+            headers.set('sdk-debug', String(1));
+            headers.set('app-debug', String(1));
+        }
+
         return headers;
+    }
+
+    /**
+     * Set sdk token for headers.
+     *
+     * @param {string} token
+     */
+    static setAPIToken(token: string): void {
+        HttpAPIService.apiToken = token;
+    }
+
+    /**
+     * Set user id for headers.
+     *
+     * @param {string} id
+     */
+    static setUserId(id: string): void {
+        HttpAPIService.userID = id;
     }
 
 }
