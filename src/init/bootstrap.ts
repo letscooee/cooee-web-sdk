@@ -1,5 +1,5 @@
-import {VisibilityListener} from "./visibility-listener";
-import {CommonListeners} from "./common-listeners";
+import {VisibilityListener} from './visibility-listener';
+import {CommonListeners} from './common-listeners';
 
 /**
  * A one time initializer class which initialises the SDK. This is used internally by the SDK
