@@ -35,7 +35,7 @@ export default class CooeeSDK {
      * @param {string} appID total active seconds
      * @param {string} appSecret total active seconds
      */
-    static init(appID: string, appSecret: string) {
+    static init(appID: string, appSecret: string): void {
         this.INSTANCE.newSessionExecutor.init(appID, appSecret);
     }
 
@@ -62,7 +62,7 @@ export default class CooeeSDK {
      * @param {Props} userData       The common user data like name, email.
      * @param {Props} userProperties The additional user properties.
      */
-    static updateUserProfile(userData: Props | null, userProperties: Props | null) {
+    static updateUserProfile(userData: Props | null, userProperties: Props | null): void {
         for (const propsKey in userProperties) {
             if (propsKey.length > 3 && propsKey.toLowerCase().startsWith('ce ')) {
                 throw new Error('User property name cannot start with \'CE \'');
@@ -83,7 +83,6 @@ export default class CooeeSDK {
         };
 
         this.INSTANCE.safeHttpCallService.updateProfile(userProfile);
-
     }
 
 }

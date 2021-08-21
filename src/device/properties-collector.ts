@@ -94,7 +94,7 @@ export class DevicePropertiesCollector {
      * @return {string} locale of the device.
      * @private
      */
-    private getDeviceLocale() {
+    private getDeviceLocale(): string {
         return navigator.language;
     }
 
@@ -105,7 +105,7 @@ export class DevicePropertiesCollector {
      * @return {string} orientation
      * @private
      */
-    private getOrientation() {
+    private getOrientation(): string {
         return screen.orientation?.type;
     }
 

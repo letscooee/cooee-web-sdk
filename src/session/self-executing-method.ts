@@ -10,7 +10,7 @@ import {Constants} from '../constants';
  * Self executing function which implement onvisibilitychange method and onpageshow method.
  */
 (
-    function() {
+    function(): void {
         const apiService: SafeHttpCallService = new SafeHttpCallService();
         const runtimeData = RuntimeData.getInstance();
 

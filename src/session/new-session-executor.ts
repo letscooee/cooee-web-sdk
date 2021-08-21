@@ -36,7 +36,7 @@ export class NewSessionExecutor {
      * @param {string} appID provided to client
      * @param {string} appSecret provided to client
      */
-    init(appID: string, appSecret: string) {
+    init(appID: string, appSecret: string): void {
         this.userAuthService.init(appID, appSecret)
             .then((response) => {
                 NewSessionExecutor.replaySubject.next(true);
@@ -55,12 +55,14 @@ export class NewSessionExecutor {
     /**
      * This method is executed at the beginning of the web app launch.
      */
-    execute() {
+    execute(): void {
         this.sessionManager.checkForNewSession();
 
         if (this.isAppFirstTimeLaunch()) {
+            // noinspection JSIgnoredPromiseFromCall
             this.sendFirstLaunchEvent();
         } else {
+            // noinspection JSIgnoredPromiseFromCall
             this.sendSuccessiveLaunchEvent();
         }
     }
@@ -82,7 +84,7 @@ export class NewSessionExecutor {
     /**
      * Runs when app is opened for the first time after sdkToken is received from server asynchronously
      */
-    private async sendFirstLaunchEvent() {
+    private async sendFirstLaunchEvent(): Promise<void> {
         const event = new Event('CE Web Installed', {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
@@ -91,7 +93,7 @@ export class NewSessionExecutor {
     /**
      * Runs every time when app is opened for a new session
      */
-    private async sendSuccessiveLaunchEvent() {
+    private async sendSuccessiveLaunchEvent(): Promise<void> {
         const event = new Event('CE Web Launched', {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);

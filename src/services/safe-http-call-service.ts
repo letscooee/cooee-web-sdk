@@ -29,7 +29,7 @@ export class SafeHttpCallService {
      *
      * @param {Event} event
      */
-    public sendEvent(event: Event) {
+    public sendEvent(event: Event): void {
         NewSessionExecutor.replaySubject.subscribe({
             complete: () => {
                 this.addEventVariable(event);
@@ -45,11 +45,10 @@ export class SafeHttpCallService {
      *
      * @param {Props} data user data and property.
      */
-    public updateProfile(data: Props) {
+    public updateProfile(data: Props): void {
         NewSessionExecutor.replaySubject.subscribe({
             complete: () => {
                 Log.l('User Profile', data);
-
                 this.httpApiService.updateUserData(data);
             },
         });
@@ -60,7 +59,7 @@ export class SafeHttpCallService {
      *
      * @param {Props} data conclude session event properties
      */
-    public concludeSession(data: Props) {
+    public concludeSession(data: Props): void {
         NewSessionExecutor.replaySubject.subscribe({
             complete: () => {
                 Log.l('Conclude Session', data);
@@ -76,7 +75,7 @@ export class SafeHttpCallService {
      * @param {Event} event
      * @private
      */
-    private addEventVariable(event: Event) {
+    private addEventVariable(event: Event): void {
         event.screenName = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();

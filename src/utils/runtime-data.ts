@@ -23,7 +23,6 @@ export class RuntimeData {
     public static getInstance(): RuntimeData {
         if (this.instance == null) {
             this.instance = new RuntimeData();
-
         }
         return this.instance;
     }
@@ -40,7 +39,7 @@ export class RuntimeData {
     /**
      * Set data when inactive.
      */
-    public setInactive() {
+    public setInactive(): void {
         this.inInactive = true;
         this.lastEnterInactive = new Date();
         LocalStorageHelper.setNumber(Constants.STORAGE_LAST_ACTIVE, this.lastEnterInactive.getTime());
@@ -49,7 +48,7 @@ export class RuntimeData {
     /**
      * Set data when active.
      */
-    public setActive() {
+    public setActive(): void {
         this.inInactive = false;
         this.lastEnterActive = new Date();
     }

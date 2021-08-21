@@ -30,7 +30,7 @@ export class HttpAPIService {
      *
      * @param {UserAuthRequest} userAuthRequest contains credentials
      */
-    async registerDevice(userAuthRequest: UserAuthRequest) {
+    async registerDevice(userAuthRequest: UserAuthRequest): Promise<any> {
         const requestOptions = {
             method: 'POST',
             body: JSON.stringify(userAuthRequest),
@@ -38,7 +38,6 @@ export class HttpAPIService {
         };
 
         const response = await fetch(Constants.API_URL + '/v1/device/validate', requestOptions);
-
         return response.json();
     }
 
@@ -47,7 +46,7 @@ export class HttpAPIService {
      *
      * @param {Event} event event to be sent
      */
-    sendEvent(event: Event) {
+    sendEvent(event: Event): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
@@ -70,15 +69,15 @@ export class HttpAPIService {
     /**
      * Create/Send user data/property call to the server.
      *
-     * @param {Props} map user data and property.
+     * @param {Props} data user data and property.
      */
-    updateUserData(map: Props) {
+    updateUserData(data: Props): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
         const requestOptions = {
             method: 'PUT',
-            body: JSON.stringify(map),
+            body: JSON.stringify(data),
             headers: headers,
         };
 
@@ -97,7 +96,7 @@ export class HttpAPIService {
      *
      * @param {Props} data conclude session event properties
      */
-    concludeSession(data: Props) {
+    concludeSession(data: Props): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
@@ -146,7 +145,7 @@ export class HttpAPIService {
      *
      * @param {string} token
      */
-    static setAPIToken(token: string) {
+    static setAPIToken(token: string): void {
         HttpAPIService.apiToken = token;
     }
 
@@ -155,7 +154,7 @@ export class HttpAPIService {
      *
      * @param {string} id
      */
-    static setUserId(id: string) {
+    static setUserId(id: string): void {
         HttpAPIService.userID = id;
     }
 

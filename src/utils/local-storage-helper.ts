@@ -24,7 +24,7 @@ export class LocalStorageHelper {
      * @param {string} key key provided for the storing value.
      * @param {string} value value stored.
      */
-    static setString(key: string, value: string) {
+    static setString(key: string, value: string): void {
         LocalStorageHelper.LOCAL_STORAGE.setItem(key, value);
     }
 
@@ -44,7 +44,7 @@ export class LocalStorageHelper {
      * @param {string} key key provided for the storing value.
      * @param {number} value value stored.
      */
-    static setNumber(key: string, value: number) {
+    static setNumber(key: string, value: number): void {
         LocalStorageHelper.setString(key, value.toString());
     }
 
@@ -68,7 +68,7 @@ export class LocalStorageHelper {
      * @param {string} key key provided for the storing value.
      * @param {boolean} value value stored.
      */
-    static setBoolean(key: string, value: boolean) {
+    static setBoolean(key: string, value: boolean): void {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 
@@ -77,7 +77,7 @@ export class LocalStorageHelper {
      *
      * @param {string} key to be removed.
      */
-    static remove(key: string) {
+    static remove(key: string): void {
         LocalStorageHelper.LOCAL_STORAGE.removeItem(key);
     }
 

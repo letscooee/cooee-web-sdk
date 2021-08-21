@@ -15,11 +15,18 @@ module.exports = {
         '@typescript-eslint',
     ],
     'rules': {
+        '@typescript-eslint/explicit-function-return-type': ['error', {
+            allowExpressions: true,
+            allowTypedFunctionExpressions: true,
+            allowHigherOrderFunctions: true,
+            allowDirectConstAssertionInArrowFunctions: true,
+            allowConciseArrowFunctionExpressionsStartingWithVoid: false,
+        }],
         // By pass Google's indentation & use 'eslint-recommended'
         'indent': 'off',
         'prefer-promise-reject-errors': ['error', {'allowEmptyReject': true}],
         'max-len': ['error', {'code': 120}],
-        'padded-blocks': ['error', {'classes': 'always'}],
+        'padded-blocks': ['error', {'classes': 'always', 'blocks': 'never'}],
         'no-multiple-empty-lines': ['error', {max: 1, maxEOF: 0}],
     },
 };

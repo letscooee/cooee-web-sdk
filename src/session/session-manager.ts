@@ -23,7 +23,7 @@ export class SessionManager {
      *
      * @return {SessionManager} instance of the class
      */
-    static getInstance() {
+    static getInstance(): SessionManager {
         if (SessionManager.instance == null) {
             SessionManager.instance = new SessionManager();
         }
@@ -60,7 +60,7 @@ export class SessionManager {
     /**
      * Start new session if required, otherwise initialize from session data from local storage.
      */
-    public checkForNewSession() {
+    public checkForNewSession(): void {
         if (this.isNewSessionRequired()) {
             this.startNewSession();
         } else {
@@ -71,7 +71,7 @@ export class SessionManager {
     /**
      * Starts new session.
      */
-    public startNewSession() {
+    public startNewSession(): void {
         if (this.currentSessionID) {
             return;
         }
@@ -83,13 +83,12 @@ export class SessionManager {
         LocalStorageHelper.setString(Constants.STORAGE_SESSION_ID, this.currentSessionID);
 
         this.bumpSessionNumber();
-
     }
 
     /**
      * Increase the session number by 1 everytime new session is created.
      */
-    public bumpSessionNumber() {
+    public bumpSessionNumber(): void {
         this.currentSessionNumber = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_NUMBER, 0);
         this.currentSessionNumber += 1;
 
@@ -123,7 +122,7 @@ export class SessionManager {
     /**
      * Conclude the current session by sending an event to the server followed by destroying it.
      */
-    public conclude() {
+    public conclude(): void {
         const data: Props = {
             'sessionID': this.currentSessionID,
             'occurred': new Date(),
@@ -137,7 +136,7 @@ export class SessionManager {
     /**
      * Destroy current session.
      */
-    public destroySession() {
+    public destroySession(): void {
         this.currentSessionID = undefined;
         this.currentSessionNumber = undefined;
         this.currentSessionStartTime = undefined;
@@ -150,7 +149,7 @@ export class SessionManager {
      *
      * @private
      */
-    private initializeSessionFromStorage() {
+    private initializeSessionFromStorage(): void {
         this.currentSessionStartTime = new Date(LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_START_TIME, 0));
         this.currentSessionID = LocalStorageHelper.getString(Constants.STORAGE_SESSION_ID, '');
         this.currentSessionNumber = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_NUMBER, 0);

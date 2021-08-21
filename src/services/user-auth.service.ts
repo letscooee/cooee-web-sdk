@@ -47,7 +47,7 @@ export class UserAuthService {
      * @param {string} appSecret provided to client
      * @return {Promise} to confirm token is fetched
      */
-    init(appID: string, appSecret: string): Promise<boolean> {
+    init(appID: string, appSecret: string): Promise<void> {
         this.appID = appID;
         this.appSecret = appSecret;
 
@@ -59,8 +59,8 @@ export class UserAuthService {
      *
      * @return {boolean} true, if token is there in local storage
      */
-    hasToken() {
-        return LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
+    hasToken(): boolean {
+        return !!LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
     }
 
     /**
@@ -68,7 +68,7 @@ export class UserAuthService {
      *
      * @return {string} user id
      */
-    getUserID() {
+    getUserID(): string {
         return this.userID;
     }
 
@@ -76,7 +76,7 @@ export class UserAuthService {
      * This method will pull user data (like SDK token & user ID) from the local storage
      * and populates it for further use.
      */
-    populateUserDataFromStorage() {
+    private async populateUserDataFromStorage(): Promise<void> {
         this.sdkToken = LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
         if (!this.sdkToken) {
             Log.l('No SDK token found in local storage');
@@ -88,7 +88,6 @@ export class UserAuthService {
         }
 
         this.updateAPIClient();
-
     }
 
     /**
@@ -96,7 +95,7 @@ export class UserAuthService {
      *
      * @private
      */
-    private updateAPIClient() {
+    private updateAPIClient(): void {
         Log.l('SDK Token:', this.sdkToken);
         Log.l('User ID:', this.userID);
 
@@ -109,13 +108,12 @@ export class UserAuthService {
      *
      * @return {Promise} to confirm token is fetched
      */
-    async acquireSDKToken(): Promise<boolean> {
+    async acquireSDKToken(): Promise<void> {
         if (this.hasToken()) {
-            this.populateUserDataFromStorage();
-            return true;
+            return this.populateUserDataFromStorage();
         }
 
-        Log.l('Attempt to acquire SDK token qqwqwe');
+        Log.l('Attempt to acquire SDK token');
 
         return this.getSDKTokenFromServer();
     }
@@ -126,7 +124,7 @@ export class UserAuthService {
      *
      * @return {Promise} to confirm token is fetched
      */
-    private async getSDKTokenFromServer(): Promise<boolean> {
+    private async getSDKTokenFromServer(): Promise<void> {
         const userAuthRequest = await this.getUserAuthRequest();
         Log.l('User Auth Request', userAuthRequest);
         const responseJson = this.apiService.registerDevice(userAuthRequest);
@@ -135,10 +133,8 @@ export class UserAuthService {
             const data = await <Promise<UserAuthResponse>>responseJson;
             Log.l('Register Device Response', data);
             this.saveUserDataInStorage(data);
-            return true;
         } catch (error) {
             Log.e(error);
-            return false;
         }
     }
 
@@ -147,7 +143,7 @@ export class UserAuthService {
      *
      * @param {UserAuthResponse} data contain user-id and token
      */
-    saveUserDataInStorage(data: UserAuthResponse) {
+    saveUserDataInStorage(data: UserAuthResponse): void {
         this.sdkToken = data.sdkToken;
         this.userID = data.id;
 
@@ -160,7 +156,7 @@ export class UserAuthService {
     /**
      * Get user auth request object.
      */
-    async getUserAuthRequest() {
+    async getUserAuthRequest(): Promise<UserAuthRequest> {
         return new UserAuthRequest(
             this.appID,
             this.appSecret,
@@ -171,10 +167,10 @@ export class UserAuthService {
     /**
      * Get device class object.
      */
-    async getDevice() {
+    async getDevice(): Promise<Device> {
         const results = await new DevicePropertiesCollector().get();
 
-        const os = this.getBackendRequiredOSName(results.os.name);
+        const os = this.getBackendCompatibleOSName(results.os.name);
         const osVersion = results.os.version;
         // TODO How to get app version and cooee sdk version?
         const appVersion = '0.0.1';
@@ -188,19 +184,19 @@ export class UserAuthService {
             appVersion,
             osVersion,
             Constants.SDK,
-            this.getCreateUUID(),
+            this.getOrCreateUUID(),
             results,
         );
-
     }
 
+    // noinspection JSMethodCanBeStatic
     /**
      * Get or Create UUID
      *
      * @return {string} device id
      * @private
      */
-    private getCreateUUID(): string {
+    private getOrCreateUUID(): string {
         let uuid: string = LocalStorageHelper.getString(Constants.UUID, '');
 
         if (!uuid) {
@@ -211,6 +207,7 @@ export class UserAuthService {
         return uuid;
     }
 
+    // noinspection JSMethodCanBeStatic
     /**
      * Get backend required OS name
      *
@@ -218,7 +215,7 @@ export class UserAuthService {
      * @return {string} backend compatible operating system name
      * @private
      */
-    private getBackendRequiredOSName(os: string): string {
+    private getBackendCompatibleOSName(os: string): string {
         switch (os) {
             case 'Mac OS':
                 return 'MAC_OS';
@@ -235,7 +232,6 @@ export class UserAuthService {
             default:
                 return 'UNKNOWN';
         }
-
     }
 
 }
