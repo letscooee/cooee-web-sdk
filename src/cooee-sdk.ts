@@ -4,6 +4,7 @@ import {NewSessionExecutor} from './session/new-session-executor';
 import {SafeHttpCallService} from './services/safe-http-call-service';
 import './session/self-executing-method';
 import {Props} from './utils/type';
+import {Bootstrap} from "./init/bootstrap";
 
 /**
  * Public consumable interface for developers.
@@ -86,3 +87,10 @@ export default class CooeeSDK {
     }
 
 }
+
+/**
+ * Self executing function to initialize the SDK.
+ */
+(function (): void {
+    new Bootstrap().init();
+})();
