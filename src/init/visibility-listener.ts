@@ -27,7 +27,7 @@ export class VisibilityListener {
             if (document.visibilityState === 'visible') {
                 // noinspection JSIgnoredPromiseFromCall
                 this.onVisible();
-            } else {
+            } else if (document.visibilityState === 'hidden') {
                 // noinspection JSIgnoredPromiseFromCall
                 this.onHidden();
             }
