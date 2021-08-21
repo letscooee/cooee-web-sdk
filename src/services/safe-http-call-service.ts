@@ -2,7 +2,6 @@ import {Event} from '../models/event/event';
 import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {HttpAPIService} from './http-api.service';
-import {Log} from '../utils/log';
 import {Props} from '../utils/type';
 
 /**
@@ -30,13 +29,9 @@ export class SafeHttpCallService {
      * @param {Event} event
      */
     public sendEvent(event: Event): void {
-        NewSessionExecutor.replaySubject.subscribe({
-            complete: () => {
-                this.addEventVariable(event);
-                Log.l('Event', event);
-
-                this.httpApiService.sendEvent(event);
-            },
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.addEventVariable(event);
+            this.httpApiService.sendEvent(event);
         });
     }
 
@@ -46,11 +41,8 @@ export class SafeHttpCallService {
      * @param {Props} data user data and property.
      */
     public updateProfile(data: Props): void {
-        NewSessionExecutor.replaySubject.subscribe({
-            complete: () => {
-                Log.l('User Profile', data);
-                this.httpApiService.updateUserData(data);
-            },
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.updateUserData(data);
         });
     }
 
@@ -60,12 +52,8 @@ export class SafeHttpCallService {
      * @param {Props} data conclude session event properties
      */
     public concludeSession(data: Props): void {
-        NewSessionExecutor.replaySubject.subscribe({
-            complete: () => {
-                Log.l('Conclude Session', data);
-
-                this.httpApiService.concludeSession(data);
-            },
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.concludeSession(data);
         });
     }
 

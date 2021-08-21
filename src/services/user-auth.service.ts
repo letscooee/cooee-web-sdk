@@ -1,9 +1,3 @@
-/**
- * Service that deals with the user/device authentication.
- *
- * @author Shashank Agrawal
- * @since 0.0.1
- */
 import {Device} from '../models/device/device';
 import {HttpAPIService} from './http-api.service';
 import {UserAuthRequest} from '../models/auth/user-auth-request';
@@ -15,7 +9,7 @@ import ObjectID from 'bson-objectid';
 import {Log} from '../utils/log';
 
 /**
- * Utility class to register user with server and to provide related data
+ * Service that deals with the user/device authentication.
  *
  * @author Abhishek Taparia
  * @version 0.0.1

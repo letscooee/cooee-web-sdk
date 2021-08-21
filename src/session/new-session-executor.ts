@@ -3,7 +3,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
 import {Event} from '../models/event/event';
 import {UserAuthService} from '../services/user-auth.service';
-import {ReplaySubject} from '@reactivex/rxjs/dist/package';
+import {ReplaySubject} from 'rxjs';
 import {SafeHttpCallService} from '../services/safe-http-call-service';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 
@@ -15,10 +15,11 @@ import {DevicePropertiesCollector} from '../device/properties-collector';
  */
 export class NewSessionExecutor {
 
+    static replaySubject: ReplaySubject<boolean>;
+
     private sessionManager: SessionManager;
     private safeHttpCallService: SafeHttpCallService;
     private userAuthService: UserAuthService;
-    static replaySubject: ReplaySubject<boolean>;
 
     /**
      * Public Constructor
@@ -38,14 +39,14 @@ export class NewSessionExecutor {
      */
     init(appID: string, appSecret: string): void {
         this.userAuthService.init(appID, appSecret)
-            .then((response) => {
+            .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
             })
-            .catch((error) => {
-                const that = this;
-                setTimeout(function() {
-                    that.init(appID, appSecret);
+            .catch(() => {
+                // Reattempt authentication in 30 seconds
+                setTimeout(() => {
+                    this.init(appID, appSecret);
                 }, 30 * 1000);
             });
 
