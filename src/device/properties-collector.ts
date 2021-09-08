@@ -11,28 +11,31 @@ export class DevicePropertiesCollector {
 
     private parser = new UAParser();
 
+    private result: { [key: string]: any } = {};
+
     /**
      * Get all the device properties.
      *
      * @return {Promise} with device properties.
      */
     public async get(): Promise<Props> {
-        const result: { [key: string]: any } = {};
+        const result = this.result;
 
-        result.availableRAM = this.getDeviceMemory();
-        result.networkType = this.getNetworkType();
-        result.locale = this.getDeviceLocale();
-        result.orientation = this.getOrientation();
-        result.dpi = this.getDPI();
-        result.battery = await this.getBatteryInfo();
-        result.location = await this.getLocation();
+        this.getDeviceMemory();
+        this.getNetworkType();
+        this.getOrientation();
+        await this.getBatteryInfo();
+        await this.getLocation();
+
+        result.locale = navigator.language;
 
         result.display = {
             w: screen.width,
             h: screen.height,
             pd: screen.pixelDepth,
+            dpi: this.getDPI(),
         };
-        result.window = {
+        result.win = {
             ow: window.outerWidth,
             oh: window.outerHeight,
             iw: window.innerWidth,
@@ -41,7 +44,7 @@ export class DevicePropertiesCollector {
         };
         result.browser = {
             name: this.parser.getBrowser().name,
-            version: this.parser.getBrowser().version,
+            ver: this.parser.getBrowser().version,
         };
         result.device = {
             model: this.parser.getDevice().model,
@@ -50,63 +53,50 @@ export class DevicePropertiesCollector {
         };
         result.os = {
             name: this.parser.getOS().name,
-            version: this.parser.getOS().version,
+            ver: this.parser.getOS().version,
         };
 
         return result;
     }
 
     /**
-     * Get device RAM memory.
+     * Get device memory.
      *
-     * @return {number | undefined} total RAM in MB
      * @private
      */
-    private getDeviceMemory(): number | undefined {
+    private getDeviceMemory(): void {
         const _navigator: any = navigator;
         if (!_navigator.deviceMemory) {
             return undefined;
         }
 
         const mem = _navigator.deviceMemory;
-        return mem * 1024;
+        this.result.mem = {tot: mem * 1024};
     }
 
-    // noinspection JSMethodCanBeStatic
     /**
      * Get network type.
      *
-     * @return {string | undefined} network type like 4g etc.
      * @private
      */
-    private getNetworkType(): string | undefined {
+    private getNetworkType(): void {
         const _navigator: any = navigator;
         const connection = _navigator.connection || _navigator.mozConnection || _navigator.webkitConnection;
-        if (connection) {
-            return connection.effectiveType;
+        if (connection?.effectiveType) {
+            this.result.net = {type: connection.effectiveType};
         }
     }
 
-    // noinspection JSMethodCanBeStatic
-    /**
-     * Get device locale.
-     *
-     * @return {string} locale of the device.
-     * @private
-     */
-    private getDeviceLocale(): string {
-        return navigator.language;
-    }
-
-    // noinspection JSMethodCanBeStatic
     /**
      * Get device orientation.
      *
-     * @return {string} orientation
      * @private
      */
-    private getOrientation(): string {
-        return screen.orientation?.type;
+    private getOrientation(): void {
+        const type = screen.orientation?.type;
+        if (type) {
+            this.result.orientation = type;
+        }
     }
 
     /**
@@ -129,47 +119,45 @@ export class DevicePropertiesCollector {
     /**
      * Get device location, if web-app asks for it and permission is granted.
      *
-     * @return {Promise} with location data, if permitted
+     * @return {Promise} when location data is fetched (if granted)
      * @private
      */
-    private async getLocation(): Promise<any> {
-        if (!navigator.geolocation) {
-            return null;
+    private async getLocation(): Promise<void> {
+        if (!navigator.geolocation || !navigator.permissions) {
+            return;
         }
 
         const a = await navigator.permissions.query({name: 'geolocation'});
 
         if (a.state == 'granted') {
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve) => {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    resolve({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    });
-                }, reject);
+                    this.result.coords = [position.coords.latitude, position.coords.longitude];
+                    resolve();
+                }, () => resolve());
             });
         } else {
-            return null;
+            return;
         }
     }
 
     /**
      * Get device battery info, if browser supports it.
      *
-     * @return {Promise} with battery data, if available.
+     * @return {Promise} when battery information has been updated.
      * @private
      */
-    private async getBatteryInfo(): Promise<any> {
+    private async getBatteryInfo(): Promise<void> {
         const isBatterySupported = 'getBattery' in navigator;
         if (!isBatterySupported) {
-            return null;
+            return;
         }
 
         // @ts-ignore
         return navigator.getBattery().then((info: any) => {
-            return {
-                level: info.level * 100,
-                charging: info.charging,
+            this.result.bat = {
+                l: info.level * 100,
+                c: info.charging,
             };
         });
     }
