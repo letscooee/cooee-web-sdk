@@ -64,7 +64,9 @@ export class SafeHttpCallService {
      * @private
      */
     private addEventVariable(event: Event): void {
+        // TODO Use actual screen name
         event.screenName = location.pathname;
+        event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
     }

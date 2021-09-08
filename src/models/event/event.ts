@@ -26,7 +26,7 @@ export class Event {
         readonly name: string,
         readonly properties: Props = {},
     ) {
-        this.occurred = new Date().toUTCString();
+        this.occurred = new Date().toISOString();
     }
 
 }
