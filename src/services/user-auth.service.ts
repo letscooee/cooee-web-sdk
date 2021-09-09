@@ -129,6 +129,7 @@ export class UserAuthService {
             this.saveUserDataInStorage(data);
         } catch (error) {
             Log.e(error);
+            throw error;
         }
     }
 

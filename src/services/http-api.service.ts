@@ -26,19 +26,36 @@ export class HttpAPIService {
     }
 
     /**
+     * Make server call and reject promise if the response code is non 2xx.
+     *
+     * @param method The HTTP method to invoke.
+     * @param url URL to invoke.
+     * @param body The JSON body for the request.
+     * @param headers Custom headers to pass.
+     * @private
+     * @return The responded data <code>T</code> if successful.
+     * @see https://stackoverflow.com/a/66713599/2405040
+     */
+    private async doHTTP<T>(method: string, url: string, body: any, headers: Headers): Promise<T> {
+        if (!url.startsWith('http')) {
+            url = Constants.API_URL + url;
+        }
+
+        const response = await fetch(url, {method, body: JSON.stringify(body), headers});
+        if (!response.ok) {
+            throw response;
+        }
+
+        return response.json();
+    }
+
+    /**
      * Async call for registering device by making a call to backend
      *
      * @param {UserAuthRequest} userAuthRequest contains credentials
      */
     async registerDevice(userAuthRequest: UserAuthRequest): Promise<any> {
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(userAuthRequest),
-            headers: this.getDefaultHeaders(),
-        };
-
-        const response = await fetch(Constants.API_URL + '/v1/device/validate', requestOptions);
-        return response.json();
+        return this.doHTTP('POST', '/v1/device/validate', userAuthRequest, this.getDefaultHeaders());
     }
 
     /**
@@ -50,14 +67,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(event),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/event/track', requestOptions)
-            .then((response) => response.json())
+        this.doHTTP('POST', '/v1/event/track', event, headers)
             .then((data) => {
                 Log.l('Sent', event.name, 'with response', data);
             })
@@ -75,14 +85,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
-        const requestOptions = {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/user/update', requestOptions)
-            .then((response) => response.json())
+        this.doHTTP('POST', '/v1/user/update', data, headers)
             .then((data) => {
                 Log.l('Sent User Data with response', data);
             })
@@ -100,14 +103,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', HttpAPIService.apiToken);
 
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/session/conclude', requestOptions)
-            .then((response) => response.json())
+        this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
                 Log.l('Conclude Session', json);
             })
