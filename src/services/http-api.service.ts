@@ -1,6 +1,6 @@
 import {Event} from '../models/event/event';
 import {Constants} from '../constants';
-import {UserAuthRequest} from '../models/auth/user-auth-request';
+import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
 import {Props} from '../utils/type';
 
@@ -42,9 +42,9 @@ export class HttpAPIService {
     /**
      * Async call for registering device by making a call to backend
      *
-     * @param {UserAuthRequest} userAuthRequest contains credentials
+     * @param {DeviceAuthRequest} userAuthRequest contains credentials
      */
-    async registerDevice(userAuthRequest: UserAuthRequest): Promise<any> {
+    async registerDevice(userAuthRequest: DeviceAuthRequest): Promise<any> {
         return this.doHTTP('POST', '/v1/device/validate', userAuthRequest, this.getDefaultHeaders());
     }
 
@@ -115,6 +115,7 @@ export class HttpAPIService {
         headers.set('sdk-version', '1.0.0');
         headers.set('sdk-version-code', '1');
 
+        headers.set('app-version', '0.0.1+1');
         headers.set('user-id', HttpAPIService.userID);
 
         // TODO add condition
