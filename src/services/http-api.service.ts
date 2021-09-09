@@ -12,9 +12,23 @@ import {Props} from '../utils/type';
  */
 export class HttpAPIService {
 
+    private static readonly INSTANCE = new HttpAPIService();
+
     private static apiToken: string = '';
     private static userID: string = '';
 
+    private constructor() {
+        // This class is singleton
+    }
+
+    /**
+     * Get instance of the class.
+     *
+     * @return {RuntimeData}
+     */
+    public static getInstance(): HttpAPIService {
+        return this.INSTANCE;
+    }
     /**
      * Make server call and reject promise if the response code is non 2xx.
      *

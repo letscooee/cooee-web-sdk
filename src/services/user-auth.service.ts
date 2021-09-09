@@ -15,22 +15,26 @@ import {Log} from '../utils/log';
  */
 export class UserAuthService {
 
-    private apiService: HttpAPIService;
+    private static readonly INSTANCE = new UserAuthService();
 
-    private sdkToken: string;
-    private userID: string;
-    private appID: string;
-    private appSecret: string;
+    private readonly apiService = HttpAPIService.getInstance();
+
+    private sdkToken: string = '';
+    private userID: string = '';
+    private appID: string = '';
+    private appSecret: string = '';
+
+    private constructor() {
+        // This class is singleton
+    }
 
     /**
-     * Public constructor
+     * Get instance of the class.
+     *
+     * @return {RuntimeData}
      */
-    constructor() {
-        this.apiService = new HttpAPIService();
-        this.sdkToken = '';
-        this.userID = '';
-        this.appID = '';
-        this.appSecret = '';
+    public static getInstance(): UserAuthService {
+        return this.INSTANCE;
     }
 
     /**

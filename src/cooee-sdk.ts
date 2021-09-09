@@ -1,9 +1,9 @@
 import {Event} from './models/event/event';
-import {UserAuthService} from './services/user-auth.service';
 import {NewSessionExecutor} from './session/new-session-executor';
-import {SafeHttpCallService} from './services/safe-http-call-service';
+import {SafeHttpService} from './services/safe-http-service';
 import {Props} from './utils/type';
 import {Bootstrap} from './init/bootstrap';
+import {RuntimeData} from "./utils/runtime-data";
 
 /**
  * Public consumable interface for developers.
@@ -15,22 +15,20 @@ export default class CooeeSDK {
 
     private static readonly INSTANCE = new CooeeSDK();
 
-    private readonly userAuthService: UserAuthService;
-    private readonly safeHttpCallService: SafeHttpCallService;
-    private readonly newSessionExecutor: NewSessionExecutor;
+    private readonly runtimeData = RuntimeData.getInstance();
+    private readonly safeHttpCallService = SafeHttpService.getInstance();
+    private readonly newSessionExecutor = new NewSessionExecutor();
 
     /**
      * Private Constructor for Singleton class.
      * @private
      */
     private constructor() {
-        this.userAuthService = new UserAuthService();
-        this.safeHttpCallService = new SafeHttpCallService();
-        this.newSessionExecutor = new NewSessionExecutor();
+        // This class is singleton
     }
 
     /**
-     * Initialize with credentials.
+     * Initialize the SDK with credentials.
      *
      * @param {string} appID total active seconds
      * @param {string} appSecret total active seconds
@@ -90,6 +88,6 @@ export default class CooeeSDK {
 /**
  * Self executing function to initialize the SDK.
  */
-(function(): void {
+(function (): void {
     new Bootstrap().init();
 })();

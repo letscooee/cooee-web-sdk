@@ -3,7 +3,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
 import {Props} from '../utils/type';
 import {RuntimeData} from '../utils/runtime-data';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 
 /**
  * Manages the user's current session in the app.
@@ -13,12 +13,14 @@ import {SafeHttpCallService} from '../services/safe-http-call-service';
  */
 export class SessionManager {
 
-    private static instance: SessionManager;
+    private static INSTANCE: SessionManager;
+
     private currentSessionID: string | undefined;
     private currentSessionStartTime: Date | undefined;
     private currentSessionNumber: number | undefined;
 
     private constructor() {
+        // This class is singleton
     }
 
     /**
@@ -27,10 +29,10 @@ export class SessionManager {
      * @return {SessionManager} instance of the class
      */
     static getInstance(): SessionManager {
-        if (SessionManager.instance == null) {
-            SessionManager.instance = new SessionManager();
+        if (!this.INSTANCE) {
+            this.INSTANCE = new SessionManager();
         }
-        return SessionManager.instance;
+        return this.INSTANCE;
     }
 
     /**
@@ -135,7 +137,7 @@ export class SessionManager {
             'duration': this.getTotalDurationInSeconds(),
         };
 
-        new SafeHttpCallService().concludeSession(data);
+        SafeHttpService.getInstance().concludeSession(data);
         this.destroySession();
     }
 

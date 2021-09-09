@@ -3,7 +3,7 @@ import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {Event} from '../models/event/event';
 import {DevicePropertiesCollector} from '../device/properties-collector';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 import {RuntimeData} from '../utils/runtime-data';
 import {Props} from "../utils/type";
 
@@ -20,7 +20,7 @@ export class VisibilityListener {
     private static readonly ACTIVE_DURATION = 'aDur';
     private static readonly INACTIVE_DURATION = 'iaDur';
 
-    private readonly apiService = new SafeHttpCallService();
+    private readonly apiService = SafeHttpService.getInstance();
     private readonly runtimeData = RuntimeData.getInstance();
 
     /**

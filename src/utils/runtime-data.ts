@@ -9,7 +9,7 @@ import {Constants} from '../constants';
  */
 export class RuntimeData {
 
-    private static instance: RuntimeData | null = null;
+    private static readonly INSTANCE = new RuntimeData();
 
     private inInactive: boolean = true;
     private lastEnterActive: Date = new Date();
@@ -21,10 +21,7 @@ export class RuntimeData {
      * @return {RuntimeData}
      */
     public static getInstance(): RuntimeData {
-        if (this.instance == null) {
-            this.instance = new RuntimeData();
-        }
-        return this.instance;
+        return this.INSTANCE;
     }
 
     /**

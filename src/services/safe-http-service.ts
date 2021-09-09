@@ -10,17 +10,28 @@ import {Props} from '../utils/type';
  * @author Abhishek Taparia
  * @version 0.0.1
  */
-export class SafeHttpCallService {
+export class SafeHttpService {
 
-    private sessionManager: SessionManager;
-    private httpApiService: HttpAPIService;
+    private static INSTANCE: SafeHttpService;
+
+    private readonly sessionManager = SessionManager.getInstance();
+    private readonly httpApiService = HttpAPIService.getInstance();
+
+    private constructor() {
+        // This class is singleton
+    }
 
     /**
-     * Public constructor
+     * Get instance of the class.
+     *
+     * @return {SafeHttpService}
      */
-    constructor() {
-        this.sessionManager = SessionManager.getInstance();
-        this.httpApiService = new HttpAPIService();
+    public static getInstance(): SafeHttpService {
+        if (!this.INSTANCE) {
+            this.INSTANCE = new SafeHttpService();
+        }
+
+        return this.INSTANCE;
     }
 
     /**
