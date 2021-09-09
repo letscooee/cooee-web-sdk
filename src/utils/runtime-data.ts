@@ -14,6 +14,12 @@ export class RuntimeData {
     private inInactive: boolean = true;
     private lastEnterActive: Date = new Date();
     private lastEnterInactive: Date | null = null;
+    private webAppVersion: string = '';
+    private isDebug: boolean = false;
+
+    private constructor() {
+        // This class is singleton
+    }
 
     /**
      * Get instance of the class.
@@ -22,6 +28,22 @@ export class RuntimeData {
      */
     public static getInstance(): RuntimeData {
         return this.INSTANCE;
+    }
+
+    public getWebAppVersion(): string {
+        return this.webAppVersion ?? '0.0.1+1';
+    }
+
+    public setWebAppVersion(version: string): void {
+        this.webAppVersion = version;
+    }
+
+    public isDebugWebApp(): boolean {
+        return this.isDebug;
+    }
+
+    public setDebugWebApp(debug: boolean): void {
+        this.isDebug = debug;
     }
 
     /**

@@ -7,6 +7,10 @@
 export class Constants {
 
     static API_URL: string = 'http://127.0.0.1:3003';
+    static SDK_VERSION: string = '0.0.1';
+    static SDK_VERSION_CODE: number = 1;
+    static SDK_DEBUG: boolean = true;
+
     static SDK: string = 'WEB';
     static LOG_PREFIX: string = 'CooeeSDK';
 

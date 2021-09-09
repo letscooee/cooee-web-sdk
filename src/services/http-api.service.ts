@@ -3,6 +3,7 @@ import {Constants} from '../constants';
 import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
 import {Props} from '../utils/type';
+import {RuntimeData} from "../utils/runtime-data";
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -14,8 +15,10 @@ export class HttpAPIService {
 
     private static readonly INSTANCE = new HttpAPIService();
 
-    private static apiToken: string = '';
-    private static userID: string = '';
+    private readonly runtimeData = RuntimeData.getInstance();
+    
+    private apiToken: string = '';
+    private userID: string = '';
 
     private constructor() {
         // This class is singleton
@@ -69,7 +72,7 @@ export class HttpAPIService {
      */
     sendEvent(event: Event): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('POST', '/v1/event/track', event, headers)
             .then((data) => {
@@ -87,7 +90,7 @@ export class HttpAPIService {
      */
     updateUserData(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('POST', '/v1/user/update', data, headers)
             .then((data) => {
@@ -105,7 +108,7 @@ export class HttpAPIService {
      */
     concludeSession(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
@@ -125,16 +128,16 @@ export class HttpAPIService {
     private getDefaultHeaders(): Headers {
         const headers = new Headers();
 
-        // TODO pull it dynamically from the release version
-        headers.set('sdk-version', '1.0.0');
-        headers.set('sdk-version-code', '1');
+        headers.set('sdk-version', Constants.SDK_VERSION);
+        headers.set('sdk-version-code', Constants.SDK_VERSION_CODE.toString());
+        headers.set('app-version', this.runtimeData.getWebAppVersion());
+        headers.set('user-id', this.userID);
 
-        headers.set('app-version', '0.0.1+1');
-        headers.set('user-id', HttpAPIService.userID);
-
-        // TODO add condition
-        if (2 > 7) {
+        if (Constants.SDK_DEBUG) {
             headers.set('sdk-debug', String(1));
+        }
+
+        if (this.runtimeData.isDebugWebApp()) {
             headers.set('app-debug', String(1));
         }
 
@@ -146,8 +149,8 @@ export class HttpAPIService {
      *
      * @param {string} token
      */
-    static setAPIToken(token: string): void {
-        HttpAPIService.apiToken = token ?? '';
+    setAPIToken(token: string): void {
+        this.apiToken = token ?? '';
     }
 
     /**
@@ -155,8 +158,8 @@ export class HttpAPIService {
      *
      * @param {string} id
      */
-    static setUserId(id: string): void {
-        HttpAPIService.userID = id ?? '';
+    setUserId(id: string): void {
+        this.userID = id ?? '';
     }
 
 }

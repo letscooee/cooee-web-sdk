@@ -38,6 +38,24 @@ export default class CooeeSDK {
     }
 
     /**
+     * Set the version of your website/webapp. Recommended format "0.0.1+1". Should not be more than 10 characters.
+     * @param version The version string.
+     */
+    static setWebAppVersion(version: string): void {
+        this.INSTANCE.runtimeData.setWebAppVersion(version);
+    }
+
+    /**
+     * Tell SDK that this is a staging/debug/development website so that the data collected from the SDK can be
+     * excluded from the reporting dashboard and will not be passed to machine learning engines.
+     *
+     * @param debug Set to <code>true</code> if this is not the production website/webapp.
+     */
+    static setDebug(debug: boolean): void {
+        this.INSTANCE.runtimeData.setDebugWebApp(debug);
+    }
+
+    /**
      * Sends custom events to the server.
      *
      * @param {string} name name the event like onPageLoad.

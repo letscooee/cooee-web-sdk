@@ -96,8 +96,8 @@ export class UserAuthService {
         Log.l('SDK Token:', this.sdkToken);
         Log.l('User ID:', this.userID);
 
-        HttpAPIService.setAPIToken(this.sdkToken);
-        HttpAPIService.setUserId(this.userID);
+        this.apiService.setAPIToken(this.sdkToken);
+        this.apiService.setUserId(this.userID);
     }
 
     /**
