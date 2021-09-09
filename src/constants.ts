@@ -22,4 +22,6 @@ export class Constants {
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
 
+    static IN_APP_CONTAINER_NAME: string = 'cooee-wrapper';
+
 }
