@@ -17,7 +17,7 @@ export class Constants {
     static STORAGE_SESSION_ID: string = 'sid';
     static STORAGE_SESSION_NUMBER: string = 'sn';
     static STORAGE_SESSION_START_TIME: string = 'sst';
-    static STORAGE_WEB_LAUNCH_SENT: string = 'wls';
+    static STORAGE_SESSION_START_EVENT_SENT: string = 'sses';
     static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
     static STORAGE_LAST_ACTIVE: string = 'la';
     // endregion

@@ -80,7 +80,7 @@ export class SessionManager {
         }
 
         // Make sure to clear the flag for "Web Launched" event for new session
-        LocalStorageHelper.setBoolean(Constants.STORAGE_WEB_LAUNCH_SENT, false);
+        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false);
 
         this.currentSessionStartTime = new Date();
         this.currentSessionID = new ObjectID().toHexString();
