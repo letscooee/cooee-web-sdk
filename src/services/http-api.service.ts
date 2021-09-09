@@ -4,6 +4,8 @@ import {UserAuthRequest} from '../models/auth/user-auth-request';
 import {SessionManager} from '../session/session-manager';
 import {Log} from '../utils/log';
 import {Props} from '../utils/type';
+import {EventResponse} from '../models/event/event-response';
+import {InAppRenderer} from '../renderer/in-app-renderer';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -58,8 +60,12 @@ export class HttpAPIService {
 
         fetch(Constants.API_URL + '/v1/event/track', requestOptions)
             .then((response) => response.json())
-            .then((data) => {
+            .then((data: EventResponse) => {
                 Log.l('Sent', event.name, 'with response', data);
+
+                if (data.triggerData) {
+                    new InAppRenderer().render(data.triggerData.ian!);
+                }
             })
             .catch((error) => {
                 Log.e(error);
