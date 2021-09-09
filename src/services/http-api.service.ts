@@ -13,8 +13,8 @@ import {Props} from '../utils/type';
  */
 export class HttpAPIService {
 
-    private static apiToken: string;
-    private static userID: string;
+    private static apiToken: string = '';
+    private static userID: string = '';
 
     private sessionManager: SessionManager;
 
@@ -142,7 +142,7 @@ export class HttpAPIService {
      * @param {string} token
      */
     static setAPIToken(token: string): void {
-        HttpAPIService.apiToken = token;
+        HttpAPIService.apiToken = token ?? '';
     }
 
     /**
@@ -151,7 +151,7 @@ export class HttpAPIService {
      * @param {string} id
      */
     static setUserId(id: string): void {
-        HttpAPIService.userID = id;
+        HttpAPIService.userID = id ?? '';
     }
 
 }

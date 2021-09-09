@@ -25,6 +25,7 @@ export class LocalStorageHelper {
      * @param {string} value value stored.
      */
     static setString(key: string, value: string): void {
+        if (!value) value = '';
         LocalStorageHelper.LOCAL_STORAGE.setItem(key, value);
     }
 
