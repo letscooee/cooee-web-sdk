@@ -2,7 +2,6 @@ import {Event} from './models/event/event';
 import {UserAuthService} from './services/user-auth.service';
 import {NewSessionExecutor} from './session/new-session-executor';
 import {SafeHttpCallService} from './services/safe-http-call-service';
-import './session/self-executing-method';
 import {Props} from './utils/type';
 import {Bootstrap} from './init/bootstrap';
 
