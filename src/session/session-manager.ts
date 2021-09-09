@@ -18,6 +18,9 @@ export class SessionManager {
     private currentSessionStartTime: Date | undefined;
     private currentSessionNumber: number | undefined;
 
+    private constructor() {
+    }
+
     /**
      * Get instance for the singleton class.
      *
@@ -75,6 +78,9 @@ export class SessionManager {
         if (this.currentSessionID) {
             return;
         }
+
+        // Make sure to clear the flag for "Web Launched" event for new session
+        LocalStorageHelper.setBoolean(Constants.STORAGE_WEB_LAUNCH_SENT, false);
 
         this.currentSessionStartTime = new Date();
         this.currentSessionID = new ObjectID().toHexString();

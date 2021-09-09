@@ -192,11 +192,11 @@ export class UserAuthService {
      * @private
      */
     private getOrCreateUUID(): string {
-        let uuid: string = LocalStorageHelper.getString(Constants.UUID, '');
+        let uuid: string = LocalStorageHelper.getString(Constants.STORAGE_DEVICE_UUID, '');
 
         if (!uuid) {
             uuid = new ObjectID().toHexString();
-            LocalStorageHelper.setString(Constants.UUID, uuid);
+            LocalStorageHelper.setString(Constants.STORAGE_DEVICE_UUID, uuid);
         }
 
         return uuid;

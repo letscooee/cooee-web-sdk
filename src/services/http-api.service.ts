@@ -1,7 +1,6 @@
 import {Event} from '../models/event/event';
 import {Constants} from '../constants';
 import {UserAuthRequest} from '../models/auth/user-auth-request';
-import {SessionManager} from '../session/session-manager';
 import {Log} from '../utils/log';
 import {Props} from '../utils/type';
 
@@ -15,15 +14,6 @@ export class HttpAPIService {
 
     private static apiToken: string = '';
     private static userID: string = '';
-
-    private sessionManager: SessionManager;
-
-    /**
-     * Public constructor
-     */
-    constructor() {
-        this.sessionManager = SessionManager.getInstance();
-    }
 
     /**
      * Make server call and reject promise if the response code is non 2xx.
