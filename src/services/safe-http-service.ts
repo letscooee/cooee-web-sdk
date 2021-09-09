@@ -17,6 +17,10 @@ export class SafeHttpService {
     private readonly sessionManager = SessionManager.getInstance();
     private readonly httpApiService = HttpAPIService.getInstance();
 
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
     private constructor() {
         // This class is singleton
     }

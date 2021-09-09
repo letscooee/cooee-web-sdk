@@ -3,7 +3,7 @@ import {Constants} from '../constants';
 import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
 import {Props} from '../utils/type';
-import {RuntimeData} from "../utils/runtime-data";
+import {RuntimeData} from '../utils/runtime-data';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -16,10 +16,14 @@ export class HttpAPIService {
     private static readonly INSTANCE = new HttpAPIService();
 
     private readonly runtimeData = RuntimeData.getInstance();
-    
+
     private apiToken: string = '';
     private userID: string = '';
 
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
     private constructor() {
         // This class is singleton
     }
@@ -27,11 +31,12 @@ export class HttpAPIService {
     /**
      * Get instance of the class.
      *
-     * @return {RuntimeData}
+     * @return {HttpAPIService}
      */
     public static getInstance(): HttpAPIService {
         return this.INSTANCE;
     }
+
     /**
      * Make server call and reject promise if the response code is non 2xx.
      *

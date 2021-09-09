@@ -19,6 +19,10 @@ export class SessionManager {
     private currentSessionStartTime: Date | undefined;
     private currentSessionNumber: number | undefined;
 
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
     private constructor() {
         // This class is singleton
     }

@@ -67,7 +67,7 @@ export class DevicePropertiesCollector {
     private getDeviceMemory(): void {
         const _navigator: any = navigator;
         if (!_navigator.deviceMemory) {
-            return undefined;
+            return;
         }
 
         const mem = _navigator.deviceMemory;

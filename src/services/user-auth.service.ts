@@ -24,6 +24,10 @@ export class UserAuthService {
     private appID: string = '';
     private appSecret: string = '';
 
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
     private constructor() {
         // This class is singleton
     }

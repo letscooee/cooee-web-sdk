@@ -1,5 +1,5 @@
-import {Props} from "../../utils/type";
-import {Constants} from "../../constants";
+import {Props} from '../../utils/type';
+import {Constants} from '../../constants';
 
 /**
  * This class is used in sending request body for the first time to get sdkToken from server

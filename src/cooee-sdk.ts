@@ -3,7 +3,7 @@ import {NewSessionExecutor} from './session/new-session-executor';
 import {SafeHttpService} from './services/safe-http-service';
 import {Props} from './utils/type';
 import {Bootstrap} from './init/bootstrap';
-import {RuntimeData} from "./utils/runtime-data";
+import {RuntimeData} from './utils/runtime-data';
 
 /**
  * Public consumable interface for developers.
@@ -39,7 +39,8 @@ export default class CooeeSDK {
 
     /**
      * Set the version of your website/webapp. Recommended format "0.0.1+1". Should not be more than 10 characters.
-     * @param version The version string.
+     *
+     * @param {string} version The version string.
      */
     static setWebAppVersion(version: string): void {
         this.INSTANCE.runtimeData.setWebAppVersion(version);
@@ -49,7 +50,7 @@ export default class CooeeSDK {
      * Tell SDK that this is a staging/debug/development website so that the data collected from the SDK can be
      * excluded from the reporting dashboard and will not be passed to machine learning engines.
      *
-     * @param debug Set to <code>true</code> if this is not the production website/webapp.
+     * @param {boolean} debug Set to <code>true</code> if this is not the production website/webapp.
      */
     static setDebug(debug: boolean): void {
         this.INSTANCE.runtimeData.setDebugWebApp(debug);
@@ -106,6 +107,6 @@ export default class CooeeSDK {
 /**
  * Self executing function to initialize the SDK.
  */
-(function (): void {
+(function(): void {
     new Bootstrap().init();
 })();
