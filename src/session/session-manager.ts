@@ -1,7 +1,7 @@
 import ObjectID from 'bson-objectid';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 import {SafeHttpService} from '../services/safe-http-service';
 

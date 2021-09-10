@@ -2,7 +2,7 @@ import {Event} from '../models/event/event';
 import {Constants} from '../constants';
 import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 
 /**

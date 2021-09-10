@@ -2,7 +2,7 @@ import {Event} from '../models/event/event';
 import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {HttpAPIService} from './http-api.service';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 
 /**
  * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.

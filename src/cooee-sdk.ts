@@ -1,7 +1,7 @@
 import {Event} from './models/event/event';
 import {NewSessionExecutor} from './session/new-session-executor';
 import {SafeHttpService} from './services/safe-http-service';
-import {Props} from './utils/type';
+import {Props} from './types';
 import {Bootstrap} from './init/bootstrap';
 import {RuntimeData} from './utils/runtime-data';
 
@@ -74,30 +74,21 @@ export default class CooeeSDK {
     }
 
     /**
-     * Send the given user data and user properties to the server.
+     * Set the given user information and properties to the user's profile.
      *
      * @param {Props} userData       The common user data like name, email.
      * @param {Props} userProperties The additional user properties.
      */
-    static updateUserProfile(userData: Props | null, userProperties: Props | null): void {
+    static updateProfile(userData: Props | null, userProperties: Props | null): void {
         for (const propsKey in userProperties) {
-            if (propsKey.length > 3 && propsKey.toLowerCase().startsWith('ce ')) {
+            if (propsKey.toLowerCase().startsWith('ce ')) {
                 throw new Error('User property name cannot start with \'CE \'');
             }
         }
 
-        if (!userData) {
-            userData = {};
-        }
-
-        if (!userProperties) {
-            userProperties = {};
-        }
-
-        const userProfile: Props = {
-            'userData': userData,
-            'userProperties': userProperties,
-        };
+        userData = userData ?? {};
+        userProperties = userProperties ?? {};
+        const userProfile: Props = {userData, userProperties};
 
         this.INSTANCE.safeHttpCallService.updateProfile(userProfile);
     }

@@ -5,7 +5,7 @@ import {Event} from '../models/event/event';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 import {SafeHttpService} from '../services/safe-http-service';
 import {RuntimeData} from '../utils/runtime-data';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 
 /**
  * Listen for the visibility of the document. It is useful to know if the document is in the background or an

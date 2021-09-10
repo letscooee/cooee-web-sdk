@@ -1,4 +1,4 @@
-import {Props} from '../../utils/type';
+import {Props} from '../../types';
 import {Constants} from '../../constants';
 
 /**
