@@ -1,5 +1,5 @@
 import {Event} from '../models/event/event';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 
 /**
  * Add the common listeners globally.
@@ -9,7 +9,7 @@ import {SafeHttpCallService} from '../services/safe-http-call-service';
  */
 export class CommonListeners {
 
-    private readonly apiService = new SafeHttpCallService();
+    private readonly apiService = SafeHttpService.getInstance();
 
     /**
      * Start listing to common events.

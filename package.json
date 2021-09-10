@@ -1,26 +1,46 @@
 {
-    "name": "cooee-web-sdk",
+    "name": "@letscooee/web-sdk",
+    "description": "Hyperpersonalised Mobile/Web App Re-Engagement via Machine Learning",
     "version": "0.0.1",
     "scripts": {
         "lint": "eslint 'src/**'",
         "prepare": "npm run build",
-        "build": "tsc"
+        "build": "tsc",
+        "build:production": "tsc && webpack",
+        "serve:old-school": "webpack serve"
     },
+    "main": "dist/cooee-sdk.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/letscooee/cooee-web-sdk.git"
+    },
+    "keywords": [
+        "engagement",
+        "machine-learning",
+        "artificial-intelligence",
+        "templateless-engagement"
+    ],
+    "author": "Cooee <shoutout@letscooee.com> (https://www.letscooee.com/)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/letscooee/cooee-web-sdk/issues"
+    },
+    "homepage": "https://github.com/letscooee/cooee-web-sdk#readme",
     "devDependencies": {
         "@types/ua-parser-js": "^0.7.36",
-        "@typescript-eslint/eslint-plugin": "^4.28.5",
-        "@typescript-eslint/parser": "^4.28.5",
+        "@typescript-eslint/eslint-plugin": "^4.31.0",
+        "@typescript-eslint/parser": "^4.31.0",
         "eslint": "^7.32.0",
         "eslint-config-google": "^0.14.0",
         "ts-loader": "^9.2.4",
         "typescript": "^4.3.5",
-        "webpack-dev-server": "^3.11.2"
+        "webpack": "^5.47.1",
+        "webpack-cli": "^4.7.2",
+        "webpack-dev-server": "^4.1.1"
     },
     "dependencies": {
         "bson-objectid": "^2.0.1",
         "rxjs": "^7.3.0",
-        "ua-parser-js": "^0.7.28",
-        "webpack": "^5.47.1",
-        "webpack-cli": "^4.7.2"
+        "ua-parser-js": "^0.7.28"
     }
 }

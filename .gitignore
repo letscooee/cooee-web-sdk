@@ -3,3 +3,4 @@ public/
 .idea/
 dist/
 .vscode
+.DS_Store

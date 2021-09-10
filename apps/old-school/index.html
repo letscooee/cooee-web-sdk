@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Cooee's Web SDK</title>
+</head>
+<body>
+    <h1>Lets Cooee</h1>
+    <!--<script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk@latest/dist/sdk.min.js" async></script>-->
+    <script src="/live-dist/sdk.min.js" async></script>
+    <script>
+        window.CooeeSDK = window.CooeeSDK || {events:[], profile:[], account:[]};
+        CooeeSDK.account.push({debug: false});
+        CooeeSDK.account.push({appVersion: "1.2.3+12030"});
+        CooeeSDK.account.push({appID: "60ace21f18d1ec7c04d12d68", appSecret: "abXgJzVEXqdPMqRdv7rP"});
+        CooeeSDK.profile.push({
+            name: "John Doe",
+            email: "john@example.com",
+            customerID: "xyz1234",
+            loggedIn: true,
+            foo: "bar",
+            subscriptions: {
+                valid: true,
+                pack: 1234
+            }
+        });
+        CooeeSDK.events.push(["Add To Cart", {foo: 2}])
+    </script>
+</body>
+</html>

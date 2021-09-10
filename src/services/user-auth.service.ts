@@ -1,9 +1,8 @@
-import {Device} from '../models/device/device';
 import {HttpAPIService} from './http-api.service';
-import {UserAuthRequest} from '../models/auth/user-auth-request';
+import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 import {Constants} from '../constants';
-import {UserAuthResponse} from '../models/auth/user-auth-response';
+import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import ObjectID from 'bson-objectid';
 import {Log} from '../utils/log';
@@ -16,22 +15,30 @@ import {Log} from '../utils/log';
  */
 export class UserAuthService {
 
-    private apiService: HttpAPIService;
+    private static readonly INSTANCE = new UserAuthService();
 
-    private sdkToken: string;
-    private userID: string;
-    private appID: string;
-    private appSecret: string;
+    private readonly apiService = HttpAPIService.getInstance();
+
+    private sdkToken: string = '';
+    private userID: string = '';
+    private appID: string = '';
+    private appSecret: string = '';
 
     /**
-     * Public constructor
+     * Private constructor to make this class singleton.
+     * @private
      */
-    constructor() {
-        this.apiService = new HttpAPIService();
-        this.sdkToken = '';
-        this.userID = '';
-        this.appID = '';
-        this.appSecret = '';
+    private constructor() {
+        // This class is singleton
+    }
+
+    /**
+     * Get instance of the class.
+     *
+     * @return {RuntimeData}
+     */
+    public static getInstance(): UserAuthService {
+        return this.INSTANCE;
     }
 
     /**
@@ -93,8 +100,8 @@ export class UserAuthService {
         Log.l('SDK Token:', this.sdkToken);
         Log.l('User ID:', this.userID);
 
-        HttpAPIService.setAPIToken(this.sdkToken);
-        HttpAPIService.setUserId(this.userID);
+        this.apiService.setAPIToken(this.sdkToken);
+        this.apiService.setUserId(this.userID);
     }
 
     /**
@@ -120,24 +127,24 @@ export class UserAuthService {
      */
     private async getSDKTokenFromServer(): Promise<void> {
         const userAuthRequest = await this.getUserAuthRequest();
-        Log.l('User Auth Request', userAuthRequest);
         const responseJson = this.apiService.registerDevice(userAuthRequest);
 
         try {
-            const data = await <Promise<UserAuthResponse>>responseJson;
+            const data = await <Promise<DeviceAuthResponse>>responseJson;
             Log.l('Register Device Response', data);
             this.saveUserDataInStorage(data);
         } catch (error) {
             Log.e(error);
+            throw error;
         }
     }
 
     /**
      * Save sdk token and user id to local storage and update for http calls.
      *
-     * @param {UserAuthResponse} data contain user-id and token
+     * @param {DeviceAuthResponse} data contain user-id and token
      */
-    saveUserDataInStorage(data: UserAuthResponse): void {
+    saveUserDataInStorage(data: DeviceAuthResponse): void {
         this.sdkToken = data.sdkToken;
         this.userID = data.id;
 
@@ -150,36 +157,14 @@ export class UserAuthService {
     /**
      * Get user auth request object.
      */
-    async getUserAuthRequest(): Promise<UserAuthRequest> {
-        return new UserAuthRequest(
+    private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
+        const props = await new DevicePropertiesCollector().get();
+
+        return new DeviceAuthRequest(
             this.appID,
             this.appSecret,
-            await this.getDevice(),
-        );
-    }
-
-    /**
-     * Get device class object.
-     */
-    async getDevice(): Promise<Device> {
-        const results = await new DevicePropertiesCollector().get();
-
-        const os = this.getBackendCompatibleOSName(results.os.name);
-        const osVersion = results.os.version;
-        // TODO How to get app version and cooee sdk version?
-        const appVersion = '0.0.1';
-        const cooeeSdkVersion = '0.0.1';
-
-        delete results.os;
-
-        return new Device(
-            os,
-            cooeeSdkVersion,
-            appVersion,
-            osVersion,
-            Constants.SDK,
             this.getOrCreateUUID(),
-            results,
+            props,
         );
     }
 
@@ -191,41 +176,14 @@ export class UserAuthService {
      * @private
      */
     private getOrCreateUUID(): string {
-        let uuid: string = LocalStorageHelper.getString(Constants.UUID, '');
+        let uuid: string = LocalStorageHelper.getString(Constants.STORAGE_DEVICE_UUID, '');
 
         if (!uuid) {
             uuid = new ObjectID().toHexString();
-            LocalStorageHelper.setString(Constants.UUID, uuid);
+            LocalStorageHelper.setString(Constants.STORAGE_DEVICE_UUID, uuid);
         }
 
         return uuid;
-    }
-
-    // noinspection JSMethodCanBeStatic
-    /**
-     * Get backend required OS name
-     *
-     * @param {string} os operating system name
-     * @return {string} backend compatible operating system name
-     * @private
-     */
-    private getBackendCompatibleOSName(os: string): string {
-        switch (os) {
-            case 'Mac OS':
-                return 'MAC_OS';
-            case 'Android':
-                return 'ANDROID';
-            case 'iOS':
-                return 'IOS';
-            case 'Windows':
-            case 'Win64':
-            case 'Win32':
-                return 'WINDOWS';
-            case 'Ubuntu':
-                return 'UBUNTU';
-            default:
-                return 'UNKNOWN';
-        }
     }
 
 }

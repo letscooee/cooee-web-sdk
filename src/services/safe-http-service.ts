@@ -2,7 +2,7 @@ import {Event} from '../models/event/event';
 import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {HttpAPIService} from './http-api.service';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 
 /**
  * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.
@@ -10,17 +10,32 @@ import {Props} from '../utils/type';
  * @author Abhishek Taparia
  * @version 0.0.1
  */
-export class SafeHttpCallService {
+export class SafeHttpService {
 
-    private sessionManager: SessionManager;
-    private httpApiService: HttpAPIService;
+    private static INSTANCE: SafeHttpService;
+
+    private readonly sessionManager = SessionManager.getInstance();
+    private readonly httpApiService = HttpAPIService.getInstance();
 
     /**
-     * Public constructor
+     * Private constructor to make this class singleton.
+     * @private
      */
-    constructor() {
-        this.sessionManager = SessionManager.getInstance();
-        this.httpApiService = new HttpAPIService();
+    private constructor() {
+        // This class is singleton
+    }
+
+    /**
+     * Get instance of the class.
+     *
+     * @return {SafeHttpService}
+     */
+    public static getInstance(): SafeHttpService {
+        if (!this.INSTANCE) {
+            this.INSTANCE = new SafeHttpService();
+        }
+
+        return this.INSTANCE;
     }
 
     /**
@@ -64,7 +79,9 @@ export class SafeHttpCallService {
      * @private
      */
     private addEventVariable(event: Event): void {
+        // TODO Use actual screen name
         event.screenName = location.pathname;
+        event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
     }

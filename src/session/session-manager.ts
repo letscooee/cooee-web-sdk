@@ -1,9 +1,9 @@
 import ObjectID from 'bson-objectid';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
-import {Props} from '../utils/type';
+import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 
 /**
  * Manages the user's current session in the app.
@@ -13,10 +13,19 @@ import {SafeHttpCallService} from '../services/safe-http-call-service';
  */
 export class SessionManager {
 
-    private static instance: SessionManager;
+    private static INSTANCE: SessionManager;
+
     private currentSessionID: string | undefined;
     private currentSessionStartTime: Date | undefined;
     private currentSessionNumber: number | undefined;
+
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
+    private constructor() {
+        // This class is singleton
+    }
 
     /**
      * Get instance for the singleton class.
@@ -24,10 +33,10 @@ export class SessionManager {
      * @return {SessionManager} instance of the class
      */
     static getInstance(): SessionManager {
-        if (SessionManager.instance == null) {
-            SessionManager.instance = new SessionManager();
+        if (!this.INSTANCE) {
+            this.INSTANCE = new SessionManager();
         }
-        return SessionManager.instance;
+        return this.INSTANCE;
     }
 
     /**
@@ -75,6 +84,9 @@ export class SessionManager {
         if (this.currentSessionID) {
             return;
         }
+
+        // Make sure to clear the flag for "Web Launched" event for new session
+        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false);
 
         this.currentSessionStartTime = new Date();
         this.currentSessionID = new ObjectID().toHexString();
@@ -129,7 +141,7 @@ export class SessionManager {
             'duration': this.getTotalDurationInSeconds(),
         };
 
-        new SafeHttpCallService().concludeSession(data);
+        SafeHttpService.getInstance().concludeSession(data);
         this.destroySession();
     }
 

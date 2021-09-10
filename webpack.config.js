@@ -4,6 +4,18 @@ module.exports = {
     entry: './src/index.ts',
     target: 'es5',
     mode: 'production',
+    devServer: {
+        static: path.join(__dirname, 'apps', 'old-school'),
+        devMiddleware: {
+            publicPath: '/live-dist',
+            writeToDisk: true,
+        },
+        open: ['/'],
+        compress: true,
+        hot: false,
+        watchFiles: ['src/**/*.*', 'apps/old-school/*.*'],
+        port: 8000,
+    },
     module: {
         rules: [
             {

@@ -22,8 +22,21 @@ module.exports = {
             allowDirectConstAssertionInArrowFunctions: true,
             allowConciseArrowFunctionExpressionsStartingWithVoid: false,
         }],
+        'valid-jsdoc': ['error', {
+            requireParamType: false,
+            requireParamDescription: false,
+            requireReturnDescription: false,
+            requireReturn: false,
+            requireReturnType: false,
+            prefer: {returns: 'return'},
+        }],
         // By pass Google's indentation & use 'eslint-recommended'
         'indent': 'off',
+        'space-before-function-paren': ['error', {
+            'anonymous': 'always',
+            'named': 'never',
+            'asyncArrow': 'always'
+        }],
         'prefer-promise-reject-errors': ['error', {'allowEmptyReject': true}],
         'max-len': ['error', {'code': 120}],
         'padded-blocks': ['error', {'classes': 'always', 'blocks': 'never'}],

@@ -1,0 +1,10 @@
+apps/
+src/
+
+tsconfig.json
+webpack.config.js
+package-lock.json
+
+.idea/
+.gitlab-ci.yml
+.eslintrc.js

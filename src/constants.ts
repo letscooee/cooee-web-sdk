@@ -7,18 +7,24 @@
 export class Constants {
 
     static API_URL: string = 'http://127.0.0.1:3003';
+    static SDK_VERSION: string = '0.0.1';
+    static SDK_VERSION_CODE: number = 1;
+    static SDK_DEBUG: boolean = true;
+
     static SDK: string = 'WEB';
     static LOG_PREFIX: string = 'CooeeSDK';
-    static UUID: string = 'uuid';
 
-    static STORAGE_SDK_TOKEN: string = 'sdk_token';
-    static STORAGE_USER_ID: string = 'user_id';
-    static STORAGE_SESSION_NUMBER: string = 'session_number';
-    static STORAGE_FIRST_TIME_LAUNCH: string = 'is_first_launch';
-    static STORAGE_SESSION_START_TIME: string = 'session_start_time';
-    static STORAGE_SESSION_ID: string = 'session_id';
-    static STORAGE_LAST_TOKEN_ATTEMPT: string = 'last_token_check_attempt';
-    static STORAGE_LAST_ACTIVE: string = 'last_active';
+    // region Local Storage Keys
+    static STORAGE_USER_ID: string = 'uid';
+    static STORAGE_SDK_TOKEN: string = 'st';
+    static STORAGE_DEVICE_UUID: string = 'uuid';
+    static STORAGE_SESSION_ID: string = 'sid';
+    static STORAGE_SESSION_NUMBER: string = 'sn';
+    static STORAGE_SESSION_START_TIME: string = 'sst';
+    static STORAGE_SESSION_START_EVENT_SENT: string = 'sses';
+    static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
+    static STORAGE_LAST_ACTIVE: string = 'la';
+    // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
 

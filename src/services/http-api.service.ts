@@ -1,9 +1,9 @@
 import {Event} from '../models/event/event';
 import {Constants} from '../constants';
-import {UserAuthRequest} from '../models/auth/user-auth-request';
-import {SessionManager} from '../session/session-manager';
+import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
-import {Props} from '../utils/type';
+import {Props} from '../types';
+import {RuntimeData} from '../utils/runtime-data';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -13,32 +13,61 @@ import {Props} from '../utils/type';
  */
 export class HttpAPIService {
 
-    private static apiToken: string;
-    private static userID: string;
+    private static readonly INSTANCE = new HttpAPIService();
 
-    private sessionManager: SessionManager;
+    private readonly runtimeData = RuntimeData.getInstance();
+
+    private apiToken: string = '';
+    private userID: string = '';
 
     /**
-     * Public constructor
+     * Private constructor to make this class singleton.
+     * @private
      */
-    constructor() {
-        this.sessionManager = SessionManager.getInstance();
+    private constructor() {
+        // This class is singleton
+    }
+
+    /**
+     * Get instance of the class.
+     *
+     * @return {HttpAPIService}
+     */
+    public static getInstance(): HttpAPIService {
+        return this.INSTANCE;
+    }
+
+    /**
+     * Make server call and reject promise if the response code is non 2xx.
+     *
+     * @param method The HTTP method to invoke.
+     * @param url URL to invoke.
+     * @param body The JSON body for the request.
+     * @param headers Custom headers to pass.
+     * @private
+     * @return The responded data <code>T</code> if successful.
+     * @see https://stackoverflow.com/a/66713599/2405040
+     */
+    private async doHTTP<T>(method: string, url: string, body: any, headers: Headers): Promise<T> {
+        if (!url.startsWith('http')) {
+            url = Constants.API_URL + url;
+        }
+
+        const response = await fetch(url, {method, body: JSON.stringify(body), headers});
+        if (!response.ok) {
+            throw response;
+        }
+
+        return response.json();
     }
 
     /**
      * Async call for registering device by making a call to backend
      *
-     * @param {UserAuthRequest} userAuthRequest contains credentials
+     * @param {DeviceAuthRequest} userAuthRequest contains credentials
      */
-    async registerDevice(userAuthRequest: UserAuthRequest): Promise<any> {
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(userAuthRequest),
-            headers: this.getDefaultHeaders(),
-        };
-
-        const response = await fetch(Constants.API_URL + '/v1/device/validate', requestOptions);
-        return response.json();
+    async registerDevice(userAuthRequest: DeviceAuthRequest): Promise<any> {
+        return this.doHTTP('POST', '/v1/device/validate', userAuthRequest, this.getDefaultHeaders());
     }
 
     /**
@@ -48,21 +77,14 @@ export class HttpAPIService {
      */
     sendEvent(event: Event): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(event),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/event/track', requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                Log.l('Sent', event.name, 'with response', data);
+        this.doHTTP('POST', '/v1/event/track', event, headers)
+            .then(() => {
+                Log.l('Sent', event.name);
             })
             .catch((error) => {
-                Log.e(error);
+                Log.e('Error sending event', error);
             });
     }
 
@@ -73,21 +95,14 @@ export class HttpAPIService {
      */
     updateUserData(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
-        const requestOptions = {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/user/update', requestOptions)
-            .then((response) => response.json())
-            .then((data) => {
-                Log.l('Sent User Data with response', data);
+        this.doHTTP('PUT', '/v1/user/update', data, headers)
+            .then(() => {
+                Log.l('Updated user profile');
             })
             .catch((error) => {
-                Log.e(error);
+                Log.e('Error saving user profile', error);
             });
     }
 
@@ -98,16 +113,9 @@ export class HttpAPIService {
      */
     concludeSession(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', HttpAPIService.apiToken);
+        headers.append('x-sdk-token', this.apiToken);
 
-        const requestOptions = {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: headers,
-        };
-
-        fetch(Constants.API_URL + '/v1/session/conclude', requestOptions)
-            .then((response) => response.json())
+        this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
                 Log.l('Conclude Session', json);
             })
@@ -125,15 +133,16 @@ export class HttpAPIService {
     private getDefaultHeaders(): Headers {
         const headers = new Headers();
 
-        // TODO pull it dynamically from the release version
-        headers.set('sdk-version', '1.0.0');
-        headers.set('sdk-version-code', '1');
+        headers.set('sdk-version', Constants.SDK_VERSION);
+        headers.set('sdk-version-code', Constants.SDK_VERSION_CODE.toString());
+        headers.set('app-version', this.runtimeData.getWebAppVersion());
+        headers.set('user-id', this.userID);
 
-        headers.set('user-id', HttpAPIService.userID);
-
-        // TODO add condition
-        if (2 > 7) {
+        if (Constants.SDK_DEBUG) {
             headers.set('sdk-debug', String(1));
+        }
+
+        if (this.runtimeData.isDebugWebApp()) {
             headers.set('app-debug', String(1));
         }
 
@@ -145,8 +154,8 @@ export class HttpAPIService {
      *
      * @param {string} token
      */
-    static setAPIToken(token: string): void {
-        HttpAPIService.apiToken = token;
+    setAPIToken(token: string): void {
+        this.apiToken = token ?? '';
     }
 
     /**
@@ -154,8 +163,8 @@ export class HttpAPIService {
      *
      * @param {string} id
      */
-    static setUserId(id: string): void {
-        HttpAPIService.userID = id;
+    setUserId(id: string): void {
+        this.userID = id ?? '';
     }
 
 }

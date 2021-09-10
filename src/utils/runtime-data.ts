@@ -9,11 +9,21 @@ import {Constants} from '../constants';
  */
 export class RuntimeData {
 
-    private static instance: RuntimeData | null = null;
+    private static readonly INSTANCE = new RuntimeData();
 
     private inInactive: boolean = true;
     private lastEnterActive: Date = new Date();
     private lastEnterInactive: Date | null = null;
+    private webAppVersion: string = '';
+    private isDebug: boolean = false;
+
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
+    private constructor() {
+        // This class is singleton
+    }
 
     /**
      * Get instance of the class.
@@ -21,10 +31,40 @@ export class RuntimeData {
      * @return {RuntimeData}
      */
     public static getInstance(): RuntimeData {
-        if (this.instance == null) {
-            this.instance = new RuntimeData();
-        }
-        return this.instance;
+        return this.INSTANCE;
+    }
+
+    /**
+     * Get the web app version set by developer.
+     *
+     * @return {string}
+     */
+    public getWebAppVersion(): string {
+        return this.webAppVersion ?? '0.0.1+1';
+    }
+
+    /**
+     * Set the app version.
+     * @param version The app version.
+     */
+    public setWebAppVersion(version: string): void {
+        this.webAppVersion = version;
+    }
+
+    /**
+     * Tells if this webapp/website is not a production site.
+     * @return {boolean}
+     */
+    public isDebugWebApp(): boolean {
+        return this.isDebug;
+    }
+
+    /**
+     * Set if this webapp/website is a non-production app/site.
+     * @param debug Set to <true> if this is not a production app/site.
+     */
+    public setDebugWebApp(debug: boolean): void {
+        this.isDebug = debug;
     }
 
     /**

@@ -3,8 +3,9 @@ import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {Event} from '../models/event/event';
 import {DevicePropertiesCollector} from '../device/properties-collector';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 import {RuntimeData} from '../utils/runtime-data';
+import {Props} from '../types';
 
 /**
  * Listen for the visibility of the document. It is useful to know if the document is in the background or an
@@ -16,7 +17,10 @@ import {RuntimeData} from '../utils/runtime-data';
  */
 export class VisibilityListener {
 
-    private readonly apiService = new SafeHttpCallService();
+    private static readonly ACTIVE_DURATION = 'aDur';
+    private static readonly INACTIVE_DURATION = 'iaDur';
+
+    private readonly apiService = SafeHttpService.getInstance();
     private readonly runtimeData = RuntimeData.getInstance();
 
     /**
@@ -49,7 +53,10 @@ export class VisibilityListener {
             new NewSessionExecutor().execute();
         }
 
-        const event = new Event('CE Web Active', {'Inactive Duration': duration});
+        const props: Props = {};
+        props[VisibilityListener.INACTIVE_DURATION] = duration;
+
+        const event = new Event('CE Web Active', props);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.apiService.sendEvent(event);
     }
@@ -62,7 +69,11 @@ export class VisibilityListener {
     private async onHidden(): Promise<void> {
         this.runtimeData.setInactive();
         const duration = this.runtimeData.getTimeForActiveInSeconds();
-        this.apiService.sendEvent(new Event('CE Web Inactive', {'Active Duration': duration}));
+
+        const props: Props = {};
+        props[VisibilityListener.ACTIVE_DURATION] = duration;
+
+        this.apiService.sendEvent(new Event('CE Web Inactive', props));
     }
 
 }

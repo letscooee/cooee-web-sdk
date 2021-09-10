@@ -4,7 +4,7 @@ import {Constants} from '../constants';
 import {Event} from '../models/event/event';
 import {UserAuthService} from '../services/user-auth.service';
 import {ReplaySubject} from 'rxjs';
-import {SafeHttpCallService} from '../services/safe-http-call-service';
+import {SafeHttpService} from '../services/safe-http-service';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 
 /**
@@ -15,21 +15,11 @@ import {DevicePropertiesCollector} from '../device/properties-collector';
  */
 export class NewSessionExecutor {
 
-    static replaySubject: ReplaySubject<boolean>;
+    static readonly replaySubject: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    private sessionManager: SessionManager;
-    private safeHttpCallService: SafeHttpCallService;
-    private userAuthService: UserAuthService;
-
-    /**
-     * Public Constructor
-     */
-    constructor() {
-        this.sessionManager = SessionManager.getInstance();
-        this.userAuthService = new UserAuthService();
-        this.safeHttpCallService = new SafeHttpCallService();
-        NewSessionExecutor.replaySubject = new ReplaySubject(1);
-    }
+    private readonly sessionManager = SessionManager.getInstance();
+    private readonly safeHttpCallService = SafeHttpService.getInstance();
+    private readonly userAuthService = UserAuthService.getInstance();
 
     /**
      * Initialize the SDK using credentials.
@@ -58,6 +48,13 @@ export class NewSessionExecutor {
      */
     execute(): void {
         this.sessionManager.checkForNewSession();
+
+        // Prevent double sending the "Web Launched"/"Web Installed" event
+        if (LocalStorageHelper.getBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false)) {
+            return;
+        }
+
+        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, true);
 
         if (this.isAppFirstTimeLaunch()) {
             // noinspection JSIgnoredPromiseFromCall
