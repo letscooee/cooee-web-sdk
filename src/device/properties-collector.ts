@@ -128,17 +128,16 @@ export class DevicePropertiesCollector {
         }
 
         const a = await navigator.permissions.query({name: 'geolocation'});
-
-        if (a.state == 'granted') {
-            return new Promise<void>((resolve) => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    this.result.coords = [position.coords.latitude, position.coords.longitude];
-                    resolve();
-                }, () => resolve());
-            });
-        } else {
+        if (a.state != 'granted') {
             return;
         }
+
+        return new Promise<void>((resolve) => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.result.coords = [position.coords.latitude, position.coords.longitude];
+                resolve();
+            }, () => resolve());
+        });
     }
 
     /**
@@ -153,13 +152,16 @@ export class DevicePropertiesCollector {
             return;
         }
 
-        // @ts-ignore
-        return navigator.getBattery().then((info: any) => {
+        try {
+            // @ts-ignore
+            const info: any = await navigator.getBattery();
             this.result.bat = {
                 l: info.level * 100,
                 c: info.charging,
             };
-        });
+        } catch (ignore) {
+            // Suppress
+        }
     }
 
 }
