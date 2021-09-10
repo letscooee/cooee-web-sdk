@@ -1,12 +1,31 @@
 {
-    "name": "cooee-web-sdk",
+    "name": "@letscooee/web-sdk",
+    "description": "Hyperpersonalised Mobile/Web App Re-Engagement via Machine Learning",
     "version": "0.0.1",
     "scripts": {
         "lint": "eslint 'src/**'",
         "prepare": "npm run build",
         "build": "tsc",
+        "build:production": "tsc && webpack",
         "serve:old-school": "webpack serve"
     },
+    "main": "dist/cooee-sdk.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/letscooee/cooee-web-sdk.git"
+    },
+    "keywords": [
+        "engagement",
+        "machine-learning",
+        "artificial-intelligence",
+        "templateless-engagement"
+    ],
+    "author": "Cooee <shoutout@letscooee.com> (https://www.letscooee.com/)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/letscooee/cooee-web-sdk/issues"
+    },
+    "homepage": "https://github.com/letscooee/cooee-web-sdk#readme",
     "devDependencies": {
         "@types/ua-parser-js": "^0.7.36",
         "@typescript-eslint/eslint-plugin": "^4.31.0",
