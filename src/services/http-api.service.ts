@@ -97,7 +97,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP('POST', '/v1/user/update', data, headers)
+        this.doHTTP('PUT', '/v1/user/update', data, headers)
             .then((data) => {
                 Log.l('Sent User Data with response', data);
             })

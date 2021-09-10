@@ -74,23 +74,18 @@ export default class CooeeSDK {
     }
 
     /**
-     * Set the given user information and properties to the user's profile.
+     * Set the given user information/properties to the user's profile.
      *
-     * @param {Props} userData       The common user data like name, email.
-     * @param {Props} userProperties The additional user properties.
+     * @param {Props} data The user's information/properties to update.
      */
-    static updateProfile(userData: Props | null, userProperties: Props | null): void {
-        for (const propsKey in userProperties) {
-            if (propsKey.toLowerCase().startsWith('ce ')) {
+    static updateProfile(data: Props): void {
+        for (const key in data) {
+            if (key.toLowerCase().startsWith('ce ')) {
                 throw new Error('User property name cannot start with \'CE \'');
             }
         }
 
-        userData = userData ?? {};
-        userProperties = userProperties ?? {};
-        const userProfile: Props = {userData, userProperties};
-
-        this.INSTANCE.safeHttpCallService.updateProfile(userProfile);
+        this.INSTANCE.safeHttpCallService.updateProfile(data);
     }
 
 }
