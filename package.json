@@ -1,13 +1,16 @@
 {
     "name": "@letscooee/web-sdk",
     "description": "Hyperpersonalised Mobile/Web App Re-Engagement via Machine Learning",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "scripts": {
         "lint": "eslint 'src/**'",
         "prepare": "npm run build",
         "build": "tsc",
         "build:production": "tsc && webpack",
-        "serve:old-school": "webpack serve"
+        "serve:old-school": "webpack serve",
+        "preversion": "git add CHANGELOG.md src/constants.ts",
+        "version": "npm run build:production",
+        "postversion": "git push && git push --tags"
     },
     "main": "dist/cooee-sdk.js",
     "repository": {
