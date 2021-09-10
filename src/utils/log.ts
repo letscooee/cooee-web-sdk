@@ -22,7 +22,7 @@ export class Log {
      *
      * @param {any[]} messages
      */
-    static e(messages: any): void {
+    static e(...messages: any): void {
         console.error(Constants.LOG_PREFIX, ':', ...messages);
     }
 
@@ -31,8 +31,8 @@ export class Log {
      *
      * @param {any[]} messages
      */
-    static w(messages: any[]): void {
-        console.warn(Constants.LOG_PREFIX, ':', messages);
+    static w(...messages: any[]): void {
+        console.warn(Constants.LOG_PREFIX, ':', ...messages);
     }
 
 }

@@ -80,11 +80,11 @@ export class HttpAPIService {
         headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('POST', '/v1/event/track', event, headers)
-            .then((data) => {
-                Log.l('Sent', event.name, 'with response', data);
+            .then(() => {
+                Log.l('Sent', event.name);
             })
             .catch((error) => {
-                Log.e(error);
+                Log.e('Error sending event', error);
             });
     }
 
@@ -98,11 +98,11 @@ export class HttpAPIService {
         headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('PUT', '/v1/user/update', data, headers)
-            .then((data) => {
-                Log.l('Sent User Data with response', data);
+            .then(() => {
+                Log.l('Updated user profile');
             })
             .catch((error) => {
-                Log.e(error);
+                Log.e('Error saving user profile', error);
             });
     }
 

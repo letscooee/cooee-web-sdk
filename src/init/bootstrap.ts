@@ -1,5 +1,6 @@
 import {VisibilityListener} from './visibility-listener';
 import {CommonListeners} from './common-listeners';
+import {ObjectMeddler} from './object-meddler';
 
 /**
  * A one time initializer class which initialises the SDK. This is used internally by the SDK
@@ -16,6 +17,7 @@ export class Bootstrap {
     init(): void {
         new VisibilityListener().listen();
         new CommonListeners().listen();
+        new ObjectMeddler().meddle();
     }
 
 }

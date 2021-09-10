@@ -93,6 +93,6 @@ export default class CooeeSDK {
 /**
  * Self executing function to initialize the SDK.
  */
-(function(): void {
+(function (): void {
     new Bootstrap().init();
 })();
