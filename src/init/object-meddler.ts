@@ -63,9 +63,8 @@ export class ObjectMeddler {
      * @private
      */
     private meddleAccount(): void {
-        const _this = this;
-        this.overwritePush(this.existingSDKObject.account, function () {
-            _this.processAccount(arguments[0]);
+        this.overwritePush(this.existingSDKObject.account, (...args: Array<any>) => {
+            this.processAccount(args[0]);
         });
     }
 
@@ -74,9 +73,8 @@ export class ObjectMeddler {
      * @private
      */
     private meddleEvents(): void {
-        const _this = this;
-        this.overwritePush(this.existingSDKObject.events, function () {
-            _this.processEvent(arguments[0]);
+        this.overwritePush(this.existingSDKObject.events, (...args: Array<any>) => {
+            this.processEvent(args[0]);
         });
     }
 
@@ -85,9 +83,8 @@ export class ObjectMeddler {
      * @private
      */
     private meddleProfile(): void {
-        const _this = this;
-        this.overwritePush(this.existingSDKObject.profile, function () {
-            _this.processProfile(arguments[0]);
+        this.overwritePush(this.existingSDKObject.profile, (...args: Array<any>) => {
+            this.processProfile(args[0]);
         });
     }
 

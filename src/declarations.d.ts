@@ -3,7 +3,7 @@
 export {};
 
 declare global {
-    interface Window {
+    export interface Window {
         CooeeSDK: any;
     }
 }
