@@ -14,7 +14,7 @@ export class RuntimeData {
     private inInactive: boolean = true;
     private lastEnterActive: Date = new Date();
     private lastEnterInactive: Date | null = null;
-    private webAppVersion: string = '';
+    private webAppVersion: string | undefined;
     private isDebug: boolean = false;
 
     /**

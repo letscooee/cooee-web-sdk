@@ -23,13 +23,17 @@ import {Map} from '../types';
  */
 export class ObjectMeddler {
 
-    private readonly existingSDKObject = window.CooeeSDK;
+    private existingSDKObject = window.CooeeSDK;
 
     /**
      * Interfere/replace the <code>push</code> method of JavaScript <code>Array</code> and pass the future data to
      * {@link CooeeSDK}.
      */
     meddle(): void {
+        if (!this.existingSDKObject) {
+            this.existingSDKObject = window.CooeeSDK = {events: [], profile: [], account: []};
+        }
+
         this.existingSDKObject.account = this.existingSDKObject.account ?? [];
         this.existingSDKObject.profile = this.existingSDKObject.profile ?? [];
         this.existingSDKObject.events = this.existingSDKObject.events ?? [];
