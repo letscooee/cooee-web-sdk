@@ -1,7 +1,7 @@
 {
     "name": "@letscooee/web-sdk",
     "description": "Hyperpersonalised Mobile/Web App Re-Engagement via Machine Learning",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "scripts": {
         "lint": "eslint 'src/**'",
         "prepare": "npm run build",

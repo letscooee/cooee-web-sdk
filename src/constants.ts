@@ -7,8 +7,8 @@
 export class Constants {
 
     static API_URL: string = 'https://api.sdk.letscooee.com';
-    static SDK_VERSION: string = '0.0.2';
-    static SDK_VERSION_CODE: number = 2;
+    static SDK_VERSION: string = '0.0.3';
+    static SDK_VERSION_CODE: number = 3;
     static SDK_DEBUG: boolean = false;
 
     static SDK: string = 'WEB';
