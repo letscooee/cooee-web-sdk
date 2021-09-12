@@ -1,6 +1,6 @@
 # Change Log
 
-# 0.0.3
+# 0.0.3, 0.0.4
 
 1. Fix generating token because of missing app version.
 2. Handle scenario when `CooeeSDK` is not initialised.
