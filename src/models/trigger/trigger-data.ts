@@ -1,3 +1,5 @@
+import {Props} from '../../types';
+
 /**
  * This store the payload sent by server to render trigger.
  */
@@ -6,6 +8,8 @@ export class TriggerData {
     // TODO implement this on trigger implementation
     id: string;
     duration: number = 0;
+    pn: Props | undefined;
+    ian: Props | undefined;
 
     /**
      * Public constructor
