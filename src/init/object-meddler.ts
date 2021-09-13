@@ -24,6 +24,7 @@ import {Map} from '../types';
 export class ObjectMeddler {
 
     private existingSDKObject = window.CooeeSDK;
+    private hooksAdded = false;
 
     /**
      * Interfere/replace the <code>push</code> method of JavaScript <code>Array</code> and pass the future data to
@@ -34,6 +35,10 @@ export class ObjectMeddler {
             this.existingSDKObject = window.CooeeSDK = {events: [], profile: [], account: []};
         }
 
+        if (this.hooksAdded) {
+            return;
+        }
+
         this.existingSDKObject.account = this.existingSDKObject.account ?? [];
         this.existingSDKObject.profile = this.existingSDKObject.profile ?? [];
         this.existingSDKObject.events = this.existingSDKObject.events ?? [];
@@ -41,6 +46,7 @@ export class ObjectMeddler {
         this.meddleAccount();
         this.meddleEvents();
         this.meddleProfile();
+        this.hooksAdded = true;
 
         this.existingSDKObject.account.forEach(this.processAccount);
         this.existingSDKObject.events.forEach(this.processEvent);
