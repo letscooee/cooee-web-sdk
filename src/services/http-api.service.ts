@@ -84,8 +84,9 @@ export class HttpAPIService {
         this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)
             .then((data: EventResponse) => {
                 Log.l('Sent', event.name);
+
                 if (data.triggerData) {
-                    new InAppRenderer().render(data.triggerData.ian!);
+                    new InAppRenderer().render(data.triggerData.ian);
                 }
             })
             .catch((error) => {

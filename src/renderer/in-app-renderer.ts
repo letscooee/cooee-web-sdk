@@ -26,7 +26,6 @@ export class InAppRenderer extends BlockProcessor {
      */
     render(ian: Props): void {
         this.ian = ian;
-        Log.l('IAN', ian);
 
         try {
             this.startRendering();
@@ -53,18 +52,18 @@ export class InAppRenderer extends BlockProcessor {
      * @private
      */
     private renderLayers(): void {
-        this.ian?.layers?.forEach((layer: any, index: number) => {
+        this.ian?.layers?.forEach((layer: Props, index: number) => {
             this.renderLayer(layer, index);
         });
     }
 
     /**
      * Render individual layer from layers list in {@link ian} block.
-     * @param {any} layerData style and attributes data of the layer
-     * @param {any} index
+     * @param {Props} layerData style and attributes data of the layer
+     * @param {number} index
      * @private
      */
-    private renderLayer(layerData: any, index: number): void {
+    private renderLayer(layerData: Props, index: number): void {
         const layerElement = this.renderer.createElement('div');
         this.renderer.setAttribute(layerElement, 'class', 'layer');
 
@@ -77,7 +76,7 @@ export class InAppRenderer extends BlockProcessor {
         layerData.size.display = layerData.size.display ?? 'FLEX';
 
         this.processCommonBlocks(layerElement, layerData);
-        layerData.children?.forEach((elementData: any, elementIndex: number) => {
+        layerData.children?.forEach((elementData: Props, elementIndex: number) => {
             const newElement = this.renderElement(layerElement, elementData);
 
             const id = `layer[${index}].element[${elementIndex}]-` + elementData.type?.toLowerCase();
@@ -88,11 +87,11 @@ export class InAppRenderer extends BlockProcessor {
     /**
      * Render element from layers list in {@link ian} block.
      * @param {HTMLElement} el element to be rendered
-     * @param {any} elementData style and attributes data of the element
+     * @param {Props} elementData style and attributes data of the element
      * @return {HTMLElement} rendered element
      * @private
      */
-    private renderElement(el: HTMLElement, elementData: any): HTMLElement {
+    private renderElement(el: HTMLElement, elementData: Props): HTMLElement {
         let newElement: HTMLElement;
 
         if (elementData.type === 'TEXT') {
@@ -116,7 +115,7 @@ export class InAppRenderer extends BlockProcessor {
             elementData.size = elementData.size ?? {};
             elementData.size.display = elementData.size.display ?? 'FLEX';
 
-            elementData.children?.forEach((newElementData: any) => {
+            elementData.children?.forEach((newElementData: Props) => {
                 this.renderElement(newElement, newElementData);
             });
         } else {
@@ -132,16 +131,16 @@ export class InAppRenderer extends BlockProcessor {
 
     /**
      * Render text element from layers list in {@link ian} block.
-     * @param {any} elementData style and attributes data of the text element
+     * @param {Props} elementData style and attributes data of the text element
      * @return {HTMLDivElement} rendered text element in a {@link HTMLDivElement}
      * @private
      */
-    private renderTextElement(elementData: any): HTMLDivElement {
+    private renderTextElement(elementData: Props): HTMLDivElement {
         const newElement = this.renderer.createElement('div');
         this.processCommonBlocks(newElement, elementData);
 
         if (elementData.parts) {
-            elementData.parts.forEach((partData: any) => {
+            elementData.parts.forEach((partData: Props) => {
                 const newPartElement = this.renderer.createElement('span');
                 newPartElement.innerHTML = partData.text;
                 this.processCommonBlocks(newPartElement, partData);

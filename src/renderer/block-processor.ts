@@ -1,6 +1,7 @@
 import {Log} from '../utils/log';
-import hexToRgba from 'hex-to-rgba';
 import {Renderer} from './renderer';
+import {Props} from '../types';
+import hexToRgba from 'hex-to-rgba';
 
 /**
  * Process all the block of in-app
@@ -27,10 +28,10 @@ export class BlockProcessor {
     /**
      * Process all the common blocks that can be placed in layer and container
      * @param {HTMLElement} el element to be processed
-     * @param {any} data style and attributes data of the element
+     * @param {Props} data style and attributes data of the element
      * @private
      */
-    protected processCommonBlocks(el: HTMLElement, data: any): void {
+    protected processCommonBlocks(el: HTMLElement, data: Props): void {
         this.processSizeBlock(el, data.size);
         this.processPositionBlock(el, data.position);
         this.processBorderBlock(el, data.border);
@@ -41,16 +42,16 @@ export class BlockProcessor {
         this.processTextAlignmentBlock(el, data.alignment);
         this.processOverflowBlock(el, data.overflow);
         this.processTransformBlock(el, data.transform);
-        this.registerAction(el, data.action);
+        this.registerAction(el, data.click);
     }
 
     /**
      * Process position block of the element
      * @param {HTMLElement} el element to be processed for position
-     * @param {any} position position data for the element
+     * @param {Props} position position data for the element
      * @private
      */
-    private processPositionBlock(el: HTMLElement, position: any): void {
+    private processPositionBlock(el: HTMLElement, position: Props): void {
         if (!position) {
             return;
         }
@@ -66,10 +67,10 @@ export class BlockProcessor {
     /**
      * Process border block of the element
      * @param {HTMLElement} el element to be processed for border
-     * @param {any} border border data for the element
+     * @param {Props} border border data for the element
      * @private
      */
-    private processBorderBlock(el: HTMLElement, border: any): void {
+    private processBorderBlock(el: HTMLElement, border: Props): void {
         if (!border) {
             return;
         }
@@ -91,10 +92,10 @@ export class BlockProcessor {
     /**
      * Process space block of the element which include margin and padding.
      * @param {HTMLElement} el element to be processed for space
-     * @param {any} space space data for the element
+     * @param {Props} space space data for the element
      * @private
      */
-    private processSpaceBlock(el: HTMLElement, space: any): void {
+    private processSpaceBlock(el: HTMLElement, space: Props): void {
         if (!space) {
             return;
         }
@@ -115,10 +116,10 @@ export class BlockProcessor {
     /**
      * Process font block of the element
      * @param {HTMLElement} el element to be processed for font
-     * @param {any} font font data for the element
+     * @param {Props} font font data for the element
      * @private
      */
-    private processFontBlock(el: HTMLElement, font: any): void {
+    private processFontBlock(el: HTMLElement, font: Props): void {
         if (!font) {
             return;
         }
@@ -133,10 +134,10 @@ export class BlockProcessor {
     /**
      * Process size block of the element
      * @param {HTMLElement} el element to be processed for size
-     * @param {any} size size data for the element
+     * @param {Props} size size data for the element
      * @private
      */
-    private processSizeBlock(el: HTMLElement, size: any): void {
+    private processSizeBlock(el: HTMLElement, size: Props): void {
         if (!size) {
             size = {};
         }
@@ -196,10 +197,10 @@ export class BlockProcessor {
     /**
      * Process text alignment block of the element
      * @param {HTMLElement} el element to be processed for text alignment
-     * @param {any} alignment alignment data for the element
+     * @param {Props} alignment alignment data for the element
      * @private
      */
-    private processTextAlignmentBlock(el: HTMLElement, alignment: any): void {
+    private processTextAlignmentBlock(el: HTMLElement, alignment: Props): void {
         if (!alignment) {
             return;
         }
@@ -210,10 +211,10 @@ export class BlockProcessor {
     /**
      * Process overflow block of the element
      * @param {HTMLElement} el element to be processed for overflow
-     * @param {any} overflowData overflow data for the element
+     * @param {Props} overflowData overflow data for the element
      * @private
      */
-    private processOverflowBlock(el: HTMLElement, overflowData: any): void {
+    private processOverflowBlock(el: HTMLElement, overflowData: Props): void {
         if (!overflowData) {
             return;
         }
@@ -225,10 +226,10 @@ export class BlockProcessor {
     /**
      * Process transform block of the element
      * @param {HTMLElement} el element to be processed for transform
-     * @param {any} transform transform data for the element
+     * @param {Props} transform transform data for the element
      * @private
      */
-    private processTransformBlock(el: HTMLElement, transform: any): void {
+    private processTransformBlock(el: HTMLElement, transform: Props): void {
         if (!transform) {
             return;
         }
@@ -241,10 +242,10 @@ export class BlockProcessor {
     /**
      * Register click-to-action(CTA) block of the element
      * @param {HTMLElement} el element to be processed for CTA
-     * @param {any} action action data for the element
+     * @param {Props} action action data for the element
      * @private
      */
-    private registerAction(el: HTMLElement, action: any): void {
+    private registerAction(el: HTMLElement, action: Props): void {
         if (!action) {
             return;
         }
@@ -256,10 +257,10 @@ export class BlockProcessor {
 
     /**
      * Perform CTA on element click event
-     * @param {any} _action action data
+     * @param {Props} _action action data
      * @private
      */
-    private performAction(_action: any): void {
+    private performAction(_action: Props): void {
         // TODO Add CTAs.
         // Temporary
         if (_action.external) {
@@ -286,10 +287,10 @@ export class BlockProcessor {
     /**
      * Process background block of the element
      * @param {HTMLElement} el element to be processed for background
-     * @param {any} bg background data for the element
+     * @param {Props} bg background data for the element
      * @private
      */
-    private processBgBlock(el: HTMLElement, bg: any): void {
+    private processBgBlock(el: HTMLElement, bg: Props): void {
         if (!bg) {
             return;
         }
@@ -334,11 +335,11 @@ export class BlockProcessor {
     /**
      * Process colour block of the element
      * @param {HTMLElement} el element to be processed for colour
-     * @param {any} colour colour data of the element
+     * @param {Props} colour colour data of the element
      * @param {string} attribute attribute on which colour data need to be applied
      * @private
      */
-    private processColourBlock(el: HTMLElement, colour: any, attribute = 'color'): void {
+    private processColourBlock(el: HTMLElement, colour: Props, attribute = 'color'): void {
         if (!colour) {
             return;
         }

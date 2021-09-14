@@ -8,17 +8,26 @@ export class TriggerData {
     // TODO implement this on trigger implementation
     id: string;
     duration: number = 0;
-    pn: Props | undefined;
-    ian: Props | undefined;
+    version: number;
+    engagementID: string;
+    internal: boolean;
+
+    pn: Props;
+    ian: Props;
 
     /**
      * Public constructor
      *
-     * @param {any} data payload
+     * @param {Props} data payload
      */
-    constructor(data: any) {
+    constructor(data: Props) {
         this.id = data.id;
         this.duration = data.duration;
+        this.version = data.version;
+        this.engagementID = data.engagementID;
+        this.internal = data.internal;
+        this.pn = data.pn;
+        this.ian = data.ian;
     }
 
 }
