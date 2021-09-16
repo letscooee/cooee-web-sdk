@@ -1,6 +1,7 @@
 import {Props} from '../types';
 import {Log} from '../utils/log';
 import {BlockProcessor} from './block-processor';
+import {TriggerData} from '../models/trigger/trigger-data';
 
 /**
  * Renders In App trigger
@@ -22,10 +23,12 @@ export class InAppRenderer extends BlockProcessor {
 
     /**
      * Renders in-app trigger from payload received
-     * @param {Props} ian in-app block from {@link TriggerData}
+     * @param {TriggerData} triggerData {@link TriggerData}
      */
-    render(ian: Props): void {
-        this.ian = ian;
+    render(triggerData: TriggerData): void {
+        this.triggerData = triggerData;
+        this.ian = triggerData.ian;
+        this.startTime = new Date().getTime();
 
         try {
             this.startRendering();

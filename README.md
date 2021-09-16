@@ -72,7 +72,9 @@ Cooee SDK supports callback on the click of in-app notifications actions by retu
 pairs i.e. objects in JavaScript.
 
 ```javascript
-document.addEventListener('onCooeeCTA', function (payload) {
+document.addEventListener('onCooeeCTA', function (event) {
+    const payload = event.detail;
+    
     if (!payload) return;
 
     if (payload.actionType === "VIEW_ITEM") {

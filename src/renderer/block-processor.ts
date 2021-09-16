@@ -2,6 +2,11 @@ import {Log} from '../utils/log';
 import {Renderer} from './renderer';
 import {Props} from '../types';
 import hexToRgba from 'hex-to-rgba';
+import {Constants} from '../constants';
+import {SafeHttpService} from '../services/safe-http-service';
+import {Event} from '../models/event/event';
+import {TriggerData} from '../models/trigger/trigger-data';
+import UAParser from 'ua-parser-js';
 
 /**
  * Process all the block of in-app
@@ -10,7 +15,10 @@ import hexToRgba from 'hex-to-rgba';
  */
 export class BlockProcessor {
 
-    protected renderer: Renderer;
+    protected readonly renderer: Renderer;
+    protected readonly apiService: SafeHttpService;
+    protected triggerData: TriggerData | undefined;
+    protected startTime: number = 0;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
@@ -23,6 +31,8 @@ export class BlockProcessor {
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
+
+        this.apiService = SafeHttpService.getInstance();
     }
 
     /**
@@ -261,27 +271,170 @@ export class BlockProcessor {
      * @private
      */
     private performAction(_action: Props): void {
-        // TODO Add CTAs.
-        // Temporary
         if (_action.external) {
             window.open(_action.external.url, '_blank')?.focus();
         }
 
-        if (_action.kv) {
-            // TODO Send key-value to client
+        // iab -> in-app browser or iFrame in web
+        if (_action.iab) {
+            const root = this.renderer.getElementById(Constants.IN_APP_CONTAINER_NAME)! as HTMLDivElement;
+            const iFrameDiv = this.createIFrameContainer();
+
+            this.createIFrameElement(iFrameDiv, _action.iab.url);
+            // Create and render close button for iFrame with anchor tag
+            this.createAnchorElement(root, iFrameDiv);
+            this.renderer.appendChild(root, iFrameDiv);
         }
 
         if (_action.up) {
-            // TODO Send user property back to server
+            this.apiService.updateProfile(_action.up);
+        }
+
+        if (_action.kv) {
+            document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': _action.kv}));
         }
 
         if (_action.prompts) {
-            // TODO Ask for location and/or push notification permission
+            // TODO test in mobile browsers
+            console.log('prompts', _action.prompts);
+            for (const permission of _action.prompts) {
+                if (permission === 'LOCATION') {
+                    this.promptLocationPermission();
+                }
+
+                if (permission === 'PUSH') {
+                    this.promptPushNotificationPermission();
+                }
+            }
         }
 
         if (_action.close) {
             this.renderer.removeInApp();
+
+            const diffInSeconds = (new Date().getTime() - this.startTime) / 1000;
+
+            const eventProps: Props = {
+                'triggerID': this.triggerData?.id,
+                'Close Behaviour': 'CTA',
+                'Duration': diffInSeconds,
+            };
+            this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
         }
+
+        // Navigator.share only works in mobile browsers and with https urls.
+        // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
+        if (_action.share) {
+            // TODO test in mobile browsers
+            const share = navigator.share;
+
+            if (!share) {
+                Log.w('Navigator.share is not compatible with this browser');
+                return;
+            }
+
+            share({'text': _action.share.text, 'title': 'Share'} as ShareData)
+                .then((r) => console.log(r));
+        }
+    }
+
+    /**
+     * Create and return iFrame container for iab CTA.
+     * @return {HTMLDivElement} iFrame container.
+     * @private
+     */
+    private createIFrameContainer(): HTMLDivElement {
+        const iFrameDiv = this.renderer.createElement('div') as HTMLDivElement;
+        this.renderer.setAttribute(iFrameDiv, 'class', 'iframe-container');
+        this.renderer.setAttribute(iFrameDiv, 'id', 'iframe-container');
+        this.renderer.setStyle(iFrameDiv, 'width', '100%');
+        this.renderer.setStyle(iFrameDiv, 'height', '100%');
+
+        this.renderer.setStyle(iFrameDiv, 'position', 'absolute');
+        this.renderer.setStyle(iFrameDiv, 'top', '0px');
+        this.renderer.setStyle(iFrameDiv, 'left', '0px');
+
+        return iFrameDiv;
+    }
+
+    /**
+     * Create and return iFrame element for iab CTA.
+     * @param {HTMLDivElement} iFrameDiv iframe container
+     * @param {string} src source url to redirect
+     * @return {HTMLIFrameElement} iFrame element
+     * @private
+     */
+    private createIFrameElement(iFrameDiv: HTMLDivElement, src: string): HTMLIFrameElement {
+        const iFrameElement = this.renderer.createElement('iframe') as HTMLIFrameElement;
+        this.renderer.setStyle(iFrameElement, 'width', '100%');
+        this.renderer.setStyle(iFrameElement, 'height', '100%');
+        this.renderer.setAttribute(iFrameElement, 'src', src);
+        this.renderer.setAttribute(iFrameElement, 'frameBorder', '0');
+
+        this.renderer.appendChild(iFrameDiv, iFrameElement);
+
+        return iFrameElement;
+    }
+
+    /**
+     * Create and return close button for iFrame element
+     * @param {HTMLDivElement} root root container of in-app
+     * @param {HTMLDivElement} iframeDiv iframe container
+     * @return {HTMLAnchorElement} close button
+     * @private
+     */
+    private createAnchorElement(root: HTMLDivElement, iframeDiv: HTMLDivElement): HTMLAnchorElement {
+        const iFrameClose = this.renderer.createElement('a') as HTMLAnchorElement;
+        this.renderer.setStyle(iFrameClose, 'position', 'absolute');
+        this.renderer.setStyle(iFrameClose, 'top', '0px');
+        this.renderer.setStyle(iFrameClose, 'right', '0px');
+
+        iFrameClose.href = '#';
+        iFrameClose.innerHTML = 'Close';
+        iFrameClose.onclick = () => {
+            root.removeChild(iframeDiv);
+        };
+
+        this.renderer.appendChild(iframeDiv, iFrameClose);
+
+        return iFrameClose;
+    }
+
+    /**
+     * This prompts for the location permission from the user and if granted sends <code>coords</code>
+     * back to server as user properties.
+     * @private
+     */
+    private promptLocationPermission(): void {
+        if (!navigator.geolocation || !navigator.permissions) {
+            return;
+        }
+
+        // TODO Need device endpoints to update this property
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.apiService.updateProfile({'coords': [position.coords.latitude, position.coords.longitude]});
+        });
+    }
+
+    /**
+     * This prompts for the push notification permission from the user.
+     * @private
+     */
+    private promptPushNotificationPermission(): void {
+        if (!('Notification' in window)) {
+            Log.w('This browser does not support desktop notification');
+            return;
+        }
+
+        // TODO Need device endpoints to update this property
+        if (Notification.permission !== 'default') {
+            this.apiService.updateProfile({'pnPerm': Notification.permission});
+            return;
+        }
+
+        Notification.requestPermission()
+            .then((permission) => {
+                this.apiService.updateProfile({'pnPerm': permission});
+            });
     }
 
     /**
@@ -295,8 +448,13 @@ export class BlockProcessor {
             return;
         }
 
+        let prefix = '';
+        if (new UAParser().getBrowser().name?.toLowerCase().includes('safari')) {
+            prefix = '-webkit-';
+        }
+
         if (bg.glossy) {
-            this.renderer.setStyle(el, 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(el, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
             if (bg.glossy.colour) {
                 this.processColourBlock(el, bg.glossy.colour, 'background');
@@ -327,7 +485,7 @@ export class BlockProcessor {
             this.renderer.setStyle(el, 'background-size', 'cover');
 
             if (bg.img.alpha) {
-                this.renderer.setStyle(el, 'backdrop-filter', `opacity(${bg.img.alpha})`);
+                this.renderer.setStyle(el, prefix + 'backdrop-filter', `opacity(${bg.img.alpha})`);
             }
         }
     }

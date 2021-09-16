@@ -100,11 +100,20 @@ export class Renderer {
      * Remove InApp trigger.
      */
     public removeInApp(): void {
-        const rootDiv = this.doc.getElementById('cooee-wrapper') as HTMLDivElement;
+        const rootDiv = this.doc.getElementById(Constants.IN_APP_CONTAINER_NAME) as HTMLDivElement;
 
         if (rootDiv) {
             rootDiv.parentElement!.removeChild(rootDiv);
         }
+    }
+
+    /**
+     * Get element by tag id
+     * @param {string} id id of the element
+     * @return {HTMLElement | null} returns element if present, otherwise null
+     */
+    public getElementById(id: string): HTMLElement | null {
+        return this.doc.getElementById(id);
     }
 
 }
