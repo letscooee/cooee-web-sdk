@@ -10,12 +10,12 @@ import {GroupElement} from '../models/trigger/elements';
 export class GroupRenderer extends BlockRenderer {
 
     /**
-     * Render button element from layers list in {@link ian} block.
-     * @param {GroupElement} elementData style and attributes data of the text element
+     * Render group element from layers list in {@link InAppTrigger} block.
+     * @param {HTMLElement} parent
+     * @param {GroupElement} elementData style and attributes data of the group element
      * @return {HTMLElement} rendered group element
-     * @private
      */
-    public render(elementData: GroupElement): HTMLElement {
+    public render(parent: HTMLElement, elementData: GroupElement): HTMLElement {
         const newElement = this.blockProcessor.renderer.createElement('div');
         // By default the parents will be relative
         this.blockProcessor.renderer.setStyle(newElement, 'position', 'relative');
@@ -25,6 +25,7 @@ export class GroupRenderer extends BlockRenderer {
         elementData.size.display = elementData.size.display ?? 'FLEX';
 
         this.commonRenderingFunction(newElement, elementData);
+        this.blockProcessor.renderer.appendChild(parent, newElement);
 
         return newElement;
     }

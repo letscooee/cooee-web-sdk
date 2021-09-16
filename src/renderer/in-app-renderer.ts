@@ -1,9 +1,11 @@
 import {Log} from '../utils/log';
-import {BlockProcessor} from './block-processor';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {Layer} from '../models/trigger/inapp/layer';
 import {BaseElement, TextElement, ImageElement, GroupElement, ButtonElement} from '../models/trigger/elements/';
 import {TextRenderer, ImageRenderer, ButtonRenderer, GroupRenderer} from './';
+import {ContainerRenderer} from './container-renderer';
+import {RootContainerRenderer} from './root-container-renderer';
+import {LayerRenderer} from './layer-renderer';
 
 /**
  * Renders In App trigger
@@ -11,7 +13,7 @@ import {TextRenderer, ImageRenderer, ButtonRenderer, GroupRenderer} from './';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class InAppRenderer extends BlockProcessor {
+export class InAppRenderer {
 
     private readonly rootContainer: HTMLDivElement;
     private ian: InAppTrigger | undefined;
@@ -20,8 +22,7 @@ export class InAppRenderer extends BlockProcessor {
      * Public constructor
      */
     constructor() {
-        super();
-        this.rootContainer = this.renderer.getRootContainer();
+        this.rootContainer = new RootContainerRenderer().render() as HTMLDivElement;
     }
 
     /**
@@ -68,23 +69,11 @@ export class InAppRenderer extends BlockProcessor {
      * @private
      */
     private renderLayer(layerData: Layer, index: number): void {
-        const layerElement = this.renderer.createElement('div');
-        this.renderer.setAttribute(layerElement, 'class', 'layer');
-
-        // By default the parents will be relative
-        this.renderer.setStyle(layerElement, 'position', 'relative');
-        this.renderer.appendChild(this.rootContainer, layerElement);
-
-        // Enforcing size to be FLEX for layers (because Android has challenges in normal layouts)
-        layerData.size = layerData.size ?? {};
-        layerData.size.display = layerData.size.display ?? 'FLEX';
-
-        this.processCommonBlocks(layerElement, layerData);
+        const layerElement = new LayerRenderer().render(this.rootContainer, layerData);
         layerData.children?.forEach((elementData: BaseElement, elementIndex: number) => {
             const newElement = this.renderElement(layerElement, elementData);
 
-            const id = `layer[${index}].element[${elementIndex}]-` + elementData.type?.toLowerCase();
-            this.renderer.setAttribute(newElement, 'id', id);
+            newElement.id = `layer[${index}].element[${elementIndex}]-` + elementData.type?.toLowerCase();
         });
     }
 
@@ -99,14 +88,14 @@ export class InAppRenderer extends BlockProcessor {
         let newElement: HTMLElement;
 
         if (elementData.type === 'TEXT') {
-            newElement = new TextRenderer().render(elementData as TextElement);
+            newElement = new TextRenderer().render(el, elementData as TextElement);
         } else if (elementData.type === 'IMAGE') {
-            newElement = new ImageRenderer().render(elementData as ImageElement);
+            newElement = new ImageRenderer().render(el, elementData as ImageElement);
         } else if (elementData.type === 'BUTTON') {
-            newElement = new ButtonRenderer().render(elementData as ButtonElement);
+            newElement = new ButtonRenderer().render(el, elementData as ButtonElement);
         } else if (elementData.type === 'GROUP') {
             const groupElement = elementData as GroupElement;
-            newElement = new GroupRenderer().render(groupElement);
+            newElement = new GroupRenderer().render(el, groupElement);
 
             groupElement.children?.forEach((newElementData: BaseElement) => {
                 this.renderElement(newElement, newElementData);
@@ -114,8 +103,6 @@ export class InAppRenderer extends BlockProcessor {
         } else {
             throw new DOMException('Unsupported element type- ' + elementData.type);
         }
-
-        this.renderer.appendChild(el, newElement);
 
         return newElement;
     }
@@ -130,7 +117,7 @@ export class InAppRenderer extends BlockProcessor {
             return;
         }
 
-        this.processCommonBlocks(this.rootContainer, container);
+        new ContainerRenderer().render(this.rootContainer, container);
     }
 
 }

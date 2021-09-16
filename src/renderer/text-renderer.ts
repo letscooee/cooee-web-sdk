@@ -11,13 +11,12 @@ export class TextRenderer extends BlockRenderer {
 
     /**
      * Render text element from layers list in {@link ian} block.
+     * @param {HTMLElement} parent
      * @param {TextElement} elementData style and attributes data of the text element
      * @return {HTMLDivElement} rendered text element in a {@link HTMLDivElement}
-     * @private
      */
-    public render(elementData: TextElement): HTMLDivElement {
+    public render(parent: HTMLElement, elementData: TextElement): HTMLDivElement {
         const newElement = this.blockProcessor.renderer.createElement('div');
-        this.blockProcessor.processCommonBlocks(newElement, elementData);
 
         if (elementData.parts) {
             elementData.parts.forEach((partData: TextElement) => {
@@ -31,6 +30,7 @@ export class TextRenderer extends BlockRenderer {
         }
 
         this.commonRenderingFunction(newElement, elementData);
+        this.blockProcessor.renderer.appendChild(parent, newElement);
 
         return newElement as HTMLDivElement;
     }

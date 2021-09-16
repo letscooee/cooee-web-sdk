@@ -9,7 +9,7 @@ import {BaseElement} from '../models/trigger/elements';
  */
 export abstract class BlockRenderer {
 
-    blockProcessor: BlockProcessor;
+    protected blockProcessor: BlockProcessor;
 
     /**
      * Public constructor
@@ -18,16 +18,19 @@ export abstract class BlockRenderer {
         this.blockProcessor = new BlockProcessor();
     }
 
-    abstract render(element: BaseElement): HTMLElement;
+    abstract render(parent: HTMLElement, element: BaseElement | null): HTMLElement;
 
     /**
      * Process all the common block in in-app.
      * @param {HTMLElement} el element to be processed
      * @param {BaseElement} baseElement style and attributes data of the element
      */
-    commonRenderingFunction(el: HTMLElement, baseElement: BaseElement): void {
+    protected commonRenderingFunction(el: HTMLElement, baseElement: BaseElement): void {
         this.blockProcessor.processCommonBlocks(el, baseElement);
-        el.classList.add(baseElement.type);
+
+        if (baseElement.type) {
+            el.classList.add(baseElement.type);
+        }
     }
 
 }
