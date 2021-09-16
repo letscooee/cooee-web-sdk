@@ -1,4 +1,5 @@
 import {Props} from '../../types';
+import {InAppTrigger} from './inapp/in-app-trigger';
 
 /**
  * This store the payload sent by server to render trigger.
@@ -13,7 +14,7 @@ export class TriggerData {
     internal: boolean;
 
     pn: Props;
-    ian: Props;
+    ian: InAppTrigger;
 
     /**
      * Public constructor

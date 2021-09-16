@@ -4,6 +4,7 @@ import {Constants} from '../constants';
  * Utility class for creating and rendering elements.
  *
  * @author Abhishek Taparia
+ * @version 0.0.5
  */
 export class Renderer {
 
@@ -17,8 +18,8 @@ export class Renderer {
         this.removeInApp();
 
         const rootDiv = this.createElement('div') as HTMLDivElement;
-        this.setAttribute(rootDiv, 'class', Constants.IN_APP_CONTAINER_NAME);
-        this.setAttribute(rootDiv, 'id', Constants.IN_APP_CONTAINER_NAME);
+        rootDiv.id = Constants.IN_APP_CONTAINER_NAME;
+        rootDiv.classList.add(Constants.IN_APP_CONTAINER_NAME);
 
         this.setStyle(rootDiv, 'position', 'absolute');
         this.setStyle(rootDiv, 'top', '0px');
@@ -71,19 +72,16 @@ export class Renderer {
      */
     public setStyle(element: HTMLElement, styleName: string, value: any): void {
         // Return if style or value is null or undefined
-        if (!styleName || value == null) {
+        if (!styleName) {
             return;
         }
 
-        let style = element.getAttribute('style');
-
-        // Initialize if style is not previously initialized
-        if (!style) {
-            style = '';
+        if (!value) {
+            element.style.removeProperty(styleName);
+            return;
         }
 
-        style += styleName + ': ' + value + '; ';
-        element.setAttribute('style', style);
+        element.style.setProperty(styleName, value);
     }
 
     /**
@@ -100,7 +98,7 @@ export class Renderer {
      * Remove InApp trigger.
      */
     public removeInApp(): void {
-        const rootDiv = this.doc.getElementById('cooee-wrapper') as HTMLDivElement;
+        const rootDiv = this.doc.getElementById(Constants.IN_APP_CONTAINER_NAME) as HTMLDivElement;
 
         if (rootDiv) {
             rootDiv.parentElement!.removeChild(rootDiv);

@@ -1,16 +1,23 @@
 import {Log} from '../utils/log';
 import {Renderer} from './renderer';
-import {Props} from '../types';
 import hexToRgba from 'hex-to-rgba';
+import {BaseElement, BaseTextElement} from '../models/trigger/elements';
+import UAParser from 'ua-parser-js';
+import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
+import {
+    Size, Position, Border, Background, Spacing, Overflow, Transform,
+    ClickAction, Font, Colour, Alignment,
+} from '../models/trigger/blocks';
 
 /**
  * Process all the block of in-app
  *
  * @author Abhishek Taparia
+ * @version 0.0.5
  */
 export class BlockProcessor {
 
-    protected renderer: Renderer;
+    public renderer: Renderer;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
@@ -28,30 +35,34 @@ export class BlockProcessor {
     /**
      * Process all the common blocks that can be placed in layer and container
      * @param {HTMLElement} el element to be processed
-     * @param {Props} data style and attributes data of the element
+     * @param {BaseElement} baseElement style and attributes data of the element
      * @private
      */
-    protected processCommonBlocks(el: HTMLElement, data: Props): void {
-        this.processSizeBlock(el, data.size);
-        this.processPositionBlock(el, data.position);
-        this.processBorderBlock(el, data.border);
-        this.processBgBlock(el, data.bg);
-        this.processSpaceBlock(el, data.spacing);
-        this.processFontBlock(el, data.font);
-        this.processColourBlock(el, data.colour);
-        this.processTextAlignmentBlock(el, data.alignment);
-        this.processOverflowBlock(el, data.overflow);
-        this.processTransformBlock(el, data.transform);
-        this.registerAction(el, data.click);
+    public processCommonBlocks(el: HTMLElement, baseElement: BaseElement): void {
+        this.processSizeBlock(el, baseElement.size);
+        this.processPositionBlock(el, baseElement.position);
+        this.processBorderBlock(el, baseElement.border);
+        this.processBgBlock(el, baseElement.bg);
+        this.processSpaceBlock(el, baseElement.spacing);
+        this.processOverflowBlock(el, baseElement.overflow);
+        this.processTransformBlock(el, baseElement.transform);
+        this.registerAction(el, baseElement.click);
+
+        if (baseElement.type === 'BUTTON' || baseElement.type === 'TEXT') {
+            const baseTextElement = baseElement as BaseTextElement;
+            this.processFontBlock(el, baseTextElement.font);
+            this.processColourBlock(el, baseTextElement.colour);
+            this.processTextAlignmentBlock(el, baseTextElement.alignment);
+        }
     }
 
     /**
      * Process position block of the element
      * @param {HTMLElement} el element to be processed for position
-     * @param {Props} position position data for the element
+     * @param {Position} position position data for the element
      * @private
      */
-    private processPositionBlock(el: HTMLElement, position: Props): void {
+    private processPositionBlock(el: HTMLElement, position: Position): void {
         if (!position) {
             return;
         }
@@ -67,16 +78,18 @@ export class BlockProcessor {
     /**
      * Process border block of the element
      * @param {HTMLElement} el element to be processed for border
-     * @param {Props} border border data for the element
+     * @param {Border} border border data for the element
      * @private
      */
-    private processBorderBlock(el: HTMLElement, border: Props): void {
+    private processBorderBlock(el: HTMLElement, border: Border): void {
         if (!border) {
             return;
         }
+
         if (border.radius) {
             this.renderer.setStyle(el, 'border-radius', border.radius);
         }
+
         if (border.width) {
             this.renderer.setStyle(el, 'border-width', border.width);
             this.renderer.setStyle(el, 'border-style', border.style?.toLowerCase() ?? 'solid');
@@ -92,10 +105,10 @@ export class BlockProcessor {
     /**
      * Process space block of the element which include margin and padding.
      * @param {HTMLElement} el element to be processed for space
-     * @param {Props} space space data for the element
+     * @param {Spacing} space space data for the element
      * @private
      */
-    private processSpaceBlock(el: HTMLElement, space: Props): void {
+    private processSpaceBlock(el: HTMLElement, space: Spacing): void {
         if (!space) {
             return;
         }
@@ -116,10 +129,10 @@ export class BlockProcessor {
     /**
      * Process font block of the element
      * @param {HTMLElement} el element to be processed for font
-     * @param {Props} font font data for the element
+     * @param {Font} font font data for the element
      * @private
      */
-    private processFontBlock(el: HTMLElement, font: Props): void {
+    private processFontBlock(el: HTMLElement, font: Font): void {
         if (!font) {
             return;
         }
@@ -134,12 +147,12 @@ export class BlockProcessor {
     /**
      * Process size block of the element
      * @param {HTMLElement} el element to be processed for size
-     * @param {Props} size size data for the element
+     * @param {Size} size size data for the element
      * @private
      */
-    private processSizeBlock(el: HTMLElement, size: Props): void {
+    private processSizeBlock(el: HTMLElement, size: Size): void {
         if (!size) {
-            size = {};
+            return;
         }
 
         const display = size.display ?? 'BLOCK';
@@ -164,15 +177,7 @@ export class BlockProcessor {
                 }
             }
 
-            if (size.width.includes('vw')) {
-                const unit = parseInt(size.width.replace('vw', ''));
-                this.renderer.setStyle(el, 'width', (this.screenWidth * unit / 100) + 'px');
-            } else if (size.width.includes('vh')) {
-                const unit = parseInt(size.width.replace('vh', ''));
-                this.renderer.setStyle(el, 'width', (this.screenHeight * unit / 100) + 'px');
-            } else {
-                this.renderer.setStyle(el, 'width', size.width);
-            }
+            this.renderer.setStyle(el, 'width', size.width);
         }
 
         if (size.height) {
@@ -182,25 +187,17 @@ export class BlockProcessor {
                 }
             }
 
-            if (size.height.includes('vw')) {
-                const unit = parseInt(size.height.replace('vw', ''));
-                this.renderer.setStyle(el, 'height', (this.screenWidth * unit / 100) + 'px');
-            } else if (size.height.includes('vh')) {
-                const unit = parseInt(size.height.replace('vh', ''));
-                this.renderer.setStyle(el, 'height', (this.screenHeight * unit / 100) + 'px');
-            } else {
-                this.renderer.setStyle(el, 'height', size.height);
-            }
+            this.renderer.setStyle(el, 'height', size.height);
         }
     }
 
     /**
      * Process text alignment block of the element
      * @param {HTMLElement} el element to be processed for text alignment
-     * @param {Props} alignment alignment data for the element
+     * @param {Alignment} alignment alignment data for the element
      * @private
      */
-    private processTextAlignmentBlock(el: HTMLElement, alignment: Props): void {
+    private processTextAlignmentBlock(el: HTMLElement, alignment: Alignment): void {
         if (!alignment) {
             return;
         }
@@ -211,10 +208,10 @@ export class BlockProcessor {
     /**
      * Process overflow block of the element
      * @param {HTMLElement} el element to be processed for overflow
-     * @param {Props} overflowData overflow data for the element
+     * @param {Overflow} overflowData overflow data for the element
      * @private
      */
-    private processOverflowBlock(el: HTMLElement, overflowData: Props): void {
+    private processOverflowBlock(el: HTMLElement, overflowData: Overflow): void {
         if (!overflowData) {
             return;
         }
@@ -226,10 +223,10 @@ export class BlockProcessor {
     /**
      * Process transform block of the element
      * @param {HTMLElement} el element to be processed for transform
-     * @param {Props} transform transform data for the element
+     * @param {Transform} transform transform data for the element
      * @private
      */
-    private processTransformBlock(el: HTMLElement, transform: Props): void {
+    private processTransformBlock(el: HTMLElement, transform: Transform): void {
         if (!transform) {
             return;
         }
@@ -242,61 +239,37 @@ export class BlockProcessor {
     /**
      * Register click-to-action(CTA) block of the element
      * @param {HTMLElement} el element to be processed for CTA
-     * @param {Props} action action data for the element
+     * @param {ClickAction} action action data for the element
      * @private
      */
-    private registerAction(el: HTMLElement, action: Props): void {
+    private registerAction(el: HTMLElement, action: ClickAction): void {
         if (!action) {
             return;
         }
 
         el.addEventListener('click', () => {
-            this.performAction(action);
+            new ClickActionExecutor(action).execute();
         });
-    }
-
-    /**
-     * Perform CTA on element click event
-     * @param {Props} _action action data
-     * @private
-     */
-    private performAction(_action: Props): void {
-        // TODO Add CTAs.
-        // Temporary
-        if (_action.external) {
-            window.open(_action.external.url, '_blank')?.focus();
-        }
-
-        if (_action.kv) {
-            // TODO Send key-value to client
-        }
-
-        if (_action.up) {
-            // TODO Send user property back to server
-        }
-
-        if (_action.prompts) {
-            // TODO Ask for location and/or push notification permission
-        }
-
-        if (_action.close) {
-            this.renderer.removeInApp();
-        }
     }
 
     /**
      * Process background block of the element
      * @param {HTMLElement} el element to be processed for background
-     * @param {Props} bg background data for the element
+     * @param {Background} bg background data for the element
      * @private
      */
-    private processBgBlock(el: HTMLElement, bg: Props): void {
+    private processBgBlock(el: HTMLElement, bg: Background): void {
         if (!bg) {
             return;
         }
 
+        let prefix = '';
+        if (new UAParser().getBrowser().name?.toLowerCase().includes('safari')) {
+            prefix = '-webkit-';
+        }
+
         if (bg.glossy) {
-            this.renderer.setStyle(el, 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(el, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
             if (bg.glossy.colour) {
                 this.processColourBlock(el, bg.glossy.colour, 'background');
@@ -318,7 +291,6 @@ export class BlockProcessor {
             }
         } else if (bg.img) {
             if (!bg.img.url) {
-                Log.w('bg.img.url is missing');
                 return;
             }
 
@@ -327,7 +299,7 @@ export class BlockProcessor {
             this.renderer.setStyle(el, 'background-size', 'cover');
 
             if (bg.img.alpha) {
-                this.renderer.setStyle(el, 'backdrop-filter', `opacity(${bg.img.alpha})`);
+                this.renderer.setStyle(el, prefix + 'backdrop-filter', `opacity(${bg.img.alpha})`);
             }
         }
     }
@@ -335,11 +307,11 @@ export class BlockProcessor {
     /**
      * Process colour block of the element
      * @param {HTMLElement} el element to be processed for colour
-     * @param {Props} colour colour data of the element
+     * @param {Colour} colour colour data of the element
      * @param {string} attribute attribute on which colour data need to be applied
      * @private
      */
-    private processColourBlock(el: HTMLElement, colour: Props, attribute = 'color'): void {
+    private processColourBlock(el: HTMLElement, colour: Colour, attribute = 'color'): void {
         if (!colour) {
             return;
         }
@@ -348,7 +320,7 @@ export class BlockProcessor {
             const grad = colour.grad;
 
             if (grad.type === 'linear') {
-                const gradient = `linear-gradient(${grad.direction}, ${grad.start}, ${grad.end})`;
+                const gradient = `linear-gradient(${grad.direction}, ${grad.c1}, ${grad.c2})`;
                 this.renderer.setStyle(el, attribute, gradient);
             } else {
                 Log.w('Unsupported value of colour.grad.type');

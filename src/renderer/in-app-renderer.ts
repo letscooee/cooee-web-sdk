@@ -1,16 +1,20 @@
-import {Props} from '../types';
 import {Log} from '../utils/log';
 import {BlockProcessor} from './block-processor';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {Layer} from '../models/trigger/inapp/layer';
+import {BaseElement, TextElement, ImageElement, GroupElement, ButtonElement} from '../models/trigger/elements/';
+import {TextRenderer, ImageRenderer, ButtonRenderer, GroupRenderer} from './';
 
 /**
  * Renders In App trigger
  *
  * @author Abhishek Taparia
+ * @version 0.0.5
  */
 export class InAppRenderer extends BlockProcessor {
 
     private readonly rootContainer: HTMLDivElement;
-    private ian: Props | undefined;
+    private ian: InAppTrigger | undefined;
 
     /**
      * Public constructor
@@ -22,9 +26,9 @@ export class InAppRenderer extends BlockProcessor {
 
     /**
      * Renders in-app trigger from payload received
-     * @param {Props} ian in-app block from {@link TriggerData}
+     * @param {InAppTrigger} ian in-app block from {@link TriggerData}
      */
-    render(ian: Props): void {
+    render(ian: InAppTrigger): void {
         this.ian = ian;
 
         try {
@@ -52,18 +56,18 @@ export class InAppRenderer extends BlockProcessor {
      * @private
      */
     private renderLayers(): void {
-        this.ian?.layers?.forEach((layer: Props, index: number) => {
+        this.ian?.layers?.forEach((layer: Layer, index: number) => {
             this.renderLayer(layer, index);
         });
     }
 
     /**
      * Render individual layer from layers list in {@link ian} block.
-     * @param {Props} layerData style and attributes data of the layer
+     * @param {Layer} layerData style and attributes data of the layer
      * @param {number} index
      * @private
      */
-    private renderLayer(layerData: Props, index: number): void {
+    private renderLayer(layerData: Layer, index: number): void {
         const layerElement = this.renderer.createElement('div');
         this.renderer.setAttribute(layerElement, 'class', 'layer');
 
@@ -76,7 +80,7 @@ export class InAppRenderer extends BlockProcessor {
         layerData.size.display = layerData.size.display ?? 'FLEX';
 
         this.processCommonBlocks(layerElement, layerData);
-        layerData.children?.forEach((elementData: Props, elementIndex: number) => {
+        layerData.children?.forEach((elementData: BaseElement, elementIndex: number) => {
             const newElement = this.renderElement(layerElement, elementData);
 
             const id = `layer[${index}].element[${elementIndex}]-` + elementData.type?.toLowerCase();
@@ -87,70 +91,33 @@ export class InAppRenderer extends BlockProcessor {
     /**
      * Render element from layers list in {@link ian} block.
      * @param {HTMLElement} el element to be rendered
-     * @param {Props} elementData style and attributes data of the element
+     * @param {BaseElement} elementData style and attributes data of the element
      * @return {HTMLElement} rendered element
      * @private
      */
-    private renderElement(el: HTMLElement, elementData: Props): HTMLElement {
+    private renderElement(el: HTMLElement, elementData: BaseElement): HTMLElement {
         let newElement: HTMLElement;
 
         if (elementData.type === 'TEXT') {
-            newElement = this.renderTextElement(elementData);
+            newElement = new TextRenderer().render(elementData as TextElement);
         } else if (elementData.type === 'IMAGE') {
-            newElement = this.renderer.createElement('img');
-            this.renderer.setAttribute(newElement, 'src', elementData.url);
-            this.renderer.setStyle(newElement, 'max-width', '100%');
-            this.renderer.setStyle(newElement, 'max-height', '100%');
-            this.renderer.setStyle(newElement, 'display', 'block');
-            this.renderer.setStyle(newElement, 'margin', '0 auto');
+            newElement = new ImageRenderer().render(elementData as ImageElement);
         } else if (elementData.type === 'BUTTON') {
-            newElement = this.renderer.createElement('button');
-            newElement.innerHTML = elementData.text;
+            newElement = new ButtonRenderer().render(elementData as ButtonElement);
         } else if (elementData.type === 'GROUP') {
-            newElement = this.renderer.createElement('div');
-            // By default the parents will be relative
-            this.renderer.setStyle(newElement, 'position', 'relative');
+            const groupElement = elementData as GroupElement;
+            newElement = new GroupRenderer().render(groupElement);
 
-            // Enforcing size to be FLEX for GROUP (because Android has challenges in normal layouts)
-            elementData.size = elementData.size ?? {};
-            elementData.size.display = elementData.size.display ?? 'FLEX';
-
-            elementData.children?.forEach((newElementData: Props) => {
+            groupElement.children?.forEach((newElementData: BaseElement) => {
                 this.renderElement(newElement, newElementData);
             });
         } else {
             throw new DOMException('Unsupported element type- ' + elementData.type);
         }
 
-        this.processCommonBlocks(newElement, elementData);
-        this.renderer.setAttribute(newElement, 'class', elementData.type);
         this.renderer.appendChild(el, newElement);
 
         return newElement;
-    }
-
-    /**
-     * Render text element from layers list in {@link ian} block.
-     * @param {Props} elementData style and attributes data of the text element
-     * @return {HTMLDivElement} rendered text element in a {@link HTMLDivElement}
-     * @private
-     */
-    private renderTextElement(elementData: Props): HTMLDivElement {
-        const newElement = this.renderer.createElement('div');
-        this.processCommonBlocks(newElement, elementData);
-
-        if (elementData.parts) {
-            elementData.parts.forEach((partData: Props) => {
-                const newPartElement = this.renderer.createElement('span');
-                newPartElement.innerHTML = partData.text;
-                this.processCommonBlocks(newPartElement, partData);
-                this.renderer.appendChild(newElement, newPartElement);
-            });
-        } else {
-            newElement.innerHTML = elementData.text;
-        }
-
-        return newElement as HTMLDivElement;
     }
 
     /**
