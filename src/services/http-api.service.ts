@@ -4,6 +4,8 @@ import {DeviceAuthRequest} from '../models/auth/device-auth-request';
 import {Log} from '../utils/log';
 import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
+import {EventResponse} from '../models/event/event-response';
+import {InAppRenderer} from '../renderer/in-app-renderer';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -79,9 +81,13 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP('POST', '/v1/event/track', event, headers)
-            .then(() => {
+        this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)
+            .then((data: EventResponse) => {
                 Log.l('Sent', event.name);
+
+                if (data.triggerData) {
+                    new InAppRenderer().render(data.triggerData.ian);
+                }
             })
             .catch((error) => {
                 Log.e('Error sending event', error);

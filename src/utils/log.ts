@@ -11,16 +11,16 @@ export class Log {
     /**
      * Log info messages.
      *
-     * @param {any[]} messages
+     * @param {any} messages
      */
-    static l(...messages: any[]): void {
+    static l(...messages: any): void {
         console.log(Constants.LOG_PREFIX, ':', ...messages);
     }
 
     /**
      * Log error messages.
      *
-     * @param {any[]} messages
+     * @param {any} messages
      */
     static e(...messages: any): void {
         console.error(Constants.LOG_PREFIX, ':', ...messages);
@@ -29,7 +29,7 @@ export class Log {
     /**
      * Log warning messages.
      *
-     * @param {any[]} messages
+     * @param {any} messages
      */
     static w(...messages: any[]): void {
         console.warn(Constants.LOG_PREFIX, ':', ...messages);
