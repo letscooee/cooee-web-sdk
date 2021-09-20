@@ -105,4 +105,13 @@ export class Renderer {
         }
     }
 
+    /**
+     * Get element by tag id
+     * @param {string} id id of the element
+     * @return {HTMLElement | null} returns element if present, otherwise null
+     */
+    public getElementById(id: string): HTMLElement | null {
+        return this.doc.getElementById(id);
+    }
+
 }

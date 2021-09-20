@@ -6,6 +6,9 @@ import {TextRenderer, ImageRenderer, ButtonRenderer, GroupRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {RootContainerRenderer} from './root-container-renderer';
 import {LayerRenderer} from './layer-renderer';
+import {TriggerData} from '../models/trigger/trigger-data';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Constants} from '../constants';
 
 /**
  * Renders In App trigger
@@ -27,13 +30,15 @@ export class InAppRenderer {
 
     /**
      * Renders in-app trigger from payload received
-     * @param {InAppTrigger} ian in-app block from {@link TriggerData}
+     * @param {TriggerData} triggerData {@link TriggerData}
      */
-    render(ian: InAppTrigger): void {
-        this.ian = ian;
+    render(triggerData: TriggerData): void {
+        this.ian = triggerData.ian;
 
         try {
             this.startRendering();
+            LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
+            LocalStorageHelper.setString(Constants.STORAGE_ACTIVE_TRIGGER_ID, triggerData.id);
         } catch (e) {
             Log.e(e);
         }

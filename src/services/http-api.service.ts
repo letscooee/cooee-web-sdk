@@ -86,7 +86,7 @@ export class HttpAPIService {
                 Log.l('Sent', event.name);
 
                 if (data.triggerData) {
-                    new InAppRenderer().render(data.triggerData.ian);
+                    new InAppRenderer().render(data.triggerData);
                 }
             })
             .catch((error) => {

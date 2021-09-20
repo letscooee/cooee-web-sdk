@@ -13,7 +13,7 @@ export class RootContainerRenderer extends BlockRenderer {
      * @return {HTMLElement} rendered button
      */
     public render(): HTMLElement {
-        return this.blockProcessor.renderer.getRootContainer();
+        return this.renderer.getRootContainer();
     }
 
 }

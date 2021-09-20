@@ -8,6 +8,7 @@ import {
     Size, Position, Border, Background, Spacing, Overflow, Transform,
     ClickAction, Font, Colour, Alignment,
 } from '../models/trigger/blocks';
+import {SafeHttpService} from '../services/safe-http-service';
 
 /**
  * Process all the block of in-app
@@ -15,9 +16,10 @@ import {
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class BlockProcessor {
+export abstract class BlockProcessor {
 
-    public renderer: Renderer;
+    protected readonly renderer: Renderer;
+    protected readonly apiService: SafeHttpService;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
@@ -25,11 +27,13 @@ export class BlockProcessor {
     /**
      * Constructor
      */
-    constructor() {
+    protected constructor() {
         this.renderer = new Renderer();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
+
+        this.apiService = SafeHttpService.getInstance();
     }
 
     /**

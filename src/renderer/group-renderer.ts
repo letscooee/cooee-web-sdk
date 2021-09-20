@@ -16,16 +16,16 @@ export class GroupRenderer extends BlockRenderer {
      * @return {HTMLElement} rendered group element
      */
     public render(parent: HTMLElement, elementData: GroupElement): HTMLElement {
-        const newElement = this.blockProcessor.renderer.createElement('div');
+        const newElement = this.renderer.createElement('div');
         // By default the parents will be relative
-        this.blockProcessor.renderer.setStyle(newElement, 'position', 'relative');
+        this.renderer.setStyle(newElement, 'position', 'relative');
 
         // Enforcing size to be FLEX for GROUP (because Android has challenges in normal layouts)
         elementData.size = elementData.size ?? {};
         elementData.size.display = elementData.size.display ?? 'FLEX';
 
         this.commonRenderingFunction(newElement, elementData);
-        this.blockProcessor.renderer.appendChild(parent, newElement);
+        this.renderer.appendChild(parent, newElement);
 
         return newElement;
     }

@@ -17,11 +17,11 @@ export class ButtonRenderer extends BlockRenderer {
      * @private
      */
     public render(parent: HTMLElement, elementData: ButtonElement): HTMLElement {
-        const newElement = this.blockProcessor.renderer.createElement('button');
+        const newElement = this.renderer.createElement('button');
         newElement.innerHTML = elementData.text;
 
         this.commonRenderingFunction(newElement, elementData);
-        this.blockProcessor.renderer.appendChild(parent, newElement);
+        this.renderer.appendChild(parent, newElement);
 
         return newElement;
     }
