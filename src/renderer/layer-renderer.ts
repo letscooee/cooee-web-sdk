@@ -1,5 +1,6 @@
 import {BlockRenderer} from './block-renderer';
 import {BaseElement} from '../models/trigger/elements';
+import {Type} from '../models/trigger/elements/base-element';
 
 /**
  * Render layer from in {@link InAppTrigger}
@@ -17,13 +18,13 @@ export class LayerRenderer extends BlockRenderer {
      */
     public render(parent: HTMLElement, elementData: BaseElement): HTMLElement {
         const layerElement = this.renderer.createElement('div');
-        elementData.type = 'layer';
+        elementData.type = Type.LAYER;
 
         // By default the parents will be relative
         this.renderer.setStyle(layerElement, 'position', 'relative');
         this.renderer.appendChild(parent, layerElement);
 
-        // Enforcing size to be FLEX for layers (because Android has challenges in normal layouts)
+        // Enforcing size to be FLEX for layers
         elementData.size = elementData.size ?? {};
         elementData.size.display = elementData.size.display ?? 'FLEX';
 

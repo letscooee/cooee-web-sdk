@@ -1,6 +1,8 @@
+type overflowType = 'HIDDEN' | 'VISIBLE' | 'SCROLL';
+
 export interface Overflow {
 
-    readonly x: string;
-    readonly y: string;
+    readonly x: overflowType;
+    readonly y: overflowType;
 
 }

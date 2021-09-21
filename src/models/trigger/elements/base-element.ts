@@ -2,7 +2,7 @@ import {Background, Border, ClickAction, Overflow, Position, Shadow, Size, Spaci
 
 export interface BaseElement {
 
-    type: string;
+    type: Type;
     bg: Background;
     border: Border;
     click: ClickAction;
@@ -13,4 +13,12 @@ export interface BaseElement {
     spacing: Spacing;
     transform: Transform;
 
+}
+
+export enum Type {
+    TEXT = 'TEXT',
+    IMAGE = 'IMAGE',
+    BUTTON = 'BUTTON',
+    GROUP = 'GROUP',
+    LAYER = 'LAYER'
 }
