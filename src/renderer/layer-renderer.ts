@@ -1,6 +1,6 @@
 import {BlockRenderer} from './block-renderer';
 import {BaseElement} from '../models/trigger/elements';
-import {Type} from '../models/trigger/elements/base-element';
+import {ElementType} from '../models/trigger/elements/base-element';
 
 /**
  * Render layer from in {@link InAppTrigger}
@@ -18,7 +18,7 @@ export class LayerRenderer extends BlockRenderer {
      */
     public render(parent: HTMLElement, elementData: BaseElement): HTMLElement {
         const layerElement = this.renderer.createElement('div');
-        elementData.type = Type.LAYER;
+        elementData.type = ElementType.LAYER;
 
         // By default the parents will be relative
         this.renderer.setStyle(layerElement, 'position', 'relative');

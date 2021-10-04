@@ -8,7 +8,7 @@ import {
     Size, Position, Border, Background, Spacing, Overflow, Transform,
     ClickAction, Font, Colour, Alignment, Gradient,
 } from '../models/trigger/blocks';
-import {Type} from '../models/trigger/elements/base-element';
+import {ElementType} from '../models/trigger/elements/base-element';
 
 /**
  * Process all the block of in-app
@@ -56,7 +56,7 @@ export abstract class BlockProcessor {
         this.processTransformBlock(baseElement.transform);
         this.registerAction(baseElement.click);
 
-        if (baseElement.type === Type.BUTTON || baseElement.type === Type.TEXT) {
+        if (baseElement.type === ElementType.BUTTON || baseElement.type === ElementType.TEXT) {
             const baseTextElement = baseElement as BaseTextElement;
             this.processFontBlock(baseTextElement.font);
             this.processColourBlock(baseTextElement.colour);

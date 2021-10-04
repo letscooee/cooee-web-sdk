@@ -5,7 +5,7 @@ import {BaseElement, ButtonElement, GroupElement, ImageElement, TextElement} fro
 import {TriggerData} from '../models/trigger/trigger-data';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
-import {Type} from '../models/trigger/elements/base-element';
+import {ElementType} from '../models/trigger/elements/base-element';
 import {ButtonRenderer, GroupRenderer, ImageRenderer, TextRenderer,
     RootContainerRenderer, ContainerRenderer, LayerRenderer} from './';
 
@@ -91,13 +91,13 @@ export class InAppRenderer {
     private renderElement(el: HTMLElement, elementData: BaseElement): HTMLElement {
         let newElement: HTMLElement;
 
-        if (elementData.type === Type.TEXT) {
+        if (elementData.type === ElementType.TEXT) {
             newElement = new TextRenderer().render(el, elementData as TextElement);
-        } else if (elementData.type === Type.IMAGE) {
+        } else if (elementData.type === ElementType.IMAGE) {
             newElement = new ImageRenderer().render(el, elementData as ImageElement);
-        } else if (elementData.type === Type.BUTTON) {
+        } else if (elementData.type === ElementType.BUTTON) {
             newElement = new ButtonRenderer().render(el, elementData as ButtonElement);
-        } else if (elementData.type === Type.GROUP) {
+        } else if (elementData.type === ElementType.GROUP) {
             const groupElement = elementData as GroupElement;
             newElement = new GroupRenderer().render(el, groupElement);
 

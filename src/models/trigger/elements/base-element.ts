@@ -2,7 +2,7 @@ import {Background, Border, ClickAction, Overflow, Position, Shadow, Size, Spaci
 
 export interface BaseElement {
 
-    type: Type;
+    type: ElementType;
     bg: Background;
     border: Border;
     click: ClickAction;
@@ -15,7 +15,7 @@ export interface BaseElement {
 
 }
 
-export enum Type {
+export enum ElementType {
     // TODO Why these are giving lint error no-unused-vars, even though they is used.
     // eslint-disable-next-line no-unused-vars
     TEXT = 'TEXT',

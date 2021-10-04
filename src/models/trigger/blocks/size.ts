@@ -9,6 +9,6 @@ export interface Size {
     readonly wrap: string;
     readonly alignContent: string;
     readonly direction: string;
-    display: 'BLOCK' | 'INLINE_BLOCK' | 'FLEX';
+    display: 'BLOCK' | 'INLINE_BLOCK' | 'FLEX' | 'INLINE_FLEX';
 
 }
