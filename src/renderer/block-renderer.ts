@@ -20,14 +20,14 @@ export abstract class BlockRenderer extends BlockProcessor {
 
     /**
      * Process all the common block in in-app.
-     * @param {HTMLElement} el element to be processed
+     * @param {HTMLElement} element element to be processed
      * @param {BaseElement} baseElement style and attributes data of the element
      */
-    protected commonRenderingFunction(el: HTMLElement, baseElement: BaseElement): void {
-        this.processCommonBlocks(el, baseElement);
+    protected commonRenderingFunction(element: HTMLElement, baseElement: BaseElement): void {
+        this.processCommonBlocks(element, baseElement);
 
         if (baseElement.type) {
-            el.classList.add(baseElement.type);
+            element.classList.add(baseElement.type);
         }
     }
 

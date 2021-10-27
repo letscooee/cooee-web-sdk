@@ -14,11 +14,11 @@ export abstract class BaseTextRenderer extends BlockRenderer {
 
     /**
      * Process all the common block in in-app.
-     * @param {HTMLElement} el element to be processed
+     * @param {HTMLElement} element element to be processed
      * @param {BaseElement} baseElement style and attributes data of the element
      */
-    protected commonRenderingFunction(el: HTMLElement, baseElement: BaseElement): void {
-        super.commonRenderingFunction(el, baseElement);
+    protected commonRenderingFunction(element: HTMLElement, baseElement: BaseElement): void {
+        super.commonRenderingFunction(element, baseElement);
 
         const baseTextElement = baseElement as BaseTextElement;
         this.processFontBlock(baseTextElement.font);
