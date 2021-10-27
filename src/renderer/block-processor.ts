@@ -1,14 +1,13 @@
 import {Log} from '../utils/log';
 import {Renderer} from './renderer';
 import hexToRgba from 'hex-to-rgba';
-import {BaseElement, BaseTextElement} from '../models/trigger/elements';
+import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {
     Size, Position, Border, Background, Spacing, Overflow, Transform,
-    ClickAction, Font, Colour, Alignment, Gradient,
+    ClickAction, Colour, Gradient,
 } from '../models/trigger/blocks';
-import {ElementType} from '../models/trigger/elements/base-element';
 
 /**
  * Process all the block of in-app
@@ -55,13 +54,6 @@ export abstract class BlockProcessor {
         this.processOverflowBlock(baseElement.overflow);
         this.processTransformBlock(baseElement.transform);
         this.registerAction(baseElement.click);
-
-        if (baseElement.type === ElementType.BUTTON || baseElement.type === ElementType.TEXT) {
-            const baseTextElement = baseElement as BaseTextElement;
-            this.processFontBlock(baseTextElement.font);
-            this.processColourBlock(baseTextElement.colour);
-            this.processTextAlignmentBlock(baseTextElement.alignment);
-        }
     }
 
     /**
@@ -132,23 +124,6 @@ export abstract class BlockProcessor {
     }
 
     /**
-     * Process font block of the element
-     * @param {Font} font font data for the element
-     * @private
-     */
-    private processFontBlock(font: Font): void {
-        if (!font) {
-            return;
-        }
-
-        this.renderer.setStyle(this.element, 'font-size', font.size);
-        this.renderer.setStyle(this.element, 'font-weight', font.weight);
-        this.renderer.setStyle(this.element, 'font-family', font.family);
-        this.renderer.setStyle(this.element, 'font-style', font.style);
-        this.renderer.setStyle(this.element, 'line-height', font.lineHeight);
-    }
-
-    /**
      * Process size block of the element
      * @param {Size} size size data for the element
      * @private
@@ -189,19 +164,6 @@ export abstract class BlockProcessor {
 
             this.renderer.setStyle(this.element, 'height', size.height);
         }
-    }
-
-    /**
-     * Process text alignment block of the element
-     * @param {Alignment} alignment alignment data for the element
-     * @private
-     */
-    private processTextAlignmentBlock(alignment: Alignment): void {
-        if (!alignment) {
-            return;
-        }
-
-        this.renderer.setStyle(this.element, 'text-align', alignment.align?.toLowerCase());
     }
 
     /**
@@ -329,7 +291,7 @@ export abstract class BlockProcessor {
      * @param {string} attribute attribute on which colour data need to be applied
      * @private
      */
-    private processColourBlock(colour: Colour, attribute = 'color'): void {
+    protected processColourBlock(colour: Colour, attribute = 'color'): void {
         if (!colour) {
             return;
         }

@@ -1,4 +1,4 @@
-import {BlockRenderer} from './block-renderer';
+import {BaseTextRenderer} from './base-text-renderer';
 import {ButtonElement} from '../models/trigger/elements';
 
 /**
@@ -7,7 +7,7 @@ import {ButtonElement} from '../models/trigger/elements';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class ButtonRenderer extends BlockRenderer {
+export class ButtonRenderer extends BaseTextRenderer {
 
     /**
      * Render button element from layers list in {@link InAppTrigger} block.

@@ -1,4 +1,4 @@
-import {BlockRenderer} from './block-renderer';
+import {BaseTextRenderer} from './base-text-renderer';
 import {TextElement} from '../models/trigger/elements';
 
 /**
@@ -7,7 +7,7 @@ import {TextElement} from '../models/trigger/elements';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class TextRenderer extends BlockRenderer {
+export class TextRenderer extends BaseTextRenderer {
 
     /**
      * Render text element from layers list in {@link ian} block.
