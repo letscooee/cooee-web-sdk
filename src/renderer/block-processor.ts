@@ -263,9 +263,13 @@ export abstract class BlockProcessor {
         if (grad.type === 'LINEAR') {
             const c1 = BlockProcessor.toRgba(grad.c1);
             const c2 = BlockProcessor.toRgba(grad.c2);
-            const c3 = BlockProcessor.toRgba(grad.c3);
 
-            let linearFunctionString = `linear-gradient(${grad.direction}, ${c1}, ${c2}, ${c3}`;
+            let linearFunctionString = `linear-gradient(${grad.direction}, ${c1}, ${c2}`;
+
+            if (grad.c3) {
+                const c3 = BlockProcessor.toRgba(grad.c3);
+                linearFunctionString += `, ${c3}`;
+            }
 
             if (grad.c4) {
                 const c4 = BlockProcessor.toRgba(grad.c4);
