@@ -158,6 +158,7 @@ export class ClickActionExecutor {
         // TODO Need device endpoints to update this property
         navigator.geolocation.getCurrentPosition((position) => {
             this.apiService.updateProfile({'coords': [position.coords.latitude, position.coords.longitude]});
+            this.sendPermissionData();
         });
     }
 
@@ -178,8 +179,8 @@ export class ClickActionExecutor {
         }
 
         Notification.requestPermission()
-            .then((permission) => {
-                this.apiService.updateProfile({'pnPerm': permission});
+            .then(() => {
+                this.sendPermissionData();
             });
     }
 
@@ -193,7 +194,46 @@ export class ClickActionExecutor {
         }
 
         navigator.mediaDevices.getUserMedia({video: true}).finally(() => {
-            // this.sendPermissionData();
+            this.sendPermissionData();
+        });
+    }
+
+    /**
+     * Check for a permission
+     * @param of permission of what
+     * @private
+     * @return permission state
+     */
+    private checkPermission(of: PermissionName): Promise<string> {
+        return navigator.permissions.query({name: of})
+            .then((permission: PermissionStatus) => {
+                return permission.state.toString();
+            });
+    }
+
+    /**
+     * Check for all the permissions
+     * @private
+     */
+    private async checkAllPermission(): Promise<Props> {
+        const camera = await this.checkPermission('camera');
+        const location = await this.checkPermission('geolocation');
+        const notification = Notification.permission;
+
+        return {
+            camera: camera,
+            location: location,
+            notification: notification,
+        };
+    }
+
+    /**
+     * Send permission data to device property
+     * @private
+     */
+    private sendPermissionData(): void {
+        this.checkAllPermission().then((permissions) => {
+            this.apiService.updateProfile({'perm': permissions});
         });
     }
 
