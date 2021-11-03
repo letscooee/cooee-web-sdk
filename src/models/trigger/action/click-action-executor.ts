@@ -92,6 +92,10 @@ export class ClickActionExecutor {
                 if (permission === 'PUSH') {
                     this.promptPushNotificationPermission();
                 }
+
+                if (permission === 'CAMERA') {
+                    this.promptCameraPermission();
+                }
             }
         }
     }
@@ -177,6 +181,20 @@ export class ClickActionExecutor {
             .then((permission) => {
                 this.apiService.updateProfile({'pnPerm': permission});
             });
+    }
+
+    /**
+     * This prompts for the camera permission from the user.
+     * @private
+     */
+    private promptCameraPermission(): void {
+        if (!navigator.mediaDevices) {
+            return;
+        }
+
+        navigator.mediaDevices.getUserMedia({video: true}).finally(() => {
+            // this.sendPermissionData();
+        });
     }
 
 }
