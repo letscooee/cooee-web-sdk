@@ -1,11 +1,13 @@
 import {Log} from '../utils/log';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {Layer} from '../models/trigger/inapp/layer';
-import {BaseElement, TextElement, ImageElement, GroupElement, ButtonElement} from '../models/trigger/elements/';
-import {TextRenderer, ImageRenderer, ButtonRenderer, GroupRenderer} from './';
-import {ContainerRenderer} from './container-renderer';
-import {RootContainerRenderer} from './root-container-renderer';
-import {LayerRenderer} from './layer-renderer';
+import {BaseElement, ButtonElement, GroupElement, ImageElement, TextElement} from '../models/trigger/elements/';
+import {TriggerData} from '../models/trigger/trigger-data';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Constants} from '../constants';
+import {ElementType} from '../models/trigger/elements/base-element';
+import {ButtonRenderer, GroupRenderer, ImageRenderer, TextRenderer,
+    RootContainerRenderer, ContainerRenderer, LayerRenderer} from './';
 
 /**
  * Renders In App trigger
@@ -27,13 +29,15 @@ export class InAppRenderer {
 
     /**
      * Renders in-app trigger from payload received
-     * @param {InAppTrigger} ian in-app block from {@link TriggerData}
+     * @param {TriggerData} triggerData {@link TriggerData}
      */
-    render(ian: InAppTrigger): void {
-        this.ian = ian;
+    render(triggerData: TriggerData): void {
+        this.ian = triggerData.ian;
 
         try {
             this.startRendering();
+            LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
+            LocalStorageHelper.setString(Constants.STORAGE_ACTIVE_TRIGGER_ID, triggerData.id);
         } catch (e) {
             Log.e(e);
         }
@@ -87,13 +91,13 @@ export class InAppRenderer {
     private renderElement(el: HTMLElement, elementData: BaseElement): HTMLElement {
         let newElement: HTMLElement;
 
-        if (elementData.type === 'TEXT') {
+        if (elementData.type === ElementType.TEXT) {
             newElement = new TextRenderer().render(el, elementData as TextElement);
-        } else if (elementData.type === 'IMAGE') {
+        } else if (elementData.type === ElementType.IMAGE) {
             newElement = new ImageRenderer().render(el, elementData as ImageElement);
-        } else if (elementData.type === 'BUTTON') {
+        } else if (elementData.type === ElementType.BUTTON) {
             newElement = new ButtonRenderer().render(el, elementData as ButtonElement);
-        } else if (elementData.type === 'GROUP') {
+        } else if (elementData.type === ElementType.GROUP) {
             const groupElement = elementData as GroupElement;
             newElement = new GroupRenderer().render(el, groupElement);
 
@@ -101,9 +105,10 @@ export class InAppRenderer {
                 this.renderElement(newElement, newElementData);
             });
         } else {
-            throw new DOMException('Unsupported element type- ' + elementData.type);
+            Log.e('Unsupported element type- ' + elementData.type);
         }
 
+        // @ts-ignore
         return newElement;
     }
 

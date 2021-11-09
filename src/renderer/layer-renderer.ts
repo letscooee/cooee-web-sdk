@@ -1,5 +1,6 @@
 import {BlockRenderer} from './block-renderer';
 import {BaseElement} from '../models/trigger/elements';
+import {ElementType} from '../models/trigger/elements/base-element';
 
 /**
  * Render layer from in {@link InAppTrigger}
@@ -16,19 +17,19 @@ export class LayerRenderer extends BlockRenderer {
      * @return {HTMLElement} rendered layer in div tag
      */
     public render(parent: HTMLElement, elementData: BaseElement): HTMLElement {
-        const layerElement = this.blockProcessor.renderer.createElement('div');
-        elementData.type = 'layer';
+        const layerElement = this.renderer.createElement('div');
+        elementData.type = ElementType.LAYER;
 
         // By default the parents will be relative
-        this.blockProcessor.renderer.setStyle(layerElement, 'position', 'relative');
-        this.blockProcessor.renderer.appendChild(parent, layerElement);
+        this.renderer.setStyle(layerElement, 'position', 'relative');
+        this.renderer.appendChild(parent, layerElement);
 
-        // Enforcing size to be FLEX for layers (because Android has challenges in normal layouts)
+        // By default size is made FLEX for layers
         elementData.size = elementData.size ?? {};
         elementData.size.display = elementData.size.display ?? 'FLEX';
 
         this.commonRenderingFunction(layerElement, elementData);
-        this.blockProcessor.renderer.appendChild(parent, layerElement);
+        this.renderer.appendChild(parent, layerElement);
 
         return layerElement;
     }

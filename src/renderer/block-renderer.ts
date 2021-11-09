@@ -7,29 +7,27 @@ import {BaseElement} from '../models/trigger/elements';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export abstract class BlockRenderer {
-
-    protected blockProcessor: BlockProcessor;
+export abstract class BlockRenderer extends BlockProcessor {
 
     /**
      * Public constructor
      */
     constructor() {
-        this.blockProcessor = new BlockProcessor();
+        super();
     }
 
-    abstract render(parent: HTMLElement, element: BaseElement | null): HTMLElement;
+    abstract render(parent: HTMLElement, element: BaseElement | string | null): HTMLElement;
 
     /**
      * Process all the common block in in-app.
-     * @param {HTMLElement} el element to be processed
+     * @param {HTMLElement} element element to be processed
      * @param {BaseElement} baseElement style and attributes data of the element
      */
-    protected commonRenderingFunction(el: HTMLElement, baseElement: BaseElement): void {
-        this.blockProcessor.processCommonBlocks(el, baseElement);
+    protected commonRenderingFunction(element: HTMLElement, baseElement: BaseElement): void {
+        this.processCommonBlocks(element, baseElement);
 
         if (baseElement.type) {
-            el.classList.add(baseElement.type);
+            element.classList.add(baseElement.type);
         }
     }
 

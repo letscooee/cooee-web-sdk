@@ -16,15 +16,15 @@ export class ImageRenderer extends BlockRenderer {
      * @return {HTMLElement} rendered image element
      */
     public render(parent: HTMLElement, elementData: ImageElement): HTMLElement {
-        const newElement = this.blockProcessor.renderer.createElement('img');
-        this.blockProcessor.renderer.setAttribute(newElement, 'src', elementData.url);
-        this.blockProcessor.renderer.setStyle(newElement, 'max-width', '100%');
-        this.blockProcessor.renderer.setStyle(newElement, 'max-height', '100%');
-        this.blockProcessor.renderer.setStyle(newElement, 'display', 'block');
-        this.blockProcessor.renderer.setStyle(newElement, 'margin', '0 auto');
+        const newElement = this.renderer.createElement('img');
+        this.renderer.setAttribute(newElement, 'src', elementData.url);
+        this.renderer.setStyle(newElement, 'max-width', '100%');
+        this.renderer.setStyle(newElement, 'max-height', '100%');
+        this.renderer.setStyle(newElement, 'display', 'block');
+        this.renderer.setStyle(newElement, 'margin', '0 auto');
 
         this.commonRenderingFunction(newElement, elementData);
-        this.blockProcessor.renderer.appendChild(parent, newElement);
+        this.renderer.appendChild(parent, newElement);
 
         return newElement;
     }

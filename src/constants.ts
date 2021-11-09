@@ -24,6 +24,8 @@ export class Constants {
     static STORAGE_SESSION_START_EVENT_SENT: string = 'sses';
     static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
     static STORAGE_LAST_ACTIVE: string = 'la';
+    static STORAGE_TRIGGER_START_TIME: string = 'tst';
+    static STORAGE_ACTIVE_TRIGGER_ID: string = 'atid';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
