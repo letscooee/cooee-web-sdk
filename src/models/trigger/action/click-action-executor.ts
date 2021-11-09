@@ -1,7 +1,7 @@
 import {ClickAction} from '../blocks';
 import {Renderer} from '../../../renderer/renderer';
 import {Constants} from '../../../constants';
-import {IFrameRenderer} from '../../../renderer/iFrame-renderer';
+import {IFrameRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
@@ -83,7 +83,6 @@ export class ClickActionExecutor {
     prompts(): void {
         if (this.action.prompts) {
             // TODO test in mobile browsers
-            console.log('prompts', this.action.prompts);
             for (const permission of this.action.prompts) {
                 if (permission === 'LOCATION') {
                     this.promptLocationPermission();

@@ -24,7 +24,7 @@ export class LayerRenderer extends BlockRenderer {
         this.renderer.setStyle(layerElement, 'position', 'relative');
         this.renderer.appendChild(parent, layerElement);
 
-        // Enforcing size to be FLEX for layers
+        // By default size is made FLEX for layers
         elementData.size = elementData.size ?? {};
         elementData.size.display = elementData.size.display ?? 'FLEX';
 

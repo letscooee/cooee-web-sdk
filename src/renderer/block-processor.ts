@@ -284,8 +284,6 @@ export abstract class BlockProcessor {
             linearFunctionString += `)`;
             const gradient = linearFunctionString;
             this.renderer.setStyle(this.element, attribute, gradient);
-        } else {
-            Log.w('Unsupported value of colour.grad.type');
         }
     }
 

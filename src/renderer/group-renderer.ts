@@ -20,7 +20,7 @@ export class GroupRenderer extends BlockRenderer {
         // By default the parents will be relative
         this.renderer.setStyle(newElement, 'position', 'relative');
 
-        // Enforcing size to be FLEX for GROUP (because Android has challenges in normal layouts)
+        // By default size is made FLEX for GROUP
         elementData.size = elementData.size ?? {};
         elementData.size.display = elementData.size.display ?? 'FLEX';
 
