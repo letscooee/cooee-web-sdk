@@ -13,8 +13,8 @@ export class TriggerData {
     engagementID: string;
     internal: boolean;
 
-    pn: Props;
-    ian: InAppTrigger;
+    pn?: Props;
+    ian?: InAppTrigger;
 
     /**
      * Public constructor

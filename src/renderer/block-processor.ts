@@ -149,12 +149,12 @@ export abstract class BlockProcessor {
         }
 
         // Just to make sure radius is not a negative number
-        if (border.radius > 0) {
+        if (border.radius && border.radius > 0) {
             this.renderer.setStyle(this.element, 'border-radius', `${this.getCalculatedSize(border.radius)}px`);
         }
 
         // Just to make sure width is not a negative number
-        if (border.width > 0) {
+        if (border.width && border.width > 0) {
             this.renderer.setStyle(this.element, 'border-width', `${this.getCalculatedSize(border.width)}px`);
             this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase() ?? 'solid');
 

@@ -1,5 +1,5 @@
 export interface Transform {
 
-    readonly rotate: number;
+    readonly rotate?: number;
 
 }
