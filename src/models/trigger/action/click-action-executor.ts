@@ -104,24 +104,26 @@ export class ClickActionExecutor {
      * Performs close action
      */
     closeAction(): void {
-        if (this.action.close) {
-            new Renderer().removeInApp();
-
-            const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-            const triggerID = LocalStorageHelper.getString(Constants.STORAGE_ACTIVE_TRIGGER_ID, '');
-
-            const diffInSeconds = (new Date().getTime() - startTime) / 1000;
-
-            const eventProps: Props = {
-                'triggerID': triggerID,
-                'Close Behaviour': 'CTA',
-                'Duration': diffInSeconds,
-            };
-            this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
-
-            LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
-            LocalStorageHelper.remove(Constants.STORAGE_ACTIVE_TRIGGER_ID);
+        if (!this.action.close) {
+            return;
         }
+
+        new Renderer().removeInApp();
+
+        const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
+        const triggerID = LocalStorageHelper.getString(Constants.STORAGE_ACTIVE_TRIGGER_ID, '');
+
+        const diffInSeconds = (new Date().getTime() - startTime) / 1000;
+
+        const eventProps: Props = {
+            'triggerID': triggerID,
+            'Close Behaviour': 'CTA',
+            'Duration': diffInSeconds,
+        };
+        this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
+
+        LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
+        LocalStorageHelper.remove(Constants.STORAGE_ACTIVE_TRIGGER_ID);
     }
 
     /**
@@ -130,19 +132,20 @@ export class ClickActionExecutor {
     shareAction(): void {
         // Navigator.share only works in mobile browsers and with https urls.
         // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
-        if (this.action.share) {
-            // TODO test in mobile browsers
-            const share = navigator.share;
-
-            if (!share) {
-                Log.w('Navigator.share is not compatible with this browser');
-                return;
-            }
-
-            navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
-                .then((r) => console.log(r))
-                .catch((e) => console.error(e));
+        if (!this.action.share) {
+            return;
         }
+        // TODO test in mobile browsers
+        const share = navigator.share;
+
+        if (!share) {
+            Log.w('Navigator.share is not compatible with this browser');
+            return;
+        }
+
+        navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
+            .then((r) => console.log(r))
+            .catch((e) => console.error(e));
     }
 
     /**
