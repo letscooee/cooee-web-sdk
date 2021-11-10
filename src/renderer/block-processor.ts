@@ -84,12 +84,14 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (border.radius) {
-            this.renderer.setStyle(this.element, 'border-radius', border.radius);
+        // Just to make sure radius is not a negative number
+        if (border.radius > 0) {
+            this.renderer.setStyle(this.element, 'border-radius', `${border.radius}px`);
         }
 
-        if (border.width) {
-            this.renderer.setStyle(this.element, 'border-width', border.width);
+        // Just to make sure width is not a negative number
+        if (border.width > 0) {
+            this.renderer.setStyle(this.element, 'border-width', `${border.width}px`);
             this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase() ?? 'solid');
 
             if (border.colour) {
