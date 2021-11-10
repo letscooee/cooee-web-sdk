@@ -1,11 +1,11 @@
-import {Colour, Alignment, Font} from '../blocks';
+import {Colour, Font} from '../blocks';
 import {BaseElement} from './base-element';
 
 export interface BaseTextElement extends BaseElement {
 
     text: string;
-    alignment: Alignment;
+    alg: number;
     font: Font;
-    colour: Colour;
+    clr: Colour;
 
 }

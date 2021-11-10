@@ -22,7 +22,7 @@ export abstract class BaseTextRenderer extends BlockRenderer {
 
         const baseTextElement = baseElement as BaseTextElement;
         this.processFontBlock(baseTextElement.font);
-        this.processTextAlignmentBlock(baseTextElement.alignment);
+        this.processTextAlignmentBlock(baseTextElement.alg);
 
         this.processColourBlock(baseTextElement.colour);
     }
@@ -46,15 +46,30 @@ export abstract class BaseTextRenderer extends BlockRenderer {
 
     /**
      * Process text alignment block of the element
-     * @param {Alignment} alignment alignment data for the element
+     * @param {number} alignment alignment data for the element
      * @private
      */
-    protected processTextAlignmentBlock(alignment: Alignment): void {
-        if (!alignment) {
-            return;
-        }
+    protected processTextAlignmentBlock(alignment: number): void {
+        let value: string;
 
-        this.renderer.setStyle(this.element, 'text-align', alignment.align?.toLowerCase());
+        switch (alignment) {
+            case 1: {
+                value = 'center';
+                break;
+            }
+            case 2: {
+                value = 'end';
+                break;
+            }
+            case 3: {
+                value = 'justify';
+                break;
+            }
+            default: {
+                value = 'start';
+            }
+        }
+        this.renderer.setStyle(this.element, 'text-align', value);
     }
 
 }

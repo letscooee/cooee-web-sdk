@@ -1,4 +1,3 @@
-export {Alignment} from './alignment';
 export {Background} from './background';
 export {Border} from './border';
 export {ClickAction} from './click-action';
