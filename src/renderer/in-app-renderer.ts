@@ -9,6 +9,7 @@ import {
     GroupRenderer, ImageRenderer, TextRenderer,
     RootContainerRenderer,
 } from './';
+import {ContainerRenderer} from './container-renderer';
 
 /**
  * Renders In App trigger
@@ -95,12 +96,11 @@ export class InAppRenderer {
             return;
         }
 
-        const groupElement = container as GroupElement;
-        const htmlGroupElement = new GroupRenderer().render(this.rootContainer, groupElement);
+        const containerHTMLElement = new ContainerRenderer().render(this.rootContainer, container);
 
-        groupElement.children?.forEach((element: BaseElement) => {
+        container.children?.forEach((element: BaseElement) => {
             element.type = ElementType.GROUP;
-            this.renderElement(htmlGroupElement, element);
+            this.renderElement(containerHTMLElement, element);
         });
     }
 
