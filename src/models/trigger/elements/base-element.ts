@@ -22,9 +22,5 @@ export enum ElementType {
     // eslint-disable-next-line no-unused-vars
     IMAGE = 'IMAGE',
     // eslint-disable-next-line no-unused-vars
-    BUTTON = 'BUTTON',
-    // eslint-disable-next-line no-unused-vars
     GROUP = 'GROUP',
-    // eslint-disable-next-line no-unused-vars
-    LAYER = 'LAYER'
 }
