@@ -5,7 +5,7 @@ import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {
-    Size, Position, Border, Background, Spacing, Overflow, Transform,
+    Size, Position, Border, Background, Spacing, Transform,
     ClickAction, Colour, Gradient,
 } from '../models/trigger/blocks';
 
@@ -170,16 +170,16 @@ export abstract class BlockProcessor {
 
     /**
      * Process overflow block of the element
-     * @param {Overflow} overflowData overflow data for the element
+     * @param {string} overflowData overflow data for the element
      * @private
      */
-    private processOverflowBlock(overflowData: Overflow): void {
+    private processOverflowBlock(overflowData: string): void {
         if (!overflowData) {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'overflow-x', overflowData.x?.toLowerCase());
-        this.renderer.setStyle(this.element, 'overflow-y', overflowData.y?.toLowerCase());
+        this.renderer.setStyle(this.element, 'overflow-x', overflowData.toLowerCase());
+        this.renderer.setStyle(this.element, 'overflow-y', overflowData.toLowerCase());
     }
 
     /**

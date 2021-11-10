@@ -1,4 +1,4 @@
-import {Background, Border, ClickAction, Overflow, Position, Shadow, Size, Spacing, Transform} from '../blocks';
+import {Background, Border, ClickAction, Position, Shadow, Size, Spacing, Transform} from '../blocks';
 
 export interface BaseElement {
 
@@ -6,7 +6,7 @@ export interface BaseElement {
     bg: Background;
     border: Border;
     click: ClickAction;
-    overflow: Overflow;
+    overflow: 'HIDDEN' | 'VISIBLE';
     position: Position;
     shadow: Shadow;
     size: Size;

@@ -7,7 +7,6 @@ export {Font} from './font';
 export {Glossy} from './glossy';
 export {Gradient} from './gradient';
 export {Image} from './image';
-export {Overflow} from './overflow';
 export {Position} from './position';
 export {Shadow} from './shadow';
 export {Size} from './size';
