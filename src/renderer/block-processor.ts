@@ -3,15 +3,8 @@ import hexToRgba from 'hex-to-rgba';
 import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {
-    Background,
-    Border,
-    ClickAction,
-    Colour, Flex,
-    Gradient,
-    Spacing,
-    Transform,
-} from '../models/trigger/blocks';
+import {Background, Border, ClickAction, Colour, Flex, Gradient, Spacing, Transform} from '../models/trigger/blocks';
+import {getScalingFactor} from './index';
 
 /**
  * Process all the block of in-app
@@ -21,14 +14,12 @@ import {
  */
 export abstract class BlockProcessor {
 
-    private static readonly HEIGHT = 1920;
     protected readonly renderer: Renderer;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
 
-    private scalingFactor: number = 1;
-    private aspectRatio: number = 1;
+    private scalingFactor: number = getScalingFactor();
 
     // @ts-ignore
     protected element: HTMLElement;
@@ -73,19 +64,13 @@ export abstract class BlockProcessor {
     private processWidthAndHeight(baseElement: BaseElement): void {
         this.renderer.setStyle(this.element, 'box-sizing', 'border-box');
 
-        let calculatedHeight: number = 0;
-        let calculatedWidth: number = 0;
-        // For Portrait mode
-        if (this.screenHeight > this.screenWidth) {
-            this.aspectRatio = baseElement.w / baseElement.h;
-            this.scalingFactor = this.screenHeight / BlockProcessor.HEIGHT;
-
-            calculatedHeight = baseElement.h * this.scalingFactor;
-            calculatedWidth = calculatedHeight * this.aspectRatio;
+        if (baseElement.w) {
+            this.renderer.setStyle(this.element, 'width', `${this.getCalculatedSize(baseElement.w)}px`);
         }
 
-        this.renderer.setStyle(this.element, 'height', calculatedHeight);
-        this.renderer.setStyle(this.element, 'width', calculatedWidth);
+        if (baseElement.h) {
+            this.renderer.setStyle(this.element, 'height', `${this.getCalculatedSize(baseElement.h)}px`);
+        }
     }
 
     /**
@@ -94,13 +79,7 @@ export abstract class BlockProcessor {
      * @return number calculated size
      */
     protected getCalculatedSize(value: number): number {
-        let scalingFactor: number = 1;
-
-        if (this.screenHeight > this.screenWidth) {
-            scalingFactor = this.screenHeight / BlockProcessor.HEIGHT;
-        }
-
-        return value * scalingFactor;
+        return value * this.scalingFactor;
     }
 
     /**
