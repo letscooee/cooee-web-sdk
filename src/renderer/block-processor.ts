@@ -52,7 +52,28 @@ export abstract class BlockProcessor {
         this.processSpaceBlock(baseElement.spc);
         this.processOverflowBlock(baseElement.clip);
         this.processTransformBlock(baseElement.trf);
+        this.processFlexBlock(baseElement.fx);
         this.registerAction(baseElement.click);
+    }
+
+    /**
+     * Process flex block of the element
+     * @param {Flex} flex data for the element
+     * @private
+     */
+    private processFlexBlock(flex: Flex): void {
+        if (!flex) {
+            return;
+        }
+        this.renderer.setStyle(this.element, 'display', 'flex');
+        this.renderer.setStyle(this.element, 'flex-direction', flex.d?.replace('_', '-').toLowerCase() ?? 'row');
+        this.renderer.setStyle(this.element, 'flex-wrap', flex.w?.replace('_', '-').toLowerCase() ?? 'nowrap');
+        this.renderer.setStyle(
+            this.element,
+            'justify-content',
+            flex.jc?.replace('_', '-').toLowerCase() ?? 'flex-start',
+        );
+        this.renderer.setStyle(this.element, 'align-items', flex.ai?.replace('_', '-').toLowerCase() ?? 'stretch');
     }
 
     /**
