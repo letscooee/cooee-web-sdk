@@ -65,21 +65,21 @@ export abstract class BlockProcessor {
         this.renderer.setStyle(this.element, 'box-sizing', 'border-box');
 
         if (baseElement.w) {
-            this.renderer.setStyle(this.element, 'width', `${this.getCalculatedSize(baseElement.w)}px`);
+            this.renderer.setStyle(this.element, 'width', this.getSizePx(baseElement.w));
         }
 
         if (baseElement.h) {
-            this.renderer.setStyle(this.element, 'height', `${this.getCalculatedSize(baseElement.h)}px`);
+            this.renderer.setStyle(this.element, 'height', this.getSizePx(baseElement.h));
         }
     }
 
     /**
-     * Get calculated size according to the device
+     * Get calculated size according to the device by multiplying it with scaling factor.
      * @param {number} value size passed in payload
      * @return number calculated size
      */
-    protected getCalculatedSize(value: number): number {
-        return value * this.scalingFactor;
+    protected getSizePx(value: number): string {
+        return (value * this.scalingFactor) + 'px';
     }
 
     /**
@@ -112,8 +112,8 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (baseElement.x) this.renderer.setStyle(this.element, 'top', `${this.getCalculatedSize(baseElement.x)}px`);
-        if (baseElement.y) this.renderer.setStyle(this.element, 'left', `${this.getCalculatedSize(baseElement.y)}px`);
+        if (baseElement.x) this.renderer.setStyle(this.element, 'top', this.getSizePx(baseElement.x));
+        if (baseElement.y) this.renderer.setStyle(this.element, 'left', this.getSizePx(baseElement.y));
         if (baseElement.z) this.renderer.setStyle(this.element, 'z-index', `${baseElement.z}`);
     }
 
@@ -129,12 +129,12 @@ export abstract class BlockProcessor {
 
         // Just to make sure radius is not a negative number
         if (border.radius && border.radius > 0) {
-            this.renderer.setStyle(this.element, 'border-radius', `${this.getCalculatedSize(border.radius)}px`);
+            this.renderer.setStyle(this.element, 'border-radius', this.getSizePx(border.radius));
         }
 
         // Just to make sure width is not a negative number
         if (border.width && border.width > 0) {
-            this.renderer.setStyle(this.element, 'border-width', `${this.getCalculatedSize(border.width)}px`);
+            this.renderer.setStyle(this.element, 'border-width', this.getSizePx(border.width));
             this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase() ?? 'solid');
 
             if (border.colour) {
@@ -155,17 +155,17 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.element, 'padding', `${this.getCalculatedSize(space.p)}px`);
-        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', `${this.getCalculatedSize(space.pt)}px`);
-        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', `${this.getCalculatedSize(space.pb)}px`);
-        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', `${this.getCalculatedSize(space.pl)}px`);
-        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', `${this.getCalculatedSize(space.pr)}px`);
+        if (space.p) this.renderer.setStyle(this.element, 'padding', this.getSizePx(space.p));
+        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', this.getSizePx(space.pt));
+        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', this.getSizePx(space.pb));
+        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', this.getSizePx(space.pl));
+        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', this.getSizePx(space.pr));
 
-        if (space.m) this.renderer.setStyle(this.element, 'margin', `${this.getCalculatedSize(space.m)}px`);
-        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', `${this.getCalculatedSize(space.mt)}px`);
-        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', `${this.getCalculatedSize(space.mb)}px`);
-        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', `${this.getCalculatedSize(space.ml)}px`);
-        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', `${this.getCalculatedSize(space.mr)}px`);
+        if (space.m) this.renderer.setStyle(this.element, 'margin', this.getSizePx(space.m));
+        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', this.getSizePx(space.mt));
+        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', this.getSizePx(space.mb));
+        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', this.getSizePx(space.ml));
+        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', this.getSizePx(space.mr));
     }
 
     /**
