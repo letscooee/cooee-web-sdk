@@ -6,7 +6,7 @@
         "lint": "eslint 'src/**'",
         "prepare": "npm run build",
         "build": "tsc",
-        "build:production": "tsc && webpack",
+        "build:production": "webpack && webpack --config ./webpack-preview.config.js",
         "serve:old-school": "webpack serve",
         "preversion": "git add CHANGELOG.md src/constants.ts",
         "version": "npm run build:production",
