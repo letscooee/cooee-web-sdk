@@ -21,9 +21,10 @@ export class Renderer {
         rootDiv.id = Constants.IN_APP_CONTAINER_NAME;
         rootDiv.classList.add(Constants.IN_APP_CONTAINER_NAME);
 
-        this.setStyle(rootDiv, 'position', 'absolute');
-        this.setStyle(rootDiv, 'top', '0px');
-        this.setStyle(rootDiv, 'left', '0px');
+        this.setStyle(rootDiv, 'z-index', '10000000');
+        this.setStyle(rootDiv, 'position', 'fixed');
+        this.setStyle(rootDiv, 'top', '0');
+        this.setStyle(rootDiv, 'left', '0');
         this.setStyle(rootDiv, 'width', '100%');
         this.setStyle(rootDiv, 'height', '100%');
 
