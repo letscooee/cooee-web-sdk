@@ -1,6 +1,6 @@
 import {BlockRenderer} from './block-renderer';
 import {BaseElement, BaseTextElement} from '../models/trigger/elements';
-import {Alignment, Font} from '../models/trigger/blocks';
+import {Font} from '../models/trigger/blocks';
 
 /**
  * Base class for rendering any text extending block from in-app.
@@ -37,11 +37,9 @@ export abstract class BaseTextRenderer extends BlockRenderer {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'font-size', font.size);
-        this.renderer.setStyle(this.element, 'font-weight', font.weight);
-        this.renderer.setStyle(this.element, 'font-family', font.family);
-        this.renderer.setStyle(this.element, 'font-style', font.style);
-        this.renderer.setStyle(this.element, 'line-height', font.lineHeight);
+        this.renderer.setStyle(this.element, 'font-size', `${font.s}px`);
+        this.renderer.setStyle(this.element, 'font-family', font.ff);
+        this.renderer.setStyle(this.element, 'line-height', `${font.lh}`);
     }
 
     /**
