@@ -24,7 +24,7 @@ export abstract class BaseTextRenderer extends BlockRenderer {
         this.processFontBlock(baseTextElement.font);
         this.processTextAlignmentBlock(baseTextElement.alg);
 
-        this.processColourBlock(baseTextElement.colour);
+        this.processColourBlock(baseTextElement.clr);
     }
 
     /**

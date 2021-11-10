@@ -46,13 +46,12 @@ export abstract class BlockProcessor {
 
         this.element = element;
 
-        this.processSizeBlock(baseElement.size);
-        this.processPositionBlock(baseElement.position);
-        this.processBorderBlock(baseElement.border);
+        this.processPositionBlock(baseElement.pos);
+        this.processBorderBlock(baseElement.br);
         this.processBgBlock(baseElement.bg);
-        this.processSpaceBlock(baseElement.spacing);
-        this.processOverflowBlock(baseElement.overflow);
-        this.processTransformBlock(baseElement.transform);
+        this.processSpaceBlock(baseElement.spc);
+        this.processOverflowBlock(baseElement.clip);
+        this.processTransformBlock(baseElement.trf);
         this.registerAction(baseElement.click);
     }
 
@@ -112,60 +111,17 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.element, 'padding', space.p);
-        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', space.pt);
-        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', space.pb);
-        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', space.pl);
-        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', space.pr);
+        if (space.p) this.renderer.setStyle(this.element, 'padding', `${space.p}px`);
+        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', `${space.pt}px`);
+        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', `${space.pb}px`);
+        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', `${space.pl}px`);
+        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', `${space.pr}px`);
 
-        if (space.m) this.renderer.setStyle(this.element, 'margin', space.m);
-        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', space.mt);
-        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', space.mb);
-        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', space.ml);
-        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', space.mr);
-    }
-
-    /**
-     * Process size block of the element
-     * @param {Size} size size data for the element
-     * @private
-     */
-    private processSizeBlock(size: Size): void {
-        if (!size) {
-            return;
-        }
-
-        const display = size.display ?? 'BLOCK';
-
-        this.renderer.setStyle(this.element, 'display', display.toLowerCase().replace('_', '-'));
-        if (display === 'FLEX') {
-            this.renderer.setStyle(this.element, 'flex-direction', size.direction?.toLowerCase()?.replace('_', '-'));
-            this.renderer.setStyle(this.element, 'flex-wrap', size.wrap?.toLowerCase()?.replace('_', '-'));
-            // eslint-disable-next-line max-len
-            this.renderer.setStyle(this.element, 'justify-content', size.justifyContent?.toLowerCase()?.replace('_', '-'));
-            this.renderer.setStyle(this.element, 'align-items', size.alignItems?.toLowerCase()?.replace('_', '-'));
-        }
-
-        if (size.maxW || size.maxH) {
-            this.renderer.setStyle(this.element, 'max-width', size.maxW);
-            this.renderer.setStyle(this.element, 'max-height', size.maxH);
-        }
-
-        if (size.width) {
-            if (size.width.includes('px') && parseInt(size.width.replace('px', '')) > this.screenWidth) {
-                Log.w('container.size.width can\'t be more than the screen size');
-            }
-
-            this.renderer.setStyle(this.element, 'width', size.width);
-        }
-
-        if (size.height) {
-            if (size.height.includes('px') && parseInt(size.height.replace('px', '')) > this.screenHeight) {
-                Log.w('container.size.height can\'t be more than the screen size');
-            }
-
-            this.renderer.setStyle(this.element, 'height', size.height);
-        }
+        if (space.m) this.renderer.setStyle(this.element, 'margin', `${space.m}px`);
+        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', `${space.mt}px`);
+        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', `${space.mb}px`);
+        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', `${space.ml}px`);
+        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', `${space.mr}px`);
     }
 
     /**

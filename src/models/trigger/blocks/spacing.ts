@@ -1,15 +1,15 @@
 export interface Spacing {
 
-    readonly p: string; // padding from all direction
-    readonly pl: string; // padding from left
-    readonly pr: string; // padding from right
-    readonly pt: string; // padding from top
-    readonly pb: string; // padding from bottom
+    readonly p: number; // padding from all direction
+    readonly pl: number; // padding from left
+    readonly pr: number; // padding from right
+    readonly pt: number; // padding from top
+    readonly pb: number; // padding from bottom
 
-    readonly m: string; // margin from all direction
-    readonly ml: string; // margin from left
-    readonly mr: string; // margin from right
-    readonly mt: string; // margin from top
-    readonly mb: string; // margin from bottom
+    readonly m: number; // margin from all direction
+    readonly ml: number; // margin from left
+    readonly mr: number; // margin from right
+    readonly mt: number; // margin from top
+    readonly mb: number; // margin from bottom
 
 }

@@ -20,9 +20,6 @@ export class GroupRenderer extends BlockRenderer {
         // By default the parents will be relative
         this.renderer.setStyle(newElement, 'position', 'relative');
 
-        elementData.size = elementData.size ?? {};
-        elementData.size.display = 'FLEX';
-
         this.commonRenderingFunction(newElement, elementData);
         this.renderer.appendChild(parent, newElement);
 
