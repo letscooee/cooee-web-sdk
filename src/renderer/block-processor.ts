@@ -1,12 +1,16 @@
-import {Log} from '../utils/log';
 import {Renderer} from './renderer';
 import hexToRgba from 'hex-to-rgba';
 import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {
-    Size, Position, Border, Background, Spacing, Transform,
-    ClickAction, Colour, Gradient,
+    Background,
+    Border,
+    ClickAction,
+    Colour, Flex,
+    Gradient,
+    Spacing,
+    Transform,
 } from '../models/trigger/blocks';
 
 /**
@@ -17,10 +21,14 @@ import {
  */
 export abstract class BlockProcessor {
 
+    private static readonly HEIGHT = 1920;
     protected readonly renderer: Renderer;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
+
+    private scalingFactor: number = 1;
+    private aspectRatio: number = 1;
 
     // @ts-ignore
     protected element: HTMLElement;
@@ -46,7 +54,8 @@ export abstract class BlockProcessor {
 
         this.element = element;
 
-        this.processPositionBlock(baseElement.pos);
+        this.processWidthAndHeight(baseElement);
+        this.processPositionBlock(baseElement);
         this.processBorderBlock(baseElement.br);
         this.processBgBlock(baseElement.bg);
         this.processSpaceBlock(baseElement.spc);
@@ -54,6 +63,44 @@ export abstract class BlockProcessor {
         this.processTransformBlock(baseElement.trf);
         this.processFlexBlock(baseElement.fx);
         this.registerAction(baseElement.click);
+    }
+
+    /**
+     * Process width and height
+     * @param baseElement
+     * @private
+     */
+    private processWidthAndHeight(baseElement: BaseElement): void {
+        this.renderer.setStyle(this.element, 'box-sizing', 'border-box');
+
+        let calculatedHeight: number = 0;
+        let calculatedWidth: number = 0;
+        // For Portrait mode
+        if (this.screenHeight > this.screenWidth) {
+            this.aspectRatio = baseElement.w / baseElement.h;
+            this.scalingFactor = this.screenHeight / BlockProcessor.HEIGHT;
+
+            calculatedHeight = baseElement.h * this.scalingFactor;
+            calculatedWidth = calculatedHeight * this.aspectRatio;
+        }
+
+        this.renderer.setStyle(this.element, 'height', calculatedHeight);
+        this.renderer.setStyle(this.element, 'width', calculatedWidth);
+    }
+
+    /**
+     * Get calculated size according to the device
+     * @param {number} value size passed in payload
+     * @return number calculated size
+     */
+    protected getCalculatedSize(value: number): number {
+        let scalingFactor: number = 1;
+
+        if (this.screenHeight > this.screenWidth) {
+            scalingFactor = this.screenHeight / BlockProcessor.HEIGHT;
+        }
+
+        return value * scalingFactor;
     }
 
     /**
@@ -78,20 +125,17 @@ export abstract class BlockProcessor {
 
     /**
      * Process position block of the element
-     * @param {Position} position position data for the element
+     * @param {BaseElement} baseElement position data for the element
      * @private
      */
-    private processPositionBlock(position: Position): void {
-        if (!position) {
+    private processPositionBlock(baseElement: BaseElement): void {
+        if (baseElement.mode !== 'FREE_FLOATING') {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'position', position.type?.toLowerCase());
-        this.renderer.setStyle(this.element, 'top', position.top);
-        this.renderer.setStyle(this.element, 'bottom', position.bottom);
-        this.renderer.setStyle(this.element, 'left', position.left);
-        this.renderer.setStyle(this.element, 'right', position.right);
-        if (position.zIndex) this.renderer.setStyle(this.element, 'z-index', position.zIndex);
+        if (baseElement.x) this.renderer.setStyle(this.element, 'top', `${this.getCalculatedSize(baseElement.x)}px`);
+        if (baseElement.y) this.renderer.setStyle(this.element, 'left', `${this.getCalculatedSize(baseElement.y)}px`);
+        if (baseElement.z) this.renderer.setStyle(this.element, 'z-index', `${baseElement.z}`);
     }
 
     /**
@@ -106,12 +150,12 @@ export abstract class BlockProcessor {
 
         // Just to make sure radius is not a negative number
         if (border.radius > 0) {
-            this.renderer.setStyle(this.element, 'border-radius', `${border.radius}px`);
+            this.renderer.setStyle(this.element, 'border-radius', `${this.getCalculatedSize(border.radius)}px`);
         }
 
         // Just to make sure width is not a negative number
         if (border.width > 0) {
-            this.renderer.setStyle(this.element, 'border-width', `${border.width}px`);
+            this.renderer.setStyle(this.element, 'border-width', `${this.getCalculatedSize(border.width)}px`);
             this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase() ?? 'solid');
 
             if (border.colour) {
@@ -132,17 +176,17 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.element, 'padding', `${space.p}px`);
-        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', `${space.pt}px`);
-        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', `${space.pb}px`);
-        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', `${space.pl}px`);
-        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', `${space.pr}px`);
+        if (space.p) this.renderer.setStyle(this.element, 'padding', `${this.getCalculatedSize(space.p)}px`);
+        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', `${this.getCalculatedSize(space.pt)}px`);
+        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', `${this.getCalculatedSize(space.pb)}px`);
+        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', `${this.getCalculatedSize(space.pl)}px`);
+        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', `${this.getCalculatedSize(space.pr)}px`);
 
-        if (space.m) this.renderer.setStyle(this.element, 'margin', `${space.m}px`);
-        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', `${space.mt}px`);
-        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', `${space.mb}px`);
-        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', `${space.ml}px`);
-        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', `${space.mr}px`);
+        if (space.m) this.renderer.setStyle(this.element, 'margin', `${this.getCalculatedSize(space.m)}px`);
+        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', `${this.getCalculatedSize(space.mt)}px`);
+        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', `${this.getCalculatedSize(space.mb)}px`);
+        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', `${this.getCalculatedSize(space.ml)}px`);
+        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', `${this.getCalculatedSize(space.mr)}px`);
     }
 
     /**

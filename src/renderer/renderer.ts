@@ -37,7 +37,7 @@ export class Renderer {
      * @return {number} inner width of the browser
      */
     public getWidth(): number {
-        return window.innerWidth;
+        return document.documentElement.clientWidth;
     }
 
     /**
@@ -45,7 +45,7 @@ export class Renderer {
      * @return {number} inner height of the browser
      */
     public getHeight(): number {
-        return window.innerHeight;
+        return document.documentElement.clientHeight;
     }
 
     /**
