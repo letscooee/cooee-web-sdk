@@ -1,6 +1,6 @@
-import {BaseElement} from '../elements/base-element';
+import {GroupElement} from '../elements';
 
-export interface Container extends BaseElement {
+export interface Container extends GroupElement {
 
     animation: string;
 

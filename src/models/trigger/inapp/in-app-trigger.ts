@@ -1,5 +1,4 @@
 import {Container} from './container';
-import {Layer} from './layer';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -10,6 +9,5 @@ import {Layer} from './layer';
 export interface InAppTrigger {
 
     container: Container;
-    layers: Layer[]
 
 }

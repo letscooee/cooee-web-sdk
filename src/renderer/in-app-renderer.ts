@@ -1,13 +1,14 @@
 import {Log} from '../utils/log';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {Layer} from '../models/trigger/inapp/layer';
 import {BaseElement, ButtonElement, GroupElement, ImageElement, TextElement} from '../models/trigger/elements/';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
 import {ElementType} from '../models/trigger/elements/base-element';
-import {ButtonRenderer, GroupRenderer, ImageRenderer, TextRenderer,
-    RootContainerRenderer, ContainerRenderer, LayerRenderer} from './';
+import {
+    ButtonRenderer, GroupRenderer, ImageRenderer, TextRenderer,
+    RootContainerRenderer,
+} from './';
 
 /**
  * Renders In App trigger
@@ -53,32 +54,6 @@ export class InAppRenderer {
         }
 
         this.renderContainer();
-        this.renderLayers();
-    }
-
-    /**
-     * Render all the layers from {@link ian} block.
-     * @private
-     */
-    private renderLayers(): void {
-        this.ian?.layers?.forEach((layer: Layer, index: number) => {
-            this.renderLayer(layer, index);
-        });
-    }
-
-    /**
-     * Render individual layer from layers list in {@link ian} block.
-     * @param {Layer} layerData style and attributes data of the layer
-     * @param {number} index
-     * @private
-     */
-    private renderLayer(layerData: Layer, index: number): void {
-        const layerElement = new LayerRenderer().render(this.rootContainer, layerData);
-        layerData.children?.forEach((elementData: BaseElement, elementIndex: number) => {
-            const newElement = this.renderElement(layerElement, elementData);
-
-            newElement.id = `layer[${index}].element[${elementIndex}]-` + elementData.type?.toLowerCase();
-        });
     }
 
     /**
@@ -122,7 +97,13 @@ export class InAppRenderer {
             return;
         }
 
-        new ContainerRenderer().render(this.rootContainer, container);
+        const groupElement = container as GroupElement;
+        const htmlGroupElement = new GroupRenderer().render(this.rootContainer, groupElement);
+
+        groupElement.children?.forEach((element: BaseElement) => {
+            element.type = ElementType.GROUP;
+            this.renderElement(htmlGroupElement, element);
+        });
     }
 
 }

@@ -24,6 +24,8 @@ export class Renderer {
         this.setStyle(rootDiv, 'position', 'absolute');
         this.setStyle(rootDiv, 'top', '0px');
         this.setStyle(rootDiv, 'left', '0px');
+        this.setStyle(rootDiv, 'width', '100%');
+        this.setStyle(rootDiv, 'height', '100%');
 
         this.appendChild(this.doc.body, rootDiv);
 
