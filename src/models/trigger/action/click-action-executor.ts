@@ -7,6 +7,7 @@ import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {Props} from '../../../types';
 import {LocalStorageHelper} from '../../../utils/local-storage-helper';
+import {Permission} from '../blocks/click-action';
 
 /**
  * Performs click to action on in-app elements
@@ -36,7 +37,7 @@ export class ClickActionExecutor {
         this.iabAction();
         this.upAction();
         this.kvAction();
-        this.prompts();
+        this.prompt();
         this.closeAction();
         this.shareAction();
     }
@@ -45,8 +46,8 @@ export class ClickActionExecutor {
      * Performs external action where url is opened in new tab/window.
      */
     externalAction(): void {
-        if (this.action.external) {
-            window.open(this.action.external.url, '_blank')?.focus();
+        if (this.action.ext) {
+            window.open(this.action.ext.u, '_blank')?.focus();
         }
     }
 
@@ -55,7 +56,7 @@ export class ClickActionExecutor {
      */
     iabAction(): void {
         if (this.action.iab) {
-            new IFrameRenderer().render(this.action.iab.url as string);
+            new IFrameRenderer().render(this.action.iab.u as string);
         }
     }
 
@@ -80,22 +81,22 @@ export class ClickActionExecutor {
     /**
      * Performs prompt action i.e. ask for permission for location and notification.
      */
-    prompts(): void {
-        if (this.action.prompts) {
-            // TODO test in mobile browsers
-            for (const permission of this.action.prompts) {
-                if (permission === 'LOCATION') {
-                    this.promptLocationPermission();
-                }
+    prompt(): void {
+        const permission: string = this.action.prompt;
+        if (!permission) {
+            return;
+        }
+        // TODO test in mobile browsers
+        if (permission === Permission.Location) {
+            this.promptLocationPermission();
+        }
 
-                if (permission === 'PUSH') {
-                    this.promptPushNotificationPermission();
-                }
+        if (permission === Permission.Push) {
+            this.promptPushNotificationPermission();
+        }
 
-                if (permission === 'CAMERA') {
-                    this.promptCameraPermission();
-                }
-            }
+        if (permission === Permission.Camera) {
+            this.promptCameraPermission();
         }
     }
 
