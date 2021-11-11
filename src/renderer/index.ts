@@ -10,11 +10,11 @@ export function getScalingFactor(): number {
     const screenWidth = document.documentElement.clientWidth;
     const screenHeight = document.documentElement.clientHeight;
 
-    const longEdge = Math.max(Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-
     if (screenWidth < screenHeight) {
-        return screenWidth / longEdge;
+        const shortEdge = Math.min(Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
+        return screenWidth / shortEdge;
     } else {
+        const longEdge = Math.max(Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
         return screenHeight / longEdge;
     }
 }
