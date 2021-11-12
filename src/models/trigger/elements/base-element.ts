@@ -23,7 +23,10 @@ export interface BaseElement {
 }
 
 export enum ElementType {
+    // eslint-disable-next-line no-unused-vars
     TEXT = 'TEXT',
+    // eslint-disable-next-line no-unused-vars
     IMAGE = 'IMAGE',
+    // eslint-disable-next-line no-unused-vars
     GROUP = 'GROUP',
 }

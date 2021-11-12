@@ -6,6 +6,10 @@ export {ImageRenderer} from './image-renderer';
 export {RootContainerRenderer} from './root-container-renderer';
 export {IFrameRenderer} from './iFrame-renderer';
 
+/**
+ * Calculate scaling factor according to screen sizes
+ * @return number scaling factor
+ */
 export function getScalingFactor(): number {
     const screenWidth = document.documentElement.clientWidth;
     const screenHeight = document.documentElement.clientHeight;
