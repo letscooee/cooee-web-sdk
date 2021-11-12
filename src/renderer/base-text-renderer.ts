@@ -37,7 +37,7 @@ export abstract class BaseTextRenderer extends BlockRenderer {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'font-size', `${this.getSizePx(font.s)}px`);
+        this.renderer.setStyle(this.element, 'font-size', this.getSizePx(font.s));
         this.renderer.setStyle(this.element, 'font-family', font.ff);
         this.renderer.setStyle(this.element, 'line-height', `${font.lh}`);
     }

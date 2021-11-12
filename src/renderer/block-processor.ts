@@ -112,8 +112,9 @@ export abstract class BlockProcessor {
             return;
         }
 
-        if (baseElement.x) this.renderer.setStyle(this.element, 'top', this.getSizePx(baseElement.x));
-        if (baseElement.y) this.renderer.setStyle(this.element, 'left', this.getSizePx(baseElement.y));
+        this.renderer.setStyle(this.element, 'position', 'absolute');
+        if (baseElement.x) this.renderer.setStyle(this.element, 'top', this.getSizePx(baseElement.y));
+        if (baseElement.y) this.renderer.setStyle(this.element, 'left', this.getSizePx(baseElement.x));
         if (baseElement.z) this.renderer.setStyle(this.element, 'z-index', `${baseElement.z}`);
     }
 
