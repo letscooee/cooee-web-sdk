@@ -1,7 +1,7 @@
 import {ClickAction} from '../blocks';
 import {Renderer} from '../../../renderer/renderer';
 import {Constants} from '../../../constants';
-import {IFrameRenderer} from '../../../renderer';
+import {IFrameRenderer, RootContainerRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
@@ -108,7 +108,7 @@ export class ClickActionExecutor {
             return;
         }
 
-        new Renderer().removeInApp();
+        new RootContainerRenderer().removeInApp();
 
         const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
         const triggerID = LocalStorageHelper.getString(Constants.STORAGE_ACTIVE_TRIGGER_ID, '');

@@ -1,6 +1,6 @@
-import {BaseElement, BaseTextElement} from '../models/trigger/elements';
-import {Font} from '../models/trigger/blocks';
+import {TextElement} from '../models/trigger/elements';
 import {BlockProcessor} from './block-processor';
+import {TextAlign, TextPart} from '../models/trigger/elements/text-element';
 
 /**
  * Base class for rendering any text extending block from in-app.
@@ -8,66 +8,58 @@ import {BlockProcessor} from './block-processor';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export abstract class BaseTextRenderer extends BlockProcessor {
+export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
 
-    abstract render(parent: HTMLElement, element: BaseElement | string | null): HTMLElement;
+    protected constructor(parentElement: HTMLElement, inappElement: TextElement) {
+        super(parentElement, inappElement);
+    }
+
+    abstract render(): void;
 
     /**
      * Process all the common block in in-app.
-     * @param {HTMLElement} element element to be processed
-     * @param {BaseElement} baseElement style and attributes data of the element
      */
-    protected processCommonBlocks(element: HTMLElement, baseElement: BaseElement): void {
-        super.processCommonBlocks(element, baseElement);
-
-        const baseTextElement = baseElement as BaseTextElement;
-        this.processFontBlock(baseTextElement.font);
-        this.processTextAlignmentBlock(baseTextElement.alg);
-
-        this.processColourBlock(baseTextElement.color);
+    protected processCommonBlocks(): void {
+        super.processCommonBlocks();
+        this.processFontBlock();
+        this.processColourBlock(this.inappElement.color);
+        this.processAlignment();
     }
 
     /**
      * Process font block of the element
-     * @param {Font} font font data for the element
-     * @private
      */
-    protected processFontBlock(font: Font): void {
+    protected processFontBlock(): void {
+        const font = this.inappElement.font;
         if (!font) {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'font-size', this.getSizePx(font.s));
-        this.renderer.setStyle(this.element, 'font-family', font.ff);
-        this.renderer.setStyle(this.element, 'line-height', font.lh);
+        this.renderer.setStyle(this.inappHTMLEl, 'font-size', this.getSizePx(font.s));
+        this.renderer.setStyle(this.inappHTMLEl, 'font-family', font.ff);
+        this.renderer.setStyle(this.inappHTMLEl, 'line-height', font.lh);
+    }
+
+    protected processPart(partHTMLEl: HTMLSpanElement, part: TextPart): void {
+        const decoration = [];
+        if (part.u) decoration.push('underline');
+        if (part.st) decoration.push('line-through');
+        if (!decoration.length) decoration.push('normal');
+
+        this.renderer.setStyle(partHTMLEl, 'font-weight', part.b ? 'bold' : 'normal');
+        this.renderer.setStyle(partHTMLEl, 'font-style', part.i ? 'italic' : 'normal');
+        this.renderer.setStyle(partHTMLEl, 'text-decoration', decoration.join(' '));
+        this.renderer.setStyle(partHTMLEl, 'color', part.c ?? 'inherit');
     }
 
     /**
      * Process text alignment block of the element
-     * @param {number} alignment alignment data for the element
      * @private
      */
-    protected processTextAlignmentBlock(alignment: number): void {
-        let value: string;
-
-        switch (alignment) {
-            case 1: {
-                value = 'center';
-                break;
-            }
-            case 2: {
-                value = 'end';
-                break;
-            }
-            case 3: {
-                value = 'justify';
-                break;
-            }
-            default: {
-                value = 'start';
-            }
-        }
-        this.renderer.setStyle(this.element, 'text-align', value);
+    protected processAlignment(): void {
+        let value = TextAlign[this.inappElement.alg]?.toLowerCase();
+        if (!value) value = 'start';
+        this.renderer.setStyle(this.inappHTMLEl, 'text-align', value);
     }
 
 }

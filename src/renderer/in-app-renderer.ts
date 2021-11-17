@@ -46,24 +46,17 @@ export class InAppRenderer {
      * Render elements.
      * @param {HTMLElement} parentEl element to be rendered
      * @param {BaseElement} inappElement style and attributes data of the element
-     * @return {HTMLElement} rendered element
-     * @private
      */
-    private renderElement(parentEl: HTMLElement, inappElement: BaseElement): HTMLElement {
-        let newElement: HTMLElement;
-
+    private renderElement(parentEl: HTMLElement, inappElement: BaseElement): void {
         if (inappElement instanceof TextElement) {
-            newElement = new TextRenderer().render(parentEl, inappElement);
+            new TextRenderer(parentEl, inappElement).render();
         } else if (inappElement instanceof ImageElement) {
-            newElement = new ImageRenderer().render(parentEl, inappElement);
+            new ImageRenderer(parentEl, inappElement).render();
         } else if (inappElement instanceof ShapeElement) {
-            newElement = new ShapeRenderer().render(parentEl, inappElement);
+            new ShapeRenderer(parentEl, inappElement).render();
         } else {
             Log.e('Unsupported element type- ' + inappElement.type);
         }
-
-        // @ts-ignore
-        return newElement;
     }
 
     /**
@@ -76,7 +69,9 @@ export class InAppRenderer {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer().render(this.rootContainer, container);
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
+            .render()
+            .getHTMLElement();
 
         this.ian.elems?.forEach((element: BaseElement) => {
             this.renderElement(containerHTMLElement, element);

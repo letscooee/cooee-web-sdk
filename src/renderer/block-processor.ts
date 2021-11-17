@@ -2,7 +2,7 @@ import {Renderer} from './renderer';
 import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {Background, Border, ClickAction, Color, Gradient, Spacing, Transform} from '../models/trigger/blocks';
+import {Color, Gradient} from '../models/trigger/blocks';
 import {getScalingFactor} from './index';
 
 /**
@@ -11,7 +11,7 @@ import {getScalingFactor} from './index';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export abstract class BlockProcessor {
+export abstract class BlockProcessor<T extends BaseElement> {
 
     protected readonly renderer: Renderer;
 
@@ -20,55 +20,54 @@ export abstract class BlockProcessor {
 
     private scalingFactor: number = getScalingFactor();
 
-    // @ts-ignore
-    protected element: HTMLElement;
+    protected readonly parentHTMLEl: HTMLElement;
+    protected readonly inappElement: T;
+    protected inappHTMLEl: HTMLElement;
 
     /**
      * Constructor
      */
-    protected constructor() {
+    protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
+        this.parentHTMLEl = parentHTMLEl;
+        this.inappElement = inappElement;
         this.renderer = new Renderer();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
     }
 
+    getHTMLElement(): HTMLElement {
+        return this.inappHTMLEl;
+    }
+
     /**
      * Process all the common blocks that can be placed in layer and container
-     * @param {HTMLElement} element element to be processed
-     * @param {BaseElement} baseElement style and attributes data of the element
-     * @private
      */
-    protected processCommonBlocks(element: HTMLElement, baseElement: BaseElement): void {
-        this.element = element;
-        this.element.classList.add(baseElement.typeAsString?.toLowerCase());
+    protected processCommonBlocks(): void {
+        this.processWidthAndHeight();
+        this.processPositionBlock();
+        this.processBorderBlock();
+        this.processBackgroundBlock();
+        this.processSpaceBlock();
+        this.processTransformBlock();
+        this.registerAction();
 
-        this.processWidthAndHeight(baseElement);
-        this.processPositionBlock(baseElement);
-        this.processBorderBlock(baseElement.br);
-        this.processBackgroundBlock(baseElement.bg);
-        this.processSpaceBlock(baseElement.spc);
-        this.processTransformBlock(baseElement.trf);
-        this.registerAction(baseElement.click);
-
-        this.renderer.setStyle(this.element, 'overflow', 'visible');
-        this.renderer.setStyle(this.element, 'outline', 'none');
+        this.renderer.setStyle(this.inappHTMLEl, 'overflow', 'visible');
+        this.renderer.setStyle(this.inappHTMLEl, 'outline', 'none');
     }
 
     /**
      * Process width and height
-     * @param baseElement
-     * @private
      */
-    private processWidthAndHeight(baseElement: BaseElement): void {
-        this.renderer.setStyle(this.element, 'box-sizing', 'border-box');
+    private processWidthAndHeight(): void {
+        this.renderer.setStyle(this.inappHTMLEl, 'box-sizing', 'border-box');
 
-        if (baseElement.w) {
-            this.renderer.setStyle(this.element, 'width', this.getSizePx(baseElement.w));
+        if (this.inappElement.w) {
+            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(this.inappElement.w));
         }
 
-        if (baseElement.h) {
-            this.renderer.setStyle(this.element, 'height', this.getSizePx(baseElement.h));
+        if (this.inappElement.h) {
+            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(this.inappElement.h));
         }
     }
 
@@ -83,102 +82,95 @@ export abstract class BlockProcessor {
 
     /**
      * Process position block of the element
-     * @param {BaseElement} baseElement position data for the element
-     * @private
      */
-    private processPositionBlock(baseElement: BaseElement): void {
-        if (!baseElement.x) {
+    private processPositionBlock(): void {
+        if (!this.inappElement.x) {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'position', 'absolute');
-        if (baseElement.x) this.renderer.setStyle(this.element, 'top', this.getSizePx(baseElement.y));
-        if (baseElement.y) this.renderer.setStyle(this.element, 'left', this.getSizePx(baseElement.x));
+        this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
+        if (this.inappElement.x) this.renderer.setStyle(this.inappHTMLEl, 'top', this.getSizePx(this.inappElement.y));
+        if (this.inappElement.y) this.renderer.setStyle(this.inappHTMLEl, 'left', this.getSizePx(this.inappElement.x));
     }
 
     /**
      * Process border block of the element
-     * @param {Border} border border data for the element
-     * @private
      */
-    private processBorderBlock(border: Border): void {
+    private processBorderBlock(): void {
+        const border = this.inappElement.br;
         if (!border) {
             return;
         }
 
         // Just to make sure radius is not a negative number
         if (border.radius && border.radius > 0) {
-            this.renderer.setStyle(this.element, 'border-radius', this.getSizePx(border.radius));
+            this.renderer.setStyle(this.inappHTMLEl, 'border-radius', this.getSizePx(border.radius));
         }
 
         // Just to make sure width is not a negative number
         if (border.width && border.width > 0) {
-            this.renderer.setStyle(this.element, 'border-width', this.getSizePx(border.width));
-            this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase());
+            this.renderer.setStyle(this.inappHTMLEl, 'border-width', this.getSizePx(border.width));
+            this.renderer.setStyle(this.inappHTMLEl, 'border-style', border.style?.toLowerCase());
 
             if (border.color) {
                 this.processColourBlock(border.color, 'border-color');
             } else {
-                this.renderer.setStyle(this.element, 'border-color', 'black');
+                this.renderer.setStyle(this.inappHTMLEl, 'border-color', 'black');
             }
         }
     }
 
     /**
      * Process space block of the element which include margin and padding.
-     * @param {Spacing} space space data for the element
-     * @private
      */
-    private processSpaceBlock(space: Spacing): void {
+    private processSpaceBlock(): void {
+        const space = this.inappElement.spc;
         if (!space) {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.element, 'padding', this.getSizePx(space.p));
-        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', this.getSizePx(space.pt));
-        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', this.getSizePx(space.pb));
-        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', this.getSizePx(space.pl));
-        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', this.getSizePx(space.pr));
+        if (space.p) this.renderer.setStyle(this.inappHTMLEl, 'padding', this.getSizePx(space.p));
+        if (space.pt) this.renderer.setStyle(this.inappHTMLEl, 'padding-top', this.getSizePx(space.pt));
+        if (space.pb) this.renderer.setStyle(this.inappHTMLEl, 'padding-bottom', this.getSizePx(space.pb));
+        if (space.pl) this.renderer.setStyle(this.inappHTMLEl, 'padding-left', this.getSizePx(space.pl));
+        if (space.pr) this.renderer.setStyle(this.inappHTMLEl, 'padding-right', this.getSizePx(space.pr));
 
-        this.renderer.setStyle(this.element, 'margin', '0 !important');
+        this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 !important');
     }
 
     /**
      * Process transform block of the element
-     * @param {Transform} transform transform data for the element
-     * @private
      */
-    private processTransformBlock(transform: Transform): void {
+    private processTransformBlock(): void {
+        const transform = this.inappElement.trf;
         if (!transform) {
             return;
         }
 
         if (transform.rotate) {
-            this.renderer.setStyle(this.element, 'transform', `rotate(${transform.rotate}deg)`);
+            this.renderer.setStyle(this.inappHTMLEl, 'transform', `rotate(${transform.rotate}deg)`);
         }
     }
 
     /**
      * Register click-to-action(CTA) block of the element
-     * @param {ClickAction} action action data for the element
-     * @private
      */
-    private registerAction(action: ClickAction): void {
+    private registerAction(): void {
+        const action = this.inappElement.clc;
         if (!action) {
             return;
         }
 
-        this.element.addEventListener('click', () => {
+        this.inappHTMLEl.addEventListener('click', () => {
             new ClickActionExecutor(action).execute();
         });
     }
 
     /**
      * Process background block of the element
-     * @param {Background} bg background data for the element
-     * @private
      */
-    private processBackgroundBlock(bg: Background): void {
+    private processBackgroundBlock(): void {
+        const bg = this.inappElement.bg;
         if (!bg) {
             return;
         }
@@ -189,7 +181,7 @@ export abstract class BlockProcessor {
         }
 
         if (bg.glossy) {
-            this.renderer.setStyle(this.element, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(this.inappHTMLEl, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
             if (bg.glossy.color) {
                 this.processColourBlock(bg.glossy.color, 'background');
@@ -198,7 +190,7 @@ export abstract class BlockProcessor {
             if (bg.solid.grad) {
                 this.processGradient(bg.solid.grad, 'background');
             } else if (bg.solid.hex) {
-                this.renderer.setStyle(this.element, 'background', bg.solid.rgba);
+                this.renderer.setStyle(this.inappHTMLEl, 'background', bg.solid.rgba);
             }
         } else if (bg.img) {
             if (!bg.img.src) {
@@ -206,11 +198,11 @@ export abstract class BlockProcessor {
             }
 
             const value = `url("${bg.img.src}") no-repeat center`;
-            this.renderer.setStyle(this.element, 'background', value);
-            this.renderer.setStyle(this.element, 'background-size', 'cover');
+            this.renderer.setStyle(this.inappHTMLEl, 'background', value);
+            this.renderer.setStyle(this.inappHTMLEl, 'background-size', 'cover');
 
             if (bg.img.a) {
-                this.renderer.setStyle(this.element, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
+                this.renderer.setStyle(this.inappHTMLEl, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
             }
         }
     }
@@ -239,7 +231,7 @@ export abstract class BlockProcessor {
 
             linearFunctionString += `)`;
             const gradient = linearFunctionString;
-            this.renderer.setStyle(this.element, attribute, gradient);
+            this.renderer.setStyle(this.inappHTMLEl, attribute, gradient);
         }
     }
 
@@ -257,7 +249,7 @@ export abstract class BlockProcessor {
         if (colour.grad) {
             this.processGradient(colour.grad, attribute);
         } else if (colour.hex) {
-            this.renderer.setStyle(this.element, attribute, colour.rgba);
+            this.renderer.setStyle(this.inappHTMLEl, attribute, colour.rgba);
         }
     }
 

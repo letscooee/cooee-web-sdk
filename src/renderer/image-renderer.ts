@@ -7,30 +7,24 @@ import {BlockProcessor} from './block-processor';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class ImageRenderer extends BlockProcessor {
+export class ImageRenderer extends BlockProcessor<ImageElement> {
 
-    constructor() {
-        super();
+    constructor(parentElement: HTMLElement, inappElement: ImageElement) {
+        super(parentElement, inappElement);
+        this.inappHTMLEl = this.renderer.createElement('img');
     }
 
     /**
      * Render image element from layers list in {@link ian} block.
-     * @param {HTMLElement} parent
-     * @param {ImageElement} elementData style and attributes data of the image element
-     * @return {HTMLElement} rendered image element
      */
-    public render(parent: HTMLElement, elementData: ImageElement): HTMLElement {
-        const newElement = this.renderer.createElement('img');
-        this.renderer.setAttribute(newElement, 'src', elementData.src);
-        this.renderer.setStyle(newElement, 'max-width', '100%');
-        this.renderer.setStyle(newElement, 'max-height', '100%');
-        this.renderer.setStyle(newElement, 'display', 'block');
-        this.renderer.setStyle(newElement, 'margin', '0 auto');
-
-        this.processCommonBlocks(newElement, elementData);
-        this.renderer.appendChild(parent, newElement);
-
-        return newElement;
+    render(): void {
+        this.renderer.setAttribute(this.inappHTMLEl, 'src', this.inappElement.src);
+        this.renderer.setStyle(this.inappHTMLEl, 'max-width', '100%');
+        this.renderer.setStyle(this.inappHTMLEl, 'max-height', '100%');
+        this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
+        this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 auto');
+        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
+        this.processCommonBlocks();
     }
 
 }
