@@ -1,4 +1,4 @@
-import {GroupElement} from '../elements/group-element';
+import {ShapeElement} from '../elements/shape-element';
 
-export interface Layer extends GroupElement {
+export interface Layer extends ShapeElement {
 }

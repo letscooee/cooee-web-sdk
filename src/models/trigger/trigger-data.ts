@@ -28,7 +28,7 @@ export class TriggerData {
         this.engagementID = data.engagementID;
         this.internal = data.internal;
         this.pn = data.pn;
-        this.ian = data.ian;
+        this.ian = new InAppTrigger(data.ian);
     }
 
 }

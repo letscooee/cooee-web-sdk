@@ -1,8 +1,8 @@
-import {Colour} from './colour';
+import {Color} from './color';
 
 export interface Shadow {
 
-    readonly elevation: string;
-    readonly colour: Colour;
+    readonly e: string;
+    readonly c: Color;
 
 }

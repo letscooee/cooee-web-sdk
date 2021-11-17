@@ -1,8 +1,9 @@
-import {GroupElement} from '../elements';
+import {BaseElement} from '../elements';
 
-export interface Container extends GroupElement {
+export class Container extends BaseElement {
 
-    children: GroupElement[];
-    animation: string;
+    constructor(data: Record<string, any>) {
+        super(data);
+    }
 
 }

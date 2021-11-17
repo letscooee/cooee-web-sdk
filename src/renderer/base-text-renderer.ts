@@ -1,6 +1,6 @@
-import {BlockRenderer} from './block-renderer';
 import {BaseElement, BaseTextElement} from '../models/trigger/elements';
 import {Font} from '../models/trigger/blocks';
+import {BlockProcessor} from './block-processor';
 
 /**
  * Base class for rendering any text extending block from in-app.
@@ -8,7 +8,7 @@ import {Font} from '../models/trigger/blocks';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export abstract class BaseTextRenderer extends BlockRenderer {
+export abstract class BaseTextRenderer extends BlockProcessor {
 
     abstract render(parent: HTMLElement, element: BaseElement | string | null): HTMLElement;
 
@@ -17,14 +17,14 @@ export abstract class BaseTextRenderer extends BlockRenderer {
      * @param {HTMLElement} element element to be processed
      * @param {BaseElement} baseElement style and attributes data of the element
      */
-    protected commonRenderingFunction(element: HTMLElement, baseElement: BaseElement): void {
-        super.commonRenderingFunction(element, baseElement);
+    protected processCommonBlocks(element: HTMLElement, baseElement: BaseElement): void {
+        super.processCommonBlocks(element, baseElement);
 
         const baseTextElement = baseElement as BaseTextElement;
         this.processFontBlock(baseTextElement.font);
         this.processTextAlignmentBlock(baseTextElement.alg);
 
-        this.processColourBlock(baseTextElement.clr);
+        this.processColourBlock(baseTextElement.color);
     }
 
     /**
@@ -39,7 +39,7 @@ export abstract class BaseTextRenderer extends BlockRenderer {
 
         this.renderer.setStyle(this.element, 'font-size', this.getSizePx(font.s));
         this.renderer.setStyle(this.element, 'font-family', font.ff);
-        this.renderer.setStyle(this.element, 'line-height', `${font.lh}`);
+        this.renderer.setStyle(this.element, 'line-height', font.lh);
     }
 
     /**

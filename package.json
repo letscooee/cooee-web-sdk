@@ -43,8 +43,9 @@
     },
     "dependencies": {
         "bson-objectid": "^2.0.1",
+        "hex-rgb": "^5.0.0",
+        "hex-to-rgba": "^2.0.1",
         "rxjs": "^7.3.0",
-        "ua-parser-js": "^0.7.28",
-        "hex-to-rgba": "^2.0.1"
+        "ua-parser-js": "^0.7.28"
     }
 }

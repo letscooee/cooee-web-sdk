@@ -4,7 +4,7 @@ export interface ClickAction {
 
     readonly iab: Props;
     readonly ext: Props;
-    readonly prompt : Permission;
+    readonly prompt: Permission;
     readonly up: Props;
     readonly kv: Props;
     readonly share: Props;

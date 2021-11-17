@@ -10,7 +10,6 @@ export interface Gradient {
     readonly c4: string | undefined;
     readonly c5: string | undefined;
 
-    readonly angle: number; // unused
-    readonly direction: string;
+    readonly ang: number; // unused
 
 }

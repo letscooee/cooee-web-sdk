@@ -1,9 +1,23 @@
-import {Colour} from './colour';
+import {Color} from './color';
 
-export interface Glossy {
+export class Glossy {
 
-    readonly radius: number;
-    readonly sampling?: number; // used in Android SDK
-    readonly colour?: Colour;
+    readonly r: number;
+    readonly c?: Color;
+
+    constructor(data: Record<string, any>) {
+        this.r = data.r;
+        if (data.c) {
+            this.c = new Color(data.c);
+        }
+    }
+
+    get radius(): number {
+        return this.r;
+    }
+
+    get color(): Color | undefined {
+        return this.c;
+    }
 
 }

@@ -1,7 +1,16 @@
 import {BaseTextElement} from './base-text-element';
 
-export interface TextElement extends BaseTextElement {
+export class TextElement extends BaseTextElement {
 
-    parts: TextElement[];
+    prs: TextElement[];
+
+    constructor(data: Record<string, any>) {
+        super(data);
+        this.prs = data.prs;
+    }
+
+    get parts(): TextElement[] {
+        return this.prs;
+    }
 
 }

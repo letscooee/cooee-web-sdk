@@ -1,11 +1,27 @@
-import {Colour, Font} from '../blocks';
+import {Color, Font} from '../blocks';
 import {BaseElement} from './base-element';
 
-export interface BaseTextElement extends BaseElement {
+export class BaseTextElement extends BaseElement {
 
-    text: string;
+    txt: string;
     alg: number;
-    font: Font;
-    clr: Colour;
+    f: Font;
+    c: Color;
+
+    protected constructor(data: Record<string, any>) {
+        super(data);
+        this.txt = data.txt;
+        this.alg = data.alg;
+        if (data.f) this.f = data.f;
+        if (data.c) this.c = new Color(data.c);
+    }
+
+    get color(): Color {
+        return this.c;
+    }
+
+    get font(): Font {
+        return this.f;
+    }
 
 }

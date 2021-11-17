@@ -1,14 +1,10 @@
 import {Log} from '../utils/log';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {BaseElement, GroupElement, ImageElement, TextElement} from '../models/trigger/elements/';
+import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
-import {ElementType} from '../models/trigger/elements/base-element';
-import {
-    GroupRenderer, ImageRenderer, TextRenderer,
-    RootContainerRenderer,
-} from './';
+import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 
 /**
@@ -20,7 +16,7 @@ import {ContainerRenderer} from './container-renderer';
 export class InAppRenderer {
 
     private readonly rootContainer: HTMLDivElement;
-    private ian: InAppTrigger | undefined;
+    private ian: InAppTrigger;
 
     /**
      * Public constructor
@@ -34,10 +30,11 @@ export class InAppRenderer {
      * @param {TriggerData} triggerData {@link TriggerData}
      */
     render(triggerData: TriggerData): void {
-        this.ian = triggerData.ian;
+        triggerData = new TriggerData(triggerData);
+        this.ian = triggerData.ian!;
 
         try {
-            this.startRendering();
+            this.renderContainer();
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             LocalStorageHelper.setString(Constants.STORAGE_ACTIVE_TRIGGER_ID, triggerData.id);
         } catch (e) {
@@ -46,40 +43,23 @@ export class InAppRenderer {
     }
 
     /**
-     * Starts rendering in-app containers and layers
-     * @private
-     */
-    private startRendering(): void {
-        if (!this.ian) {
-            return;
-        }
-
-        this.renderContainer();
-    }
-
-    /**
-     * Render element from layers list in {@link ian} block.
-     * @param {HTMLElement} el element to be rendered
-     * @param {BaseElement} elementData style and attributes data of the element
+     * Render elements.
+     * @param {HTMLElement} parentEl element to be rendered
+     * @param {BaseElement} inappElement style and attributes data of the element
      * @return {HTMLElement} rendered element
      * @private
      */
-    private renderElement(el: HTMLElement, elementData: BaseElement): HTMLElement {
+    private renderElement(parentEl: HTMLElement, inappElement: BaseElement): HTMLElement {
         let newElement: HTMLElement;
 
-        if (elementData.type === ElementType.TEXT) {
-            newElement = new TextRenderer().render(el, elementData as TextElement);
-        } else if (elementData.type === ElementType.IMAGE) {
-            newElement = new ImageRenderer().render(el, elementData as ImageElement);
-        } else if (elementData.type === ElementType.GROUP) {
-            const groupElement = elementData as GroupElement;
-            newElement = new GroupRenderer().render(el, groupElement);
-
-            groupElement.children?.forEach((newElementData: BaseElement) => {
-                this.renderElement(newElement, newElementData);
-            });
+        if (inappElement instanceof TextElement) {
+            newElement = new TextRenderer().render(parentEl, inappElement);
+        } else if (inappElement instanceof ImageElement) {
+            newElement = new ImageRenderer().render(parentEl, inappElement);
+        } else if (inappElement instanceof ShapeElement) {
+            newElement = new ShapeRenderer().render(parentEl, inappElement);
         } else {
-            Log.e('Unsupported element type- ' + elementData.type);
+            Log.e('Unsupported element type- ' + inappElement.type);
         }
 
         // @ts-ignore
@@ -91,15 +71,14 @@ export class InAppRenderer {
      * @private
      */
     private renderContainer(): void {
-        const container = this.ian!.container;
+        const container = this.ian?.cont;
         if (!container) {
             return;
         }
 
         const containerHTMLElement = new ContainerRenderer().render(this.rootContainer, container);
 
-        container.children?.forEach((element: BaseElement) => {
-            element.type = ElementType.GROUP;
+        this.ian.elems?.forEach((element: BaseElement) => {
             this.renderElement(containerHTMLElement, element);
         });
     }
