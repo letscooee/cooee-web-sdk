@@ -11,6 +11,9 @@ export class ContainerRenderer extends ShapeRenderer {
 
     constructor(parentElement: HTMLElement, inappElement: Container) {
         super(parentElement, inappElement);
+        // Need to figure out the best way of doing this
+        this.inappElement.w = 1080;
+        this.inappElement.h = 1920;
     }
 
     /**
@@ -19,8 +22,8 @@ export class ContainerRenderer extends ShapeRenderer {
     render(): this {
         super.render();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
-        this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
-        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
+        /*this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
+        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');*/
         return this;
     }
 
