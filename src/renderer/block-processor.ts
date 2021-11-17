@@ -4,6 +4,7 @@ import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {Color, Gradient} from '../models/trigger/blocks';
 import {getScalingFactor} from './index';
+import {Container} from '../models/trigger/inapp/container';
 
 /**
  * Process all the block of in-app
@@ -38,6 +39,10 @@ export abstract class BlockProcessor<T extends BaseElement> {
 
     getHTMLElement(): HTMLElement {
         return this.inappHTMLEl;
+    }
+
+    protected insertElement(): void {
+        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
     }
 
     /**
@@ -175,22 +180,28 @@ export abstract class BlockProcessor<T extends BaseElement> {
             return;
         }
 
+        let htmlElement = this.inappHTMLEl;
+        // For container, the background must be applied to its parent i.e. root container
+        if (this.inappElement instanceof Container) {
+            htmlElement = htmlElement.parentElement!;
+        }
+
         let prefix = '';
         if (new UAParser().getBrowser().name?.toLowerCase().includes('safari')) {
             prefix = '-webkit-';
         }
 
         if (bg.glossy) {
-            this.renderer.setStyle(this.inappHTMLEl, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
             if (bg.glossy.color) {
-                this.processColourBlock(bg.glossy.color, 'background');
+                this.processColourBlock(bg.glossy.color, 'background', htmlElement);
             }
         } else if (bg.solid) {
             if (bg.solid.grad) {
                 this.processGradient(bg.solid.grad, 'background');
             } else if (bg.solid.hex) {
-                this.renderer.setStyle(this.inappHTMLEl, 'background', bg.solid.rgba);
+                this.renderer.setStyle(htmlElement, 'background', bg.solid.rgba);
             }
         } else if (bg.img) {
             if (!bg.img.src) {
@@ -198,11 +209,11 @@ export abstract class BlockProcessor<T extends BaseElement> {
             }
 
             const value = `url("${bg.img.src}") no-repeat center`;
-            this.renderer.setStyle(this.inappHTMLEl, 'background', value);
-            this.renderer.setStyle(this.inappHTMLEl, 'background-size', 'cover');
+            this.renderer.setStyle(htmlElement, 'background', value);
+            this.renderer.setStyle(htmlElement, 'background-size', 'cover');
 
             if (bg.img.a) {
-                this.renderer.setStyle(this.inappHTMLEl, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
+                this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
             }
         }
     }
@@ -239,9 +250,10 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * Process colour block of the element
      * @param {Color} colour colour data of the element
      * @param {string} attribute attribute on which colour data need to be applied
+     * @param {HTMLElement} element Any other element to apply the color apart from {@link inappHTMLEl}
      * @private
      */
-    protected processColourBlock(colour: Color, attribute = 'color'): void {
+    protected processColourBlock(colour: Color, attribute = 'color', element = this.inappHTMLEl): void {
         if (!colour) {
             return;
         }
@@ -249,7 +261,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
         if (colour.grad) {
             this.processGradient(colour.grad, attribute);
         } else if (colour.hex) {
-            this.renderer.setStyle(this.inappHTMLEl, attribute, colour.rgba);
+            this.renderer.setStyle(element, attribute, colour.rgba);
         }
     }
 

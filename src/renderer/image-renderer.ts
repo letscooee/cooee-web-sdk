@@ -12,6 +12,7 @@ export class ImageRenderer extends BlockProcessor<ImageElement> {
     constructor(parentElement: HTMLElement, inappElement: ImageElement) {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('img');
+        this.insertElement();
     }
 
     /**
@@ -23,7 +24,6 @@ export class ImageRenderer extends BlockProcessor<ImageElement> {
         this.renderer.setStyle(this.inappHTMLEl, 'max-height', '100%');
         this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
         this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 auto');
-        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
         this.processCommonBlocks();
     }
 

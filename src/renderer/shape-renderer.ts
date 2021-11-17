@@ -12,6 +12,7 @@ export class ShapeRenderer extends BlockProcessor<ShapeElement> {
     constructor(parentElement: HTMLElement, inappElement: ShapeElement) {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
+        this.insertElement();
     }
 
     /**
@@ -19,7 +20,6 @@ export class ShapeRenderer extends BlockProcessor<ShapeElement> {
      */
     render(): void {
         this.processCommonBlocks();
-        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
     }
 
 }

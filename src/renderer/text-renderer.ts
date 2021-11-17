@@ -13,6 +13,7 @@ export class TextRenderer extends BaseTextRenderer {
     constructor(parentElement: HTMLElement, inappElement: TextElement) {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
+        this.insertElement();
     }
 
     /**
@@ -27,7 +28,6 @@ export class TextRenderer extends BaseTextRenderer {
         });
 
         this.processCommonBlocks();
-        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
     }
 
 }
