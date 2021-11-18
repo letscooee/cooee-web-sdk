@@ -1,30 +1,53 @@
-import {Background, Border, ClickAction, Overflow, Position, Shadow, Size, Spacing, Transform} from '../blocks';
+import {Background, Border, ClickAction, Shadow, Spacing, Transform} from '../blocks';
 
-export interface BaseElement {
+export abstract class BaseElement {
 
-    type: ElementType;
+    t: ElementType;
     bg: Background;
-    border: Border;
-    click: ClickAction;
-    overflow: Overflow;
-    position: Position;
-    shadow: Shadow;
-    size: Size;
-    spacing: Spacing;
-    transform: Transform;
+    br: Border;
+    clc: ClickAction;
+    shd: Shadow;
+    spc: Spacing;
+    trf: Transform;
+
+    w: number; // width
+    h: number; // height
+    x: number; // x-coordinate
+    y: number; // y-coordinate
+
+    protected constructor(data: Record<string, any>) {
+        this.t = data.t;
+        if (data.bg) this.bg = new Background(data.bg);
+        if (data.br) this.br = new Border(data.br);
+        this.clc = data.clc;
+        this.shd = data.shd;
+        this.spc = data.spc;
+        this.trf = data.trf;
+        this.w = data.w;
+        this.h = data.h;
+        this.x = data.x;
+        this.y = data.y;
+    }
+
+    get type(): ElementType {
+        return this.t;
+    }
+
+    get typeAsString(): string {
+        return ElementType[this.t];
+    }
+
+    get click(): ClickAction {
+        return this.clc;
+    }
 
 }
 
 export enum ElementType {
-    // TODO Why these are giving lint error no-unused-vars, even though they is used.
-    // eslint-disable-next-line no-unused-vars
-    TEXT = 'TEXT',
-    // eslint-disable-next-line no-unused-vars
-    IMAGE = 'IMAGE',
-    // eslint-disable-next-line no-unused-vars
-    BUTTON = 'BUTTON',
-    // eslint-disable-next-line no-unused-vars
-    GROUP = 'GROUP',
-    // eslint-disable-next-line no-unused-vars
-    LAYER = 'LAYER'
+
+    IMAGE = 1,
+    TEXT = 2,
+    BUTTON = 3,
+    SHAPE = 100,
+
 }

@@ -1,7 +1,9 @@
-import {BaseElement} from '../elements/base-element';
+import {BaseElement} from '../elements';
 
-export interface Container extends BaseElement {
+export class Container extends BaseElement {
 
-    animation: string;
+    constructor(data: Record<string, any>) {
+        super(data);
+    }
 
 }

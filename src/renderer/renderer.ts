@@ -1,5 +1,3 @@
-import {Constants} from '../constants';
-
 /**
  * Utility class for creating and rendering elements.
  *
@@ -11,31 +9,11 @@ export class Renderer {
     private doc: Document = document;
 
     /**
-     * Get root container
-     * @return {HTMLDivElement} root container
-     */
-    public getRootContainer(): HTMLDivElement {
-        this.removeInApp();
-
-        const rootDiv = this.createElement('div') as HTMLDivElement;
-        rootDiv.id = Constants.IN_APP_CONTAINER_NAME;
-        rootDiv.classList.add(Constants.IN_APP_CONTAINER_NAME);
-
-        this.setStyle(rootDiv, 'position', 'absolute');
-        this.setStyle(rootDiv, 'top', '0px');
-        this.setStyle(rootDiv, 'left', '0px');
-
-        this.appendChild(this.doc.body, rootDiv);
-
-        return rootDiv;
-    }
-
-    /**
      * Get width of the browser
      * @return {number} inner width of the browser
      */
     public getWidth(): number {
-        return window.innerWidth;
+        return document.documentElement.clientWidth;
     }
 
     /**
@@ -43,7 +21,7 @@ export class Renderer {
      * @return {number} inner height of the browser
      */
     public getHeight(): number {
-        return window.innerHeight;
+        return document.documentElement.clientHeight;
     }
 
     /**
@@ -92,17 +70,6 @@ export class Renderer {
      */
     public setAttribute(element: HTMLElement, attrName: string, value: any): void {
         element.setAttribute(attrName, value as string);
-    }
-
-    /**
-     * Remove InApp trigger.
-     */
-    public removeInApp(): void {
-        const rootDiv = this.doc.getElementById(Constants.IN_APP_CONTAINER_NAME) as HTMLDivElement;
-
-        if (rootDiv) {
-            rootDiv.parentElement!.removeChild(rootDiv);
-        }
     }
 
     /**

@@ -1,5 +1,6 @@
 import {BaseTextRenderer} from './base-text-renderer';
 import {TextElement} from '../models/trigger/elements';
+import {TextPart} from '../models/trigger/elements/text-element';
 
 /**
  * Renders text element present in in-app layer block.
@@ -9,30 +10,24 @@ import {TextElement} from '../models/trigger/elements';
  */
 export class TextRenderer extends BaseTextRenderer {
 
+    constructor(parentElement: HTMLElement, inappElement: TextElement) {
+        super(parentElement, inappElement);
+        this.inappHTMLEl = this.renderer.createElement('div');
+        this.insertElement();
+    }
+
     /**
      * Render text element from layers list in {@link ian} block.
-     * @param {HTMLElement} parent
-     * @param {TextElement} elementData style and attributes data of the text element
-     * @return {HTMLDivElement} rendered text element in a {@link HTMLDivElement}
      */
-    public render(parent: HTMLElement, elementData: TextElement): HTMLDivElement {
-        const newElement = this.renderer.createElement('div');
+    render(): void {
+        this.inappElement.parts?.forEach((partData: TextPart) => {
+            const newPartElement = this.renderer.createElement('span');
+            newPartElement.innerHTML = partData.txt;
+            this.processPart(newPartElement, partData);
+            this.renderer.appendChild(this.inappHTMLEl, newPartElement);
+        });
 
-        if (elementData.parts) {
-            elementData.parts.forEach((partData: TextElement) => {
-                const newPartElement = this.renderer.createElement('span');
-                newPartElement.innerHTML = partData.text;
-                this.processCommonBlocks(newPartElement, partData);
-                this.renderer.appendChild(newElement, newPartElement);
-            });
-        } else {
-            newElement.innerHTML = elementData.text;
-        }
-
-        this.commonRenderingFunction(newElement, elementData);
-        this.renderer.appendChild(parent, newElement);
-
-        return newElement as HTMLDivElement;
+        this.processCommonBlocks();
     }
 
 }

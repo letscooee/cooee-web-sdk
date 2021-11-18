@@ -1,12 +1,13 @@
 import {ClickAction} from '../blocks';
 import {Renderer} from '../../../renderer/renderer';
 import {Constants} from '../../../constants';
-import {IFrameRenderer} from '../../../renderer';
+import {IFrameRenderer, RootContainerRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {Props} from '../../../types';
 import {LocalStorageHelper} from '../../../utils/local-storage-helper';
+import {Permission} from '../blocks/click-action';
 
 /**
  * Performs click to action on in-app elements
@@ -36,7 +37,7 @@ export class ClickActionExecutor {
         this.iabAction();
         this.upAction();
         this.kvAction();
-        this.prompts();
+        this.prompt();
         this.closeAction();
         this.shareAction();
     }
@@ -45,8 +46,8 @@ export class ClickActionExecutor {
      * Performs external action where url is opened in new tab/window.
      */
     externalAction(): void {
-        if (this.action.external) {
-            window.open(this.action.external.url, '_blank')?.focus();
+        if (this.action.ext) {
+            window.open(this.action.ext.u, '_blank')?.focus();
         }
     }
 
@@ -55,7 +56,7 @@ export class ClickActionExecutor {
      */
     iabAction(): void {
         if (this.action.iab) {
-            new IFrameRenderer().render(this.action.iab.url as string);
+            new IFrameRenderer().render(this.action.iab.u as string);
         }
     }
 
@@ -80,22 +81,22 @@ export class ClickActionExecutor {
     /**
      * Performs prompt action i.e. ask for permission for location and notification.
      */
-    prompts(): void {
-        if (this.action.prompts) {
-            // TODO test in mobile browsers
-            for (const permission of this.action.prompts) {
-                if (permission === 'LOCATION') {
-                    this.promptLocationPermission();
-                }
+    prompt(): void {
+        const permission: string = this.action.prompt;
+        if (!permission) {
+            return;
+        }
+        // TODO test in mobile browsers
+        if (permission === Permission.Location) {
+            this.promptLocationPermission();
+        }
 
-                if (permission === 'PUSH') {
-                    this.promptPushNotificationPermission();
-                }
+        if (permission === Permission.Push) {
+            this.promptPushNotificationPermission();
+        }
 
-                if (permission === 'CAMERA') {
-                    this.promptCameraPermission();
-                }
-            }
+        if (permission === Permission.Camera) {
+            this.promptCameraPermission();
         }
     }
 
@@ -103,24 +104,26 @@ export class ClickActionExecutor {
      * Performs close action
      */
     closeAction(): void {
-        if (this.action.close) {
-            new Renderer().removeInApp();
-
-            const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-            const triggerID = LocalStorageHelper.getString(Constants.STORAGE_ACTIVE_TRIGGER_ID, '');
-
-            const diffInSeconds = (new Date().getTime() - startTime) / 1000;
-
-            const eventProps: Props = {
-                'triggerID': triggerID,
-                'Close Behaviour': 'CTA',
-                'Duration': diffInSeconds,
-            };
-            this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
-
-            LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
-            LocalStorageHelper.remove(Constants.STORAGE_ACTIVE_TRIGGER_ID);
+        if (!this.action.close) {
+            return;
         }
+
+        new RootContainerRenderer().removeInApp();
+
+        const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
+        const triggerID = LocalStorageHelper.getString(Constants.STORAGE_ACTIVE_TRIGGER_ID, '');
+
+        const diffInSeconds = (new Date().getTime() - startTime) / 1000;
+
+        const eventProps: Props = {
+            'triggerID': triggerID,
+            'Close Behaviour': 'CTA',
+            'Duration': diffInSeconds,
+        };
+        this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
+
+        LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
+        LocalStorageHelper.remove(Constants.STORAGE_ACTIVE_TRIGGER_ID);
     }
 
     /**
@@ -129,19 +132,20 @@ export class ClickActionExecutor {
     shareAction(): void {
         // Navigator.share only works in mobile browsers and with https urls.
         // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
-        if (this.action.share) {
-            // TODO test in mobile browsers
-            const share = navigator.share;
-
-            if (!share) {
-                Log.w('Navigator.share is not compatible with this browser');
-                return;
-            }
-
-            navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
-                .then((r) => console.log(r))
-                .catch((e) => console.error(e));
+        if (!this.action.share) {
+            return;
         }
+        // TODO test in mobile browsers
+        const share = navigator.share;
+
+        if (!share) {
+            Log.w('Navigator.share is not compatible with this browser');
+            return;
+        }
+
+        navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
+            .then((r) => console.log(r))
+            .catch((e) => console.error(e));
     }
 
     /**

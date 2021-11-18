@@ -1,5 +1,9 @@
-export interface Transform {
+export class Transform {
 
-    readonly rotate: number;
+    readonly rot?: number;
+
+    get rotate(): number | undefined {
+        return this.rot;
+    }
 
 }

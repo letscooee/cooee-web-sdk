@@ -1,5 +1,6 @@
 import {Container} from './container';
-import {Layer} from './layer';
+import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements';
+import {ElementType} from '../elements/base-element';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -7,9 +8,25 @@ import {Layer} from './layer';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export interface InAppTrigger {
+export class InAppTrigger {
 
-    container: Container;
-    layers: Layer[]
+    cont: Container;
+    elems: BaseElement[] = [];
+
+    constructor(data: Record<string, any>) {
+        this.cont = new Container(data.cont);
+
+        data.elems.forEach((rawElement: Record<string, any>) => {
+            if (rawElement.t === ElementType.IMAGE) {
+                this.elems.push(new ImageElement(rawElement));
+            } else if (rawElement.t === ElementType.TEXT) {
+                this.elems.push(new TextElement(rawElement));
+            } else if (rawElement.t === ElementType.BUTTON) {
+                this.elems.push(new TextElement(rawElement));
+            } else if (rawElement.t === ElementType.SHAPE) {
+                this.elems.push(new ShapeElement(rawElement));
+            }
+        });
+    }
 
 }

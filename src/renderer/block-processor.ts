@@ -1,13 +1,10 @@
-import {Log} from '../utils/log';
 import {Renderer} from './renderer';
-import hexToRgba from 'hex-to-rgba';
 import {BaseElement} from '../models/trigger/elements';
 import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {
-    Size, Position, Border, Background, Spacing, Overflow, Transform,
-    ClickAction, Colour, Gradient,
-} from '../models/trigger/blocks';
+import {Color, Gradient} from '../models/trigger/blocks';
+import {getScalingFactor} from './index';
+import {Container} from '../models/trigger/inapp/container';
 
 /**
  * Process all the block of in-app
@@ -15,209 +12,178 @@ import {
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export abstract class BlockProcessor {
+export abstract class BlockProcessor<T extends BaseElement> {
 
     protected readonly renderer: Renderer;
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
 
-    // @ts-ignore
-    protected element: HTMLElement;
+    private scalingFactor: number = getScalingFactor();
+
+    protected readonly parentHTMLEl: HTMLElement;
+    protected readonly inappElement: T;
+    protected inappHTMLEl: HTMLElement;
 
     /**
      * Constructor
      */
-    protected constructor() {
+    protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
+        this.parentHTMLEl = parentHTMLEl;
+        this.inappElement = inappElement;
         this.renderer = new Renderer();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
     }
 
+    getHTMLElement(): HTMLElement {
+        return this.inappHTMLEl;
+    }
+
+    protected insertElement(): void {
+        this.renderer.appendChild(this.parentHTMLEl, this.inappHTMLEl);
+    }
+
     /**
      * Process all the common blocks that can be placed in layer and container
-     * @param {HTMLElement} element element to be processed
-     * @param {BaseElement} baseElement style and attributes data of the element
-     * @private
      */
-    public processCommonBlocks(element: HTMLElement, baseElement: BaseElement): void {
-        if (!element) return;
+    protected processCommonBlocks(): void {
+        this.processWidthAndHeight();
+        this.processPositionBlock();
+        this.processBorderBlock();
+        this.processBackgroundBlock();
+        this.processSpaceBlock();
+        this.processTransformBlock();
+        this.registerAction();
 
-        this.element = element;
+        this.renderer.setStyle(this.inappHTMLEl, 'overflow', 'visible');
+        this.renderer.setStyle(this.inappHTMLEl, 'outline', 'none');
+    }
 
-        this.processSizeBlock(baseElement.size);
-        this.processPositionBlock(baseElement.position);
-        this.processBorderBlock(baseElement.border);
-        this.processBgBlock(baseElement.bg);
-        this.processSpaceBlock(baseElement.spacing);
-        this.processOverflowBlock(baseElement.overflow);
-        this.processTransformBlock(baseElement.transform);
-        this.registerAction(baseElement.click);
+    /**
+     * Process width and height
+     */
+    private processWidthAndHeight(): void {
+        this.renderer.setStyle(this.inappHTMLEl, 'box-sizing', 'border-box');
+
+        if (this.inappElement.w) {
+            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(this.inappElement.w));
+        }
+
+        if (this.inappElement.h) {
+            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(this.inappElement.h));
+        }
+    }
+
+    /**
+     * Get calculated size according to the device by multiplying it with scaling factor.
+     * @param {number} value size passed in payload
+     * @return number calculated size
+     */
+    protected getSizePx(value: number): string {
+        return (value * this.scalingFactor) + 'px';
     }
 
     /**
      * Process position block of the element
-     * @param {Position} position position data for the element
-     * @private
      */
-    private processPositionBlock(position: Position): void {
-        if (!position) {
+    private processPositionBlock(): void {
+        if (!this.inappElement.x) {
             return;
         }
 
-        this.renderer.setStyle(this.element, 'position', position.type?.toLowerCase());
-        this.renderer.setStyle(this.element, 'top', position.top);
-        this.renderer.setStyle(this.element, 'bottom', position.bottom);
-        this.renderer.setStyle(this.element, 'left', position.left);
-        this.renderer.setStyle(this.element, 'right', position.right);
-        if (position.zIndex) this.renderer.setStyle(this.element, 'z-index', position.zIndex);
+        this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
+        if (this.inappElement.x) this.renderer.setStyle(this.inappHTMLEl, 'top', this.getSizePx(this.inappElement.y));
+        if (this.inappElement.y) this.renderer.setStyle(this.inappHTMLEl, 'left', this.getSizePx(this.inappElement.x));
     }
 
     /**
      * Process border block of the element
-     * @param {Border} border border data for the element
-     * @private
      */
-    private processBorderBlock(border: Border): void {
+    private processBorderBlock(): void {
+        const border = this.inappElement.br;
         if (!border) {
             return;
         }
 
-        if (border.radius) {
-            this.renderer.setStyle(this.element, 'border-radius', border.radius);
+        // Just to make sure radius is not a negative number
+        if (border.radius && border.radius > 0) {
+            this.renderer.setStyle(this.inappHTMLEl, 'border-radius', this.getSizePx(border.radius));
         }
 
-        if (border.width) {
-            this.renderer.setStyle(this.element, 'border-width', border.width);
-            this.renderer.setStyle(this.element, 'border-style', border.style?.toLowerCase() ?? 'solid');
+        // Just to make sure width is not a negative number
+        if (border.width && border.width > 0) {
+            this.renderer.setStyle(this.inappHTMLEl, 'border-width', this.getSizePx(border.width));
+            this.renderer.setStyle(this.inappHTMLEl, 'border-style', border.style?.toLowerCase());
 
-            if (border.colour) {
-                this.processColourBlock(border.colour, 'border-color');
+            if (border.color) {
+                this.processColourBlock(border.color, 'border-color');
             } else {
-                this.renderer.setStyle(this.element, 'border-color', 'black');
+                this.renderer.setStyle(this.inappHTMLEl, 'border-color', 'black');
             }
         }
     }
 
     /**
      * Process space block of the element which include margin and padding.
-     * @param {Spacing} space space data for the element
-     * @private
      */
-    private processSpaceBlock(space: Spacing): void {
+    private processSpaceBlock(): void {
+        const space = this.inappElement.spc;
         if (!space) {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.element, 'padding', space.p);
-        if (space.pt) this.renderer.setStyle(this.element, 'padding-top', space.pt);
-        if (space.pb) this.renderer.setStyle(this.element, 'padding-bottom', space.pb);
-        if (space.pl) this.renderer.setStyle(this.element, 'padding-left', space.pl);
-        if (space.pr) this.renderer.setStyle(this.element, 'padding-right', space.pr);
+        if (space.p) this.renderer.setStyle(this.inappHTMLEl, 'padding', this.getSizePx(space.p));
+        if (space.pt) this.renderer.setStyle(this.inappHTMLEl, 'padding-top', this.getSizePx(space.pt));
+        if (space.pb) this.renderer.setStyle(this.inappHTMLEl, 'padding-bottom', this.getSizePx(space.pb));
+        if (space.pl) this.renderer.setStyle(this.inappHTMLEl, 'padding-left', this.getSizePx(space.pl));
+        if (space.pr) this.renderer.setStyle(this.inappHTMLEl, 'padding-right', this.getSizePx(space.pr));
 
-        if (space.m) this.renderer.setStyle(this.element, 'margin', space.m);
-        if (space.mt) this.renderer.setStyle(this.element, 'margin-top', space.mt);
-        if (space.mb) this.renderer.setStyle(this.element, 'margin-bottom', space.mb);
-        if (space.ml) this.renderer.setStyle(this.element, 'margin-left', space.ml);
-        if (space.mr) this.renderer.setStyle(this.element, 'margin-right', space.mr);
-    }
-
-    /**
-     * Process size block of the element
-     * @param {Size} size size data for the element
-     * @private
-     */
-    private processSizeBlock(size: Size): void {
-        if (!size) {
-            return;
-        }
-
-        const display = size.display ?? 'BLOCK';
-
-        this.renderer.setStyle(this.element, 'display', display.toLowerCase().replace('_', '-'));
-        if (display === 'FLEX') {
-            this.renderer.setStyle(this.element, 'flex-direction', size.direction?.toLowerCase()?.replace('_', '-'));
-            this.renderer.setStyle(this.element, 'flex-wrap', size.wrap?.toLowerCase()?.replace('_', '-'));
-            // eslint-disable-next-line max-len
-            this.renderer.setStyle(this.element, 'justify-content', size.justifyContent?.toLowerCase()?.replace('_', '-'));
-            this.renderer.setStyle(this.element, 'align-items', size.alignItems?.toLowerCase()?.replace('_', '-'));
-        }
-
-        if (size.maxW || size.maxH) {
-            this.renderer.setStyle(this.element, 'max-width', size.maxW);
-            this.renderer.setStyle(this.element, 'max-height', size.maxH);
-        }
-
-        if (size.width) {
-            if (size.width.includes('px') && parseInt(size.width.replace('px', '')) > this.screenWidth) {
-                Log.w('container.size.width can\'t be more than the screen size');
-            }
-
-            this.renderer.setStyle(this.element, 'width', size.width);
-        }
-
-        if (size.height) {
-            if (size.height.includes('px') && parseInt(size.height.replace('px', '')) > this.screenHeight) {
-                Log.w('container.size.height can\'t be more than the screen size');
-            }
-
-            this.renderer.setStyle(this.element, 'height', size.height);
-        }
-    }
-
-    /**
-     * Process overflow block of the element
-     * @param {Overflow} overflowData overflow data for the element
-     * @private
-     */
-    private processOverflowBlock(overflowData: Overflow): void {
-        if (!overflowData) {
-            return;
-        }
-
-        this.renderer.setStyle(this.element, 'overflow-x', overflowData.x?.toLowerCase());
-        this.renderer.setStyle(this.element, 'overflow-y', overflowData.y?.toLowerCase());
+        this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 !important');
     }
 
     /**
      * Process transform block of the element
-     * @param {Transform} transform transform data for the element
-     * @private
      */
-    private processTransformBlock(transform: Transform): void {
+    private processTransformBlock(): void {
+        const transform = this.inappElement.trf;
         if (!transform) {
             return;
         }
 
         if (transform.rotate) {
-            this.renderer.setStyle(this.element, 'transform', `rotate(${transform.rotate}deg)`);
+            this.renderer.setStyle(this.inappHTMLEl, 'transform', `rotate(${transform.rotate}deg)`);
         }
     }
 
     /**
      * Register click-to-action(CTA) block of the element
-     * @param {ClickAction} action action data for the element
-     * @private
      */
-    private registerAction(action: ClickAction): void {
+    private registerAction(): void {
+        const action = this.inappElement.clc;
         if (!action) {
             return;
         }
 
-        this.element.addEventListener('click', () => {
+        this.inappHTMLEl.addEventListener('click', () => {
             new ClickActionExecutor(action).execute();
         });
     }
 
     /**
      * Process background block of the element
-     * @param {Background} bg background data for the element
-     * @private
      */
-    private processBgBlock(bg: Background): void {
+    private processBackgroundBlock(): void {
+        const bg = this.inappElement.bg;
         if (!bg) {
             return;
+        }
+
+        let htmlElement = this.inappHTMLEl;
+        // For container, the background must be applied to its parent i.e. root container
+        if (this.inappElement instanceof Container) {
+            htmlElement = htmlElement.parentElement!;
         }
 
         let prefix = '';
@@ -226,29 +192,28 @@ export abstract class BlockProcessor {
         }
 
         if (bg.glossy) {
-            this.renderer.setStyle(this.element, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
-            if (bg.glossy.colour) {
-                this.processColourBlock(bg.glossy.colour, 'background');
+            if (bg.glossy.color) {
+                this.processColourBlock(bg.glossy.color, 'background', htmlElement);
             }
         } else if (bg.solid) {
             if (bg.solid.grad) {
                 this.processGradient(bg.solid.grad, 'background');
             } else if (bg.solid.hex) {
-                const colour = BlockProcessor.toRgba(bg.solid.hex);
-                this.renderer.setStyle(this.element, 'background', colour);
+                this.renderer.setStyle(htmlElement, 'background', bg.solid.rgba);
             }
         } else if (bg.img) {
-            if (!bg.img.url) {
+            if (!bg.img.src) {
                 return;
             }
 
-            const value = `url("${bg.img.url}") no-repeat center`;
-            this.renderer.setStyle(this.element, 'background', value);
-            this.renderer.setStyle(this.element, 'background-size', 'cover');
+            const value = `url("${bg.img.src}") no-repeat center`;
+            this.renderer.setStyle(htmlElement, 'background', value);
+            this.renderer.setStyle(htmlElement, 'background-size', 'cover');
 
-            if (bg.img.alpha) {
-                this.renderer.setStyle(this.element, prefix + 'backdrop-filter', `opacity(${bg.img.alpha})`);
+            if (bg.img.a) {
+                this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
             }
         }
     }
@@ -261,39 +226,34 @@ export abstract class BlockProcessor {
      */
     private processGradient(grad: Gradient, attribute: string): void {
         if (grad.type === 'LINEAR') {
-            const c1 = BlockProcessor.toRgba(grad.c1);
-            const c2 = BlockProcessor.toRgba(grad.c2);
-
-            let linearFunctionString = `linear-gradient(${grad.direction}, ${c1}, ${c2}`;
+            let linearFunctionString = `linear-gradient(${grad.ang}deg, ${grad.c1}, ${grad.c2}`;
 
             if (grad.c3) {
-                const c3 = BlockProcessor.toRgba(grad.c3);
-                linearFunctionString += `, ${c3}`;
+                linearFunctionString += `, ${grad.c3}`;
             }
 
             if (grad.c4) {
-                const c4 = BlockProcessor.toRgba(grad.c4);
-                linearFunctionString += `, ${c4}`;
+                linearFunctionString += `, ${grad.c4}`;
             }
 
             if (grad.c5) {
-                const c5 = BlockProcessor.toRgba(grad.c5);
-                linearFunctionString += `, ${c5}`;
+                linearFunctionString += `, ${grad.c5}`;
             }
 
             linearFunctionString += `)`;
             const gradient = linearFunctionString;
-            this.renderer.setStyle(this.element, attribute, gradient);
+            this.renderer.setStyle(this.inappHTMLEl, attribute, gradient);
         }
     }
 
     /**
      * Process colour block of the element
-     * @param {Colour} colour colour data of the element
+     * @param {Color} colour colour data of the element
      * @param {string} attribute attribute on which colour data need to be applied
+     * @param {HTMLElement} element Any other element to apply the color apart from {@link inappHTMLEl}
      * @private
      */
-    protected processColourBlock(colour: Colour, attribute = 'color'): void {
+    protected processColourBlock(colour: Color, attribute = 'color', element = this.inappHTMLEl): void {
         if (!colour) {
             return;
         }
@@ -301,26 +261,8 @@ export abstract class BlockProcessor {
         if (colour.grad) {
             this.processGradient(colour.grad, attribute);
         } else if (colour.hex) {
-            const rgba = BlockProcessor.toRgba(colour.hex);
-            this.renderer.setStyle(this.element, attribute, rgba);
+            this.renderer.setStyle(element, attribute, colour.rgba);
         }
-    }
-
-    /**
-     * Convert to RGBA.
-     * @param {string} hex hex-colour info Eg. '#45FF0000'(Red with alpha 45), '#FF0000FF'(Blue)
-     * @return {string}
-     * @private
-     */
-    private static toRgba(hex: string): string {
-        if (!hex) return '';
-
-        // https://github.com/misund/hex-to-rgba/issues/360
-        if (hex.length === (1 + 2 + 6)) {
-            hex = '#' + hex.substring(3) + hex.substring(1, 3);
-        }
-
-        return hexToRgba(hex);
     }
 
 }

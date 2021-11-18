@@ -14,6 +14,9 @@ export class Constants {
     static SDK: string = 'WEB';
     static LOG_PREFIX: string = 'CooeeSDK';
 
+    static CANVAS_WIDTH = 1080;
+    static CANVAS_HEIGHT = 1920;
+
     // region Local Storage Keys
     static STORAGE_USER_ID: string = 'uid';
     static STORAGE_SDK_TOKEN: string = 'st';
