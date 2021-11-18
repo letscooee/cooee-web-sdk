@@ -1,5 +1,9 @@
 # Change Log
 
+# 0.0.5
+
+Supporting changes based on the in-app composer.
+
 # 0.0.3, 0.0.4
 
 1. Fix generating token because of missing app version.
