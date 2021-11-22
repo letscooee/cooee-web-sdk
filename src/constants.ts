@@ -7,8 +7,8 @@
 export class Constants {
 
     static API_URL: string = 'https://api.sdk.letscooee.com';
-    static SDK_VERSION: string = '0.0.4';
-    static SDK_VERSION_CODE: number = 4;
+    static readonly SDK_VERSION: string = require('../package.json').version;
+    static SDK_VERSION_CODE: number;
     static SDK_DEBUG: boolean = false;
 
     static SDK: string = 'WEB';
@@ -34,5 +34,10 @@ export class Constants {
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
 
     static IN_APP_CONTAINER_NAME: string = 'cooee-wrapper';
+
+    static {
+        const rawCode = Constants.SDK_VERSION.split('.').map((item) => item.padStart(2, '0')).join('');
+        Constants.SDK_VERSION_CODE = parseInt(rawCode, 10);
+    }
 
 }
