@@ -18,12 +18,13 @@ export class ContainerRenderer extends ShapeRenderer {
 
     /**
      * Render group element from layers list in {@link InAppTrigger} block.
+     * @return The instance of this renderer.
      */
     render(): this {
         super.render();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
-        /*this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
-        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');*/
+        /* this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
+        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%'); */
         return this;
     }
 

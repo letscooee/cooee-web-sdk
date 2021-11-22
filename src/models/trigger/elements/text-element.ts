@@ -60,6 +60,8 @@ export class TextPart {
 
 }
 
+/* eslint-disable no-unused-vars */
 export enum TextAlign { START, CENTER, END, JUSTIFY}
 
 export enum TextScript { NORMAL, SUPER, SUB}
+/* eslint-enable no-unused-vars */

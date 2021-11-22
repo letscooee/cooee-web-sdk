@@ -1,5 +1,4 @@
 import {ClickAction} from '../blocks';
-import {Renderer} from '../../../renderer/renderer';
 import {Constants} from '../../../constants';
 import {IFrameRenderer, RootContainerRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
@@ -219,6 +218,7 @@ export class ClickActionExecutor {
      * @private
      */
     private async checkAllPermission(): Promise<Props> {
+        // @ts-ignore
         const camera = await this.checkPermission('camera');
         const location = await this.checkPermission('geolocation');
         const notification = Notification.permission;

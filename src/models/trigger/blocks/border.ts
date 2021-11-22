@@ -34,9 +34,11 @@ export class Border {
 
 }
 
+/* eslint-disable no-unused-vars */
 export enum BorderStyle {
 
     SOLID = 1,
     DASHED = 2
 
 }
+/* eslint-enable no-unused-vars */
