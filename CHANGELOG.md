@@ -1,5 +1,10 @@
 # Change Log
 
+# 0.0.6
+
+1. Build: Upgrade TypeScript to 4.4.
+2. Fix: Convert \n to `<br>` in texts.
+
 # 0.0.5
 
 Supporting changes based on the in-app composer.
