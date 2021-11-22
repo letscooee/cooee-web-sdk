@@ -219,6 +219,7 @@ export class ClickActionExecutor {
      * @private
      */
     private async checkAllPermission(): Promise<Props> {
+        // @ts-ignore
         const camera = await this.checkPermission('camera');
         const location = await this.checkPermission('geolocation');
         const notification = Notification.permission;
