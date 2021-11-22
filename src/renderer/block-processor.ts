@@ -25,9 +25,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
     protected readonly inappElement: T;
     protected inappHTMLEl: HTMLElement;
 
-    /**
-     * Constructor
-     */
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;

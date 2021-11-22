@@ -43,6 +43,7 @@ export abstract class BaseElement {
 
 }
 
+/* eslint-disable no-unused-vars */
 export enum ElementType {
 
     IMAGE = 1,
@@ -51,3 +52,4 @@ export enum ElementType {
     SHAPE = 100,
 
 }
+/* eslint-disable no-unused-vars */

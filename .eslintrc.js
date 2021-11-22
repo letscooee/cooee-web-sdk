@@ -22,6 +22,7 @@ module.exports = {
             allowDirectConstAssertionInArrowFunctions: true,
             allowConciseArrowFunctionExpressionsStartingWithVoid: false,
         }],
+        'require-jsdoc': ['off'],
         'valid-jsdoc': ['error', {
             requireParamType: false,
             requireParamDescription: false,
