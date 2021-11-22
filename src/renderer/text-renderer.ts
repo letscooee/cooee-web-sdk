@@ -22,7 +22,7 @@ export class TextRenderer extends BaseTextRenderer {
     render(): void {
         this.inappElement.parts?.forEach((partData: TextPart) => {
             const newPartElement = this.renderer.createElement('span');
-            newPartElement.innerHTML = partData.txt;
+            newPartElement.innerHTML = partData.txt?.toString()?.replace(/\n/g, '<br />');
             this.processPart(newPartElement, partData);
             this.renderer.appendChild(this.inappHTMLEl, newPartElement);
         });
