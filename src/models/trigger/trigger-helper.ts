@@ -24,12 +24,12 @@ export class TriggerHelper {
 
     static getActiveTriggers(): EmbeddedTrigger[] {
         const activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
+
         if (!activeTriggers) {
             return [];
         }
 
         activeTriggers.forEach((trigger, index, array) => {
-            console.log(typeof trigger, trigger.isExpired);
             if (new EmbeddedTrigger(trigger).isExpired) {
                 array.splice(index, 1);
             }

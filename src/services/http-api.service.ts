@@ -87,6 +87,7 @@ export class HttpAPIService {
         event.activeTriggers = TriggerHelper.getActiveTriggers();
 
         const trigger: EmbeddedTrigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER);
+
         if (trigger) {
             event.trigger = trigger;
         }
