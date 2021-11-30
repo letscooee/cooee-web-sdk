@@ -7,6 +7,8 @@ import {Constants} from '../constants';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
+import {SafeHttpService} from '../services/safe-http-service';
+import {Event} from '../models/event/event';
 
 /**
  * Renders In App trigger
@@ -36,6 +38,10 @@ export class InAppRenderer {
 
         try {
             this.renderContainer();
+
+            const event: Event = new Event('CE Trigger Displayed', {'triggerID': triggerData.id});
+            SafeHttpService.getInstance().sendEvent(event);
+
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
