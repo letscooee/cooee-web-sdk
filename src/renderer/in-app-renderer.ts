@@ -6,6 +6,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
+import {TriggerHelper} from '../models/trigger/trigger-helper';
 
 /**
  * Renders In App trigger
@@ -36,7 +37,7 @@ export class InAppRenderer {
         try {
             this.renderContainer();
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-            LocalStorageHelper.setString(Constants.STORAGE_ACTIVE_TRIGGER_ID, triggerData.id);
+            TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
             Log.e(e);
         }

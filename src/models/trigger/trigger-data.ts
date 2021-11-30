@@ -8,7 +8,7 @@ export class TriggerData {
 
     // TODO implement this on trigger implementation
     id: string;
-    duration: number = 0;
+    expireAt: number = new Date().getTime();
     version: number;
     engagementID: string;
     internal: boolean;
@@ -23,7 +23,7 @@ export class TriggerData {
      */
     constructor(data: Props) {
         this.id = data.id;
-        this.duration = data.duration;
+        this.expireAt = data.expireAt;
         this.version = data.version;
         this.engagementID = data.engagementID;
         this.internal = data.internal;

@@ -1,4 +1,5 @@
 import {Props} from '../../types';
+import {EmbeddedTrigger} from '../trigger/embedded-trigger';
 
 /**
  * Event class is sent as body to server when a user event needs to be tracked.
@@ -12,7 +13,8 @@ export class Event {
     public screenName: string | null = null;
     public deviceProps: Props | null = null;
     public sessionNumber: number = 0;
-    public activeTriggers: Array<object> = [];
+    public activeTriggers: Array<EmbeddedTrigger> = [];
+    public trigger: EmbeddedTrigger
 
     private readonly occurred: string;
 
