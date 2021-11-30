@@ -110,7 +110,7 @@ export class ClickActionExecutor {
         new RootContainerRenderer().removeInApp();
 
         const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-        const triggerID = LocalStorageHelper.getEmbeddedTrigger(Constants.STORAGE_ACTIVE_TRIGGER)?.triggerID;
+        const triggerID = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER)?.triggerID;
 
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 

@@ -6,8 +6,7 @@ import {EmbeddedTrigger} from './embedded-trigger';
 export class TriggerHelper {
 
     static storeActiveTrigger(triggerData: TriggerData): void {
-        let activeTriggers: EmbeddedTrigger[] | null =
-            LocalStorageHelper.getEmbeddedTriggers(Constants.STORAGE_ACTIVE_TRIGGERS);
+        let activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
 
         if (!activeTriggers) {
             activeTriggers = [];
@@ -19,13 +18,12 @@ export class TriggerHelper {
             activeTriggers.push(embeddedTrigger);
         }
 
-        LocalStorageHelper.setEmbeddedTrigger(Constants.STORAGE_ACTIVE_TRIGGER, embeddedTrigger);
-        LocalStorageHelper.setEmbeddedTriggers(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
+        LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGER, embeddedTrigger);
+        LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
     }
 
     static getActiveTriggers(): EmbeddedTrigger[] {
-        const activeTriggers: EmbeddedTrigger[] | null =
-            LocalStorageHelper.getEmbeddedTriggers(Constants.STORAGE_ACTIVE_TRIGGERS);
+        const activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
         if (!activeTriggers) {
             return [];
         }
@@ -37,7 +35,7 @@ export class TriggerHelper {
             }
         });
 
-        LocalStorageHelper.setEmbeddedTriggers(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
+        LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
 
         return activeTriggers;
     }

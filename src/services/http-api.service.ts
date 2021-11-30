@@ -8,6 +8,7 @@ import {EventResponse} from '../models/event/event-response';
 import {InAppRenderer} from '../renderer/in-app-renderer';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
+import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -85,7 +86,7 @@ export class HttpAPIService {
 
         event.activeTriggers = TriggerHelper.getActiveTriggers();
 
-        const trigger = LocalStorageHelper.getEmbeddedTrigger(Constants.STORAGE_ACTIVE_TRIGGER);
+        const trigger: EmbeddedTrigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER);
         if (trigger) {
             event.trigger = trigger;
         }

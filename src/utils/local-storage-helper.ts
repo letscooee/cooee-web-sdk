@@ -1,5 +1,3 @@
-import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
-
 /**
  * LocalStorageHelper is used to store local shared preference data
  *
@@ -75,27 +73,15 @@ export class LocalStorageHelper {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 
-    static getEmbeddedTrigger(key: string): EmbeddedTrigger | null {
+    static getObject(key: string): any {
         try {
-            return JSON.parse(LocalStorageHelper.getString(key, '')) as EmbeddedTrigger;
+            return JSON.parse(LocalStorageHelper.getString(key, ''));
         } catch (ignored) {
             return null;
         }
     }
 
-    static setEmbeddedTrigger(key: string, value: EmbeddedTrigger): void {
-        LocalStorageHelper.setString(key, JSON.stringify(value));
-    }
-
-    static getEmbeddedTriggers(key: string): EmbeddedTrigger[] | null {
-        try {
-            return JSON.parse(LocalStorageHelper.getString(key, '')) as EmbeddedTrigger[];
-        } catch (ignored) {
-            return null;
-        }
-    }
-
-    static setEmbeddedTriggers(key: string, value: EmbeddedTrigger[]): void {
+    static setObject(key: string, value: any): void {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 
