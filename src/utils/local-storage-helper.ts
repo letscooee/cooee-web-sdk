@@ -73,6 +73,12 @@ export class LocalStorageHelper {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 
+    /**
+     * Get value from local storage.
+     *
+     * @param {string} key key provided for the stored value.
+     * @return {any} value stored.
+     */
     static getObject(key: string): any {
         try {
             return JSON.parse(LocalStorageHelper.getString(key, ''));
@@ -81,6 +87,11 @@ export class LocalStorageHelper {
         }
     }
 
+    /**
+     * Set value in local storage as json string.
+     * @param {string} key key provided for the storing value.
+     * @param {any} value value stored.
+     */
     static setObject(key: string, value: any): void {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }

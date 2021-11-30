@@ -1,3 +1,10 @@
+/**
+ * This class store data related to triggers which are active/activated by clicking on the trigger notification or by
+ * looking an in-app trigger(in future). This would be commonly sent with events as <code>activeTrigger</code>.
+ *
+ * @author Abhishek Taparia
+ * @since 1.1.0
+ */
 export class EmbeddedTrigger {
 
     triggerID: string;
