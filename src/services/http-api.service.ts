@@ -55,7 +55,7 @@ export class HttpAPIService {
             url = Constants.API_URL + url;
         }
 
-        const response = await fetch(url, {method, body: JSON.stringify(body), headers});
+        const response = await fetch(url, {method, body: JSON.stringify(body), headers, keepalive: true});
         if (!response.ok) {
             throw response;
         }
