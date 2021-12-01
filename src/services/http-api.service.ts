@@ -55,6 +55,19 @@ export class HttpAPIService {
             url = Constants.API_URL + url;
         }
 
+        const browserSupportsKeepalive = 'keepalive' in new Request('');
+
+        if (!browserSupportsKeepalive && JSON.stringify(body).includes('CE Web Inactive')) {
+            const xmlHttpRequest = new XMLHttpRequest();
+            xmlHttpRequest.open('POST', url, false);
+            headers.forEach((value, key) => {
+                xmlHttpRequest.setRequestHeader(key, value);
+            });
+            xmlHttpRequest.send(JSON.stringify(body));
+
+            return xmlHttpRequest.response.json();
+        }
+
         const response = await fetch(url, {method, body: JSON.stringify(body), headers, keepalive: true});
         if (!response.ok) {
             throw response;
