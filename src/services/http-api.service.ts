@@ -94,14 +94,14 @@ export class HttpAPIService {
 
         this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)
             .then((data: EventResponse) => {
-                Log.l('Sent', event.name);
+                Log.log('Sent', event.name);
 
                 if (data.triggerData) {
                     new InAppRenderer().render(data.triggerData);
                 }
             })
             .catch((error) => {
-                Log.e('Error sending event', error);
+                Log.error('Error sending event', error);
             });
     }
 
@@ -116,10 +116,10 @@ export class HttpAPIService {
 
         this.doHTTP('PUT', '/v1/user/update', data, headers)
             .then(() => {
-                Log.l('Updated user profile');
+                Log.log('Updated user profile');
             })
             .catch((error) => {
-                Log.e('Error saving user profile', error);
+                Log.error('Error saving user profile', error);
             });
     }
 
@@ -134,10 +134,10 @@ export class HttpAPIService {
 
         this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
-                Log.l('Conclude Session', json);
+                Log.log('Conclude Session', json);
             })
             .catch((error) => {
-                Log.e(error);
+                Log.error(error);
             });
     }
 

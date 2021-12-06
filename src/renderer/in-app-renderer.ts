@@ -45,7 +45,7 @@ export class InAppRenderer {
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
-            Log.e(e);
+            Log.error(e);
         }
     }
 
@@ -62,7 +62,7 @@ export class InAppRenderer {
         } else if (inappElement instanceof ShapeElement) {
             new ShapeRenderer(parentEl, inappElement).render();
         } else {
-            Log.e('Unsupported element type- ' + inappElement.type);
+            Log.error('Unsupported element type- ' + inappElement.type);
         }
     }
 

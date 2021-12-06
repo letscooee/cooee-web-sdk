@@ -137,7 +137,7 @@ export class ClickActionExecutor {
         const share = navigator.share;
 
         if (!share) {
-            Log.w('Navigator.share is not compatible with this browser');
+            Log.warning('Navigator.share is not compatible with this browser');
             return;
         }
 
@@ -169,7 +169,7 @@ export class ClickActionExecutor {
      */
     private promptPushNotificationPermission(): void {
         if (!('Notification' in window)) {
-            Log.w('This browser does not support desktop notification');
+            Log.warning('This browser does not support desktop notification');
             return;
         }
 
