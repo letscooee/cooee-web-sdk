@@ -13,7 +13,7 @@ export class Event {
     public screenName: string | null = null;
     public deviceProps: Props | null = null;
     public sessionNumber: number = 0;
-    public activeTriggers: Array<EmbeddedTrigger> = [];
+    public activeTriggers: EmbeddedTrigger[] = [];
     public trigger: EmbeddedTrigger
 
     private readonly occurred: string;
