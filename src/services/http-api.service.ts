@@ -6,6 +6,9 @@ import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 import {EventResponse} from '../models/event/event-response';
 import {InAppRenderer} from '../renderer/in-app-renderer';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {TriggerHelper} from '../models/trigger/trigger-helper';
+import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -94,16 +97,24 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
+        event.activeTriggers = TriggerHelper.getActiveTriggers();
+
+        const trigger: EmbeddedTrigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER);
+
+        if (trigger) {
+            event.trigger = trigger;
+        }
+
         this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)
             .then((data: EventResponse) => {
-                Log.l('Sent', event.name);
+                Log.log('Sent', event.name);
 
                 if (data.triggerData) {
                     new InAppRenderer().render(data.triggerData);
                 }
             })
             .catch((error) => {
-                Log.e('Error sending event', error);
+                Log.error('Error sending event', error);
             });
     }
 
@@ -118,10 +129,10 @@ export class HttpAPIService {
 
         this.doHTTP('PUT', '/v1/user/update', data, headers)
             .then(() => {
-                Log.l('Updated user profile');
+                Log.log('Updated user profile');
             })
             .catch((error) => {
-                Log.e('Error saving user profile', error);
+                Log.error('Error saving user profile', error);
             });
     }
 
@@ -136,10 +147,10 @@ export class HttpAPIService {
 
         this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
-                Log.l('Conclude Session', json);
+                Log.log('Conclude Session', json);
             })
             .catch((error) => {
-                Log.e(error);
+                Log.error(error);
             });
     }
 

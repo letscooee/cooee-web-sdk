@@ -142,6 +142,8 @@ export class SessionManager {
         };
 
         SafeHttpService.getInstance().concludeSession(data);
+
+        LocalStorageHelper.remove(Constants.STORAGE_ACTIVE_TRIGGER);
         this.destroySession();
     }
 

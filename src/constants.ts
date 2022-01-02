@@ -28,7 +28,8 @@ export class Constants {
     static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
     static STORAGE_LAST_ACTIVE: string = 'la';
     static STORAGE_TRIGGER_START_TIME: string = 'tst';
-    static STORAGE_ACTIVE_TRIGGER_ID: string = 'atid';
+    static STORAGE_ACTIVE_TRIGGER: string = 'at';
+    static STORAGE_ACTIVE_TRIGGERS: string = 'ats';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;

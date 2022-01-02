@@ -80,12 +80,12 @@ export class UserAuthService {
     private async populateUserDataFromStorage(): Promise<void> {
         this.sdkToken = LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
         if (!this.sdkToken) {
-            Log.l('No SDK token found in local storage');
+            Log.log('No SDK token found in local storage');
         }
 
         this.userID = LocalStorageHelper.getString(Constants.STORAGE_USER_ID, '');
         if (!this.userID) {
-            Log.l('No user ID found in local storage');
+            Log.log('No user ID found in local storage');
         }
 
         this.updateAPIClient();
@@ -97,8 +97,8 @@ export class UserAuthService {
      * @private
      */
     private updateAPIClient(): void {
-        Log.l('SDK Token:', this.sdkToken);
-        Log.l('User ID:', this.userID);
+        Log.log('SDK Token:', this.sdkToken);
+        Log.log('User ID:', this.userID);
 
         this.apiService.setAPIToken(this.sdkToken);
         this.apiService.setUserId(this.userID);
@@ -114,7 +114,7 @@ export class UserAuthService {
             return this.populateUserDataFromStorage();
         }
 
-        Log.l('Attempt to acquire SDK token');
+        Log.log('Attempt to acquire SDK token');
 
         return this.getSDKTokenFromServer();
     }
@@ -131,10 +131,10 @@ export class UserAuthService {
 
         try {
             const data = await <Promise<DeviceAuthResponse>>responseJson;
-            Log.l('Register Device Response', data);
+            Log.log('Register Device Response', data);
             this.saveUserDataInStorage(data);
         } catch (error) {
-            Log.e(error);
+            Log.error(error);
             throw error;
         }
     }
