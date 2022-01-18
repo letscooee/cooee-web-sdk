@@ -38,6 +38,8 @@ module.exports = {
             'named': 'never',
             'asyncArrow': 'always'
         }],
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': 'error',
         'prefer-promise-reject-errors': ['error', {'allowEmptyReject': true}],
         'max-len': ['error', {'code': 120}],
         'padded-blocks': ['error', {'classes': 'always', 'blocks': 'never'}],

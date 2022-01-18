@@ -56,7 +56,7 @@ export class VisibilityListener {
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
-        const event = new Event('CE Web Active', props);
+        const event = new Event('CE App Foreground', props);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.apiService.sendEvent(event);
     }
@@ -73,7 +73,7 @@ export class VisibilityListener {
         const props: Props = {};
         props[VisibilityListener.ACTIVE_DURATION] = duration;
 
-        this.apiService.sendEvent(new Event('CE Web Inactive', props));
+        this.apiService.sendEvent(new Event('CE App Background', props));
     }
 
 }

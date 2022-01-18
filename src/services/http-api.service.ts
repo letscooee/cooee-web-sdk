@@ -60,7 +60,7 @@ export class HttpAPIService {
 
         const browserSupportsKeepalive = 'keepalive' in new Request('');
 
-        if (!browserSupportsKeepalive && JSON.stringify(body).includes('CE Web Inactive')) {
+        if (!browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
             const xmlHttpRequest = new XMLHttpRequest();
             xmlHttpRequest.open('POST', url, false);
             headers.forEach((value, key) => {

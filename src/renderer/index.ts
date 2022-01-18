@@ -14,11 +14,15 @@ export function getScalingFactor(): number {
     const screenWidth = document.documentElement.clientWidth;
     const screenHeight = document.documentElement.clientHeight;
 
+    let scalingFactor;
     if (screenWidth < screenHeight) {
         const shortEdge = Math.min(Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-        return screenWidth / shortEdge;
+        scalingFactor = screenWidth / shortEdge;
     } else {
         const longEdge = Math.max(Constants.CANVAS_WIDTH, Constants.CANVAS_HEIGHT);
-        return screenHeight / longEdge;
+        scalingFactor = screenHeight / longEdge;
     }
+
+    // The in-app should not scale beyond 100%
+    return Math.min(scalingFactor, 1);
 }
