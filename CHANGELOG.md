@@ -1,5 +1,9 @@
 # Change Log
 
+# 0.0.7
+
+More feature support in the sdk.
+
 # 0.0.6
 
 1. Build: Upgrade TypeScript to 4.4.
