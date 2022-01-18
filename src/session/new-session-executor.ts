@@ -83,7 +83,7 @@ export class NewSessionExecutor {
      * Runs when app is opened for the first time after sdkToken is received from server asynchronously
      */
     private async sendFirstLaunchEvent(): Promise<void> {
-        const event = new Event('CE Web Installed', {});
+        const event = new Event('CE App Installed', {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
     }
@@ -92,7 +92,7 @@ export class NewSessionExecutor {
      * Runs every time when app is opened for a new session
      */
     private async sendSuccessiveLaunchEvent(): Promise<void> {
-        const event = new Event('CE Web Launched', {});
+        const event = new Event('CE App Launched', {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
     }
