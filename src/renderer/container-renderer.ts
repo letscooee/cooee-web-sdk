@@ -1,5 +1,5 @@
-import {ShapeRenderer} from './shape-renderer';
 import {Container} from '../models/trigger/inapp/container';
+import {BlockProcessor} from './block-processor';
 
 /**
  * Renders container element.
@@ -7,10 +7,12 @@ import {Container} from '../models/trigger/inapp/container';
  * @author Shashank Agrawal
  * @version 0.0.5
  */
-export class ContainerRenderer extends ShapeRenderer {
+export class ContainerRenderer extends BlockProcessor<Container> {
 
     constructor(parentElement: HTMLElement, inappElement: Container) {
         super(parentElement, inappElement);
+        this.inappHTMLEl = this.renderer.createElement('div');
+        this.insertElement();
         // Need to figure out the best way of doing this
         this.inappElement.w = 1080;
         this.inappElement.h = 1920;
@@ -21,10 +23,9 @@ export class ContainerRenderer extends ShapeRenderer {
      * @return The instance of this renderer.
      */
     render(): this {
-        super.render();
+        this.processCommonBlocks();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
-        /* this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
-        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%'); */
+        Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
         return this;
     }
 

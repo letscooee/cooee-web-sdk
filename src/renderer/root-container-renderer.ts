@@ -28,9 +28,6 @@ export class RootContainerRenderer {
         this.renderer.setStyle(rootDiv, 'left', '0');
         this.renderer.setStyle(rootDiv, 'width', '100%');
         this.renderer.setStyle(rootDiv, 'height', '100%');
-        this.renderer.setStyle(rootDiv, 'display', 'flex');
-        this.renderer.setStyle(rootDiv, 'justify-content', 'center');
-        this.renderer.setStyle(rootDiv, 'align-items', 'center');
 
         this.renderer.appendChild(document.body, rootDiv);
 
