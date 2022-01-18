@@ -27,11 +27,11 @@ code before calling any other CooeeSDK functions.
 <script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk@latest/dist/sdk.min.js" async></script>
 <script>
     window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: []};
-    CooeeSDK.account.push({"appID": "MY_COOEE_APP_ID", "appSecret": "MY_COOEE_APP_SECRET"});
+    CooeeSDK.account.push({"appID": "MY_COOEE_APP_ID"});
 </script>
 ```
 
-Replace `MY_COOEE_APP_ID` & `MY_COOEE_APP_SECRET` with the app id & secret given to you.
+Replace `MY_COOEE_APP_ID` with the app id as seen in your Cooee dashboard.
 
 #### Step 2: Track Custom Events
 
