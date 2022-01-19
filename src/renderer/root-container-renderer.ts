@@ -1,5 +1,6 @@
 import {Constants} from '../constants';
 import {Renderer} from './renderer';
+import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 
 /**
  * Renders root container.
@@ -30,6 +31,9 @@ export class RootContainerRenderer {
         this.renderer.setStyle(rootDiv, 'height', '100%');
 
         this.renderer.appendChild(document.body, rootDiv);
+        rootDiv.addEventListener('click', () => {
+            new ClickActionExecutor({close: true}).execute();
+        });
 
         return rootDiv;
     }
