@@ -64,6 +64,7 @@ export class Container extends BaseElement {
         }
 
         styles.position = 'absolute';
+        styles.overflow = 'hidden';
         return styles;
     }
 
