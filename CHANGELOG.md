@@ -1,5 +1,11 @@
 # Change Log
 
+# 0.0.8
+
+1. Feature: Ability of InApp to be rendered inside an element.
+2. Fix: Overflowed content should not be rendered.
+3. Fix: Placing in-app on east direction.
+
 # 0.0.7
 
 More feature support in the sdk.
