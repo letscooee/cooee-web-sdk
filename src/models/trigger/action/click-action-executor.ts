@@ -81,7 +81,7 @@ export class ClickActionExecutor {
      * Performs prompt action i.e. ask for permission for location and notification.
      */
     prompt(): void {
-        const permission: string = this.action.prompt;
+        const permission = this.action.prompt;
         if (!permission) {
             return;
         }

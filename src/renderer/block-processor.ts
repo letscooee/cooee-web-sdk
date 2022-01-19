@@ -14,7 +14,7 @@ import {Container} from '../models/trigger/inapp/container';
  */
 export abstract class BlockProcessor<T extends BaseElement> {
 
-    protected readonly renderer: Renderer;
+    protected readonly renderer: Renderer = Renderer.get();
 
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
@@ -28,7 +28,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;
-        this.renderer = new Renderer();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
@@ -54,7 +53,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.processTransformBlock();
         this.registerAction();
 
-        this.renderer.setStyle(this.inappHTMLEl, 'overflow', 'visible');
         this.renderer.setStyle(this.inappHTMLEl, 'outline', 'none');
     }
 

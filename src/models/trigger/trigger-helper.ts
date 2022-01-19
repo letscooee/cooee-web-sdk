@@ -16,6 +16,10 @@ export class TriggerHelper {
      * @param triggerData trigger data
      */
     static storeActiveTrigger(triggerData: TriggerData): void {
+        if (triggerData.id === 'test') {
+            return;
+        }
+
         let activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
 
         if (!activeTriggers) {

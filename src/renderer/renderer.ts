@@ -6,21 +6,44 @@
  */
 export class Renderer {
 
-    private doc: Document = document;
+    private static _instance: Renderer;
+
+    private parentContainer: HTMLElement;
+    private readonly doc: Document = document;
+
+    // No need to instantiate this class.
+    private constructor() {
+    }
+
+    static get(): Renderer {
+        if (!Renderer._instance) {
+            Renderer._instance = new Renderer();
+        }
+
+        return Renderer._instance;
+    }
 
     /**
-     * Get width of the browser
-     * @return {number} inner width of the browser
+     * Get width of the parent most container where the Cooee's root div will render.
+     * @return width of the parent most container.
      */
     public getWidth(): number {
+        if (this.parentContainer) {
+            return this.parentContainer.clientWidth;
+        }
+
         return document.documentElement.clientWidth;
     }
 
     /**
-     * Get height of the browser
-     * @return {number} inner height of the browser
+     * Get height of the parent most container where the Cooee's root div will render.
+     * @return height of the parent most container.
      */
     public getHeight(): number {
+        if (this.parentContainer) {
+            return this.parentContainer.clientHeight;
+        }
+
         return document.documentElement.clientHeight;
     }
 
@@ -79,6 +102,14 @@ export class Renderer {
      */
     public getElementById(id: string): HTMLElement | null {
         return this.doc.getElementById(id);
+    }
+
+    /**
+     * Set the parent most container where the Cooee's In-App's root div will render.
+     * @param container The HTML holder element.
+     */
+    setParentContainer(container: HTMLElement): void {
+        this.parentContainer = container;
     }
 
 }

@@ -103,6 +103,9 @@ export class HttpAPIService {
 
         if (trigger) {
             event.trigger = trigger;
+            if (trigger.triggerID === 'test') {
+                return;
+            }
         }
 
         this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)

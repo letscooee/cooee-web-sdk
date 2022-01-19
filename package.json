@@ -7,7 +7,8 @@
         "prepare": "npm run build",
         "build": "tsc",
         "build:production": "webpack && webpack --config ./webpack-preview.config.js",
-        "serve:old-school": "webpack serve",
+        "serve": "webpack serve",
+        "serve:preview": "webpack serve --config ./webpack-preview.config.js",
         "preversion": "git add CHANGELOG.md src/constants.ts",
         "version": "npm run build:production",
         "postversion": "git push && git push --tags"

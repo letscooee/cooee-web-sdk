@@ -1,4 +1,5 @@
 import {Constants} from '../constants';
+import {Renderer} from './renderer';
 
 export {TextRenderer} from './text-renderer';
 export {ShapeRenderer} from './shape-renderer';
@@ -7,12 +8,12 @@ export {RootContainerRenderer} from './root-container-renderer';
 export {IFrameRenderer} from './iFrame-renderer';
 
 /**
- * Calculate scaling factor according to screen sizes
+ * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
  * @return number scaling factor
  */
 export function getScalingFactor(): number {
-    const screenWidth = document.documentElement.clientWidth;
-    const screenHeight = document.documentElement.clientHeight;
+    const screenWidth = Renderer.get().getWidth();
+    const screenHeight = Renderer.get().getHeight();
 
     let scalingFactor;
     if (screenWidth < screenHeight) {

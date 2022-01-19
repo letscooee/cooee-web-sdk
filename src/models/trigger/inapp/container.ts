@@ -30,7 +30,7 @@ export class Container extends BaseElement {
         } else if (this.o === ContainerOrigin.E) {
             styles = {
                 top: '50%',
-                left: 0,
+                right: 0,
                 transform: 'translateY(-50%)',
             };
         } else if (this.o === ContainerOrigin.SE) {
@@ -64,6 +64,7 @@ export class Container extends BaseElement {
         }
 
         styles.position = 'absolute';
+        styles.overflow = 'hidden';
         return styles;
     }
 

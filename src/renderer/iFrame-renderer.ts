@@ -9,14 +9,7 @@ import {Constants} from '../constants';
  */
 export class IFrameRenderer {
 
-    renderer: Renderer;
-
-    /**
-     * Constructor
-     */
-    constructor() {
-        this.renderer = new Renderer();
-    }
+    renderer: Renderer = Renderer.get();
 
     /**
      * Render iFrame element on CTAs.
