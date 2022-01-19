@@ -10,7 +10,11 @@ import {ClickActionExecutor} from '../models/trigger/action/click-action-executo
  */
 export class RootContainerRenderer {
 
-    private readonly renderer = new Renderer();
+    private readonly renderer = Renderer.get();
+
+    constructor(private parent?: HTMLElement) {
+        this.renderer.setParentContainer(parent!);
+    }
 
     /**
      * Render root container.
@@ -23,14 +27,19 @@ export class RootContainerRenderer {
         rootDiv.id = Constants.IN_APP_CONTAINER_NAME;
         rootDiv.classList.add(Constants.IN_APP_CONTAINER_NAME);
 
+        if (this.parent) {
+            this.renderer.setStyle(rootDiv, 'position', 'absolute');
+        } else {
+            this.renderer.setStyle(rootDiv, 'position', 'fixed');
+        }
+
         this.renderer.setStyle(rootDiv, 'z-index', '10000000');
-        this.renderer.setStyle(rootDiv, 'position', 'fixed');
         this.renderer.setStyle(rootDiv, 'top', '0');
         this.renderer.setStyle(rootDiv, 'left', '0');
         this.renderer.setStyle(rootDiv, 'width', '100%');
         this.renderer.setStyle(rootDiv, 'height', '100%');
 
-        this.renderer.appendChild(document.body, rootDiv);
+        this.renderer.appendChild(this.parent || document.body, rootDiv);
         rootDiv.addEventListener('click', () => {
             new ClickActionExecutor({close: true}).execute();
         });

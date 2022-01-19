@@ -22,10 +22,12 @@ export class InAppRenderer {
     private ian: InAppTrigger;
 
     /**
-     * Public constructor
+     * Public constructor.
+     *
+     * @param parent Place the in-app in the given parent instead of the document.body.
      */
-    constructor() {
-        this.rootContainer = new RootContainerRenderer().render() as HTMLDivElement;
+    constructor(private parent?: HTMLElement) {
+        this.rootContainer = new RootContainerRenderer(parent).render() as HTMLDivElement;
     }
 
     /**
