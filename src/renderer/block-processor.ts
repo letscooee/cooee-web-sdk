@@ -1,6 +1,5 @@
 import {Renderer} from './renderer';
 import {BaseElement} from '../models/trigger/elements';
-import UAParser from 'ua-parser-js';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {Color, Gradient} from '../models/trigger/blocks';
 import {getScalingFactor} from './index';
@@ -181,13 +180,12 @@ export abstract class BlockProcessor<T extends BaseElement> {
             htmlElement = htmlElement.parentElement!;
         }
 
-        let prefix = '';
-        if (new UAParser().getBrowser().name?.toLowerCase().includes('safari')) {
-            prefix = '-webkit-';
-        }
-
         if (bg.glossy) {
-            this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            // Style for Apple devices
+            this.renderer.setStyle(htmlElement, '-webkit-backdrop-filter', `blur(${bg.glossy.radius}px)`);
+
+            // Style for other devices
+            this.renderer.setStyle(htmlElement, 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
 
             if (bg.glossy.color) {
                 this.processColourBlock(bg.glossy.color, 'background', htmlElement);
@@ -208,7 +206,11 @@ export abstract class BlockProcessor<T extends BaseElement> {
             this.renderer.setStyle(htmlElement, 'background-size', 'cover');
 
             if (bg.img.a) {
-                this.renderer.setStyle(htmlElement, prefix + 'backdrop-filter', `opacity(${bg.img.a})`);
+                // Style for Apple devices
+                this.renderer.setStyle(htmlElement, '-webkit-backdrop-filter', `opacity(${bg.img.a})`);
+
+                // Style for other devices
+                this.renderer.setStyle(htmlElement, 'backdrop-filter', `opacity(${bg.img.a})`);
             }
         }
     }
