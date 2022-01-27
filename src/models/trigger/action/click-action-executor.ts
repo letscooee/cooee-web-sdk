@@ -124,8 +124,8 @@ export class ClickActionExecutor {
 
         const eventProps: Props = {
             'triggerID': triggerID,
-            'Close Behaviour': closeBehaviour,
-            'Duration': diffInSeconds,
+            'closeBehaviour': closeBehaviour,
+            'duration': diffInSeconds,
         };
         this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
 
