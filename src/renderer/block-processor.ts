@@ -160,7 +160,8 @@ export abstract class BlockProcessor<T extends BaseElement> {
             return;
         }
 
-        this.inappHTMLEl.addEventListener('click', () => {
+        this.inappHTMLEl.addEventListener('click', (event) => {
+            event.stopPropagation();
             new ClickActionExecutor(action).execute();
         });
     }
