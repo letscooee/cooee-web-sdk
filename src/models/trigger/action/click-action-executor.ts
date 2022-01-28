@@ -114,10 +114,18 @@ export class ClickActionExecutor {
 
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 
+        let closeBehaviour;
+        if (this.action.ext || this.action.up || this.action.kv ||
+            this.action.iab || this.action.prompt || this.action.share) {
+            closeBehaviour = 'CTA';
+        } else {
+            closeBehaviour = 'Close';
+        }
+
         const eventProps: Props = {
             'triggerID': triggerID,
-            'Close Behaviour': 'CTA',
-            'Duration': diffInSeconds,
+            'closeBehaviour': closeBehaviour,
+            'duration': diffInSeconds,
         };
         this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
 

@@ -82,7 +82,7 @@ export class Renderer {
             return;
         }
 
-        element.style.setProperty(styleName, value);
+        element.style.setProperty(styleName, value, 'important');
     }
 
     /**
