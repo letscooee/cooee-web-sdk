@@ -21,10 +21,11 @@ export class RootContainerRenderer {
      * @return {HTMLElement} rendered root container
      */
     render(): HTMLElement {
-        this.removeInApp();
+        if (!this.parent) {
+            this.removeInApp();
+        }
 
         const rootDiv = this.renderer.createElement('div') as HTMLDivElement;
-        rootDiv.id = Constants.IN_APP_CONTAINER_NAME;
         rootDiv.classList.add(Constants.IN_APP_CONTAINER_NAME);
 
         if (this.parent) {
@@ -52,7 +53,7 @@ export class RootContainerRenderer {
      * Remove InApp trigger.
      */
     removeInApp(): void {
-        const rootDiv = document.getElementById(Constants.IN_APP_CONTAINER_NAME) as HTMLDivElement;
+        const rootDiv = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`) as HTMLDivElement;
         if (rootDiv) {
             rootDiv.parentElement!.removeChild(rootDiv);
         }

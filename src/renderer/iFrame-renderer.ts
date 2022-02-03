@@ -18,7 +18,7 @@ export class IFrameRenderer {
      * @private
      */
     public render(url: string): HTMLElement {
-        const root = this.renderer.getElementById(Constants.IN_APP_CONTAINER_NAME)! as HTMLDivElement;
+        const root = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`)! as HTMLDivElement;
         const iFrameDiv = this.createIFrameContainer();
 
         this.createIFrameElement(iFrameDiv, url);
