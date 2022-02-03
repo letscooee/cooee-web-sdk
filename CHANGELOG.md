@@ -1,5 +1,12 @@
 # Change Log
 
+# 0.0.9
+
+1. Fix: glassmorphism on iOS.
+2. Fix: Fix rendering scaled images.
+3. Fix: Update in KPI for CTA.
+4. Fix: Do not remove in-app if being used inside an element.
+
 # 0.0.8
 
 1. Feature: Ability of InApp to be rendered inside an element.
