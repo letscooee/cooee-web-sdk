@@ -166,7 +166,7 @@ export class ClickActionExecutor {
 
         // TODO Need device endpoints to update this property
         navigator.geolocation.getCurrentPosition((position) => {
-            this.apiService.updateProfile({'coords': [position.coords.latitude, position.coords.longitude]});
+            this.apiService.updateDeviceProps({'coords': [position.coords.latitude, position.coords.longitude]});
             this.sendPermissionData();
         });
     }
@@ -183,7 +183,7 @@ export class ClickActionExecutor {
 
         // TODO Need device endpoints to update this property
         if (Notification.permission !== 'default') {
-            this.apiService.updateProfile({'pnPerm': Notification.permission});
+            this.apiService.updateDeviceProps({'pnPerm': Notification.permission});
             return;
         }
 
@@ -243,7 +243,7 @@ export class ClickActionExecutor {
      */
     private sendPermissionData(): void {
         this.checkAllPermission().then((permissions) => {
-            this.apiService.updateProfile({'perm': permissions});
+            this.apiService.updateDeviceProps({'perm': permissions});
         });
     }
 

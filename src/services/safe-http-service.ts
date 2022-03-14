@@ -51,13 +51,24 @@ export class SafeHttpService {
     }
 
     /**
-     * Queue events till the sdk token is fetch for safe call.
+     * Queue sending user data/property till the sdk token is fetch for safe call.
      *
      * @param {Props} data user data and property.
      */
     public updateProfile(data: Props): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
             this.httpApiService.updateUserData(data);
+        });
+    }
+
+    /**
+     * Queue sending device property till the sdk token is fetch for safe call.
+     *
+     * @param {Props} data device property.
+     */
+    public updateDeviceProps(data: Props): void {
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.updateDeviceProps({'props': data});
         });
     }
 

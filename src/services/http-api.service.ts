@@ -140,6 +140,24 @@ export class HttpAPIService {
     }
 
     /**
+     * Create/Send device property call to the server.
+     *
+     * @param {Props} data device property.
+     */
+    updateDeviceProps(data: Props): void {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', this.apiToken);
+
+        this.doHTTP('PUT', '/v1/device/update', data, headers)
+            .then(() => {
+                Log.log('Updated device property');
+            })
+            .catch((error) => {
+                Log.error('Error saving device property', error);
+            });
+    }
+
+    /**
      * Send conclude session events.
      *
      * @param {Props} data conclude session event properties
