@@ -4,7 +4,7 @@ export interface ClickAction {
 
     readonly iab?: Props;
     readonly ext?: Props;
-    readonly prompt?: Permission;
+    readonly pmpt?: Permission;
     readonly up?: Props;
     readonly kv?: Props;
     readonly share?: Props;
@@ -14,9 +14,9 @@ export interface ClickAction {
 
 export enum Permission {
     // eslint-disable-next-line no-unused-vars
-    Location = 'LOCATION',
+    CAMERA = 1,
     // eslint-disable-next-line no-unused-vars
-    Push = 'PUSH',
+    LOCATION = 2,
     // eslint-disable-next-line no-unused-vars
-    Camera = 'CAMERA'
+    PUSH = 6
 }

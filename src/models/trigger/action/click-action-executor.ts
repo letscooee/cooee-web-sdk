@@ -81,20 +81,20 @@ export class ClickActionExecutor {
      * Performs prompt action i.e. ask for permission for location and notification.
      */
     prompt(): void {
-        const permission = this.action.prompt;
+        const permission = this.action.pmpt;
         if (!permission) {
             return;
         }
         // TODO test in mobile browsers
-        if (permission === Permission.Location) {
+        if (permission === Permission.LOCATION) {
             this.promptLocationPermission();
         }
 
-        if (permission === Permission.Push) {
+        if (permission === Permission.PUSH) {
             this.promptPushNotificationPermission();
         }
 
-        if (permission === Permission.Camera) {
+        if (permission === Permission.CAMERA) {
             this.promptCameraPermission();
         }
     }
@@ -116,7 +116,7 @@ export class ClickActionExecutor {
 
         let closeBehaviour;
         if (this.action.ext || this.action.up || this.action.kv ||
-            this.action.iab || this.action.prompt || this.action.share) {
+            this.action.iab || this.action.pmpt || this.action.share) {
             closeBehaviour = 'CTA';
         } else {
             closeBehaviour = 'Close';
