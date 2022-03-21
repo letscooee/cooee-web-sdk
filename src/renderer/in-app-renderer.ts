@@ -82,6 +82,12 @@ export class InAppRenderer {
             .render()
             .getHTMLElement();
 
+        // Forward compatibility
+        if (!this.ian.gvt) {
+            this.ian.gvt = this.ian.cont.getOrigin();
+        }
+        Object.assign(containerHTMLElement.style, this.ian.getStyles());
+
         this.ian.elems?.forEach((element: BaseElement) => {
             this.renderElement(containerHTMLElement, element);
         });
