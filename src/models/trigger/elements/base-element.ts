@@ -19,10 +19,10 @@ export abstract class BaseElement {
         this.t = data.t;
         if (data.bg) this.bg = new Background(data.bg);
         if (data.br) this.br = new Border(data.br);
+        this.trf = new Transform(data.trf);
         this.clc = data.clc;
         this.shd = data.shd;
         this.spc = data.spc;
-        this.trf = data.trf;
         this.w = data.w;
         this.h = data.h;
         this.x = data.x;
