@@ -83,13 +83,9 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * Process position block of the element
      */
     private processPositionBlock(): void {
-        if (!this.inappElement.x) {
-            return;
-        }
-
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
-        if (this.inappElement.x) this.renderer.setStyle(this.inappHTMLEl, 'top', this.getSizePx(this.inappElement.y));
-        if (this.inappElement.y) this.renderer.setStyle(this.inappHTMLEl, 'left', this.getSizePx(this.inappElement.x));
+        if (this.inappElement.x) this.renderer.setStyle(this.inappHTMLEl, 'left', this.getSizePx(this.inappElement.x));
+        if (this.inappElement.y) this.renderer.setStyle(this.inappHTMLEl, 'top', this.getSizePx(this.inappElement.y));
     }
 
     /**
