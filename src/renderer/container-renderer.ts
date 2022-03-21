@@ -25,7 +25,6 @@ export class ContainerRenderer extends BlockProcessor<Container> {
     render(): this {
         this.processCommonBlocks();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
-        Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
         return this;
     }
 
