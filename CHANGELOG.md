@@ -1,12 +1,13 @@
 # Change Log
 
-## 0.0.11
+## 0.0.11, 0.0.12
 
 ### Fixes
+
 1. Rendering condition for x(left) and y(top) position.
 2. Rotation of the text.
 
-## 0.0.10
+## 0.0.10 (unreleased)
 
 ### Improvement:
 1. Get trigger direction(gravity) for InAppTrigger.
