@@ -1,7 +1,7 @@
 import {Renderer} from './renderer';
 import {BaseElement} from '../models/trigger/elements';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {Color, Gradient} from '../models/trigger/blocks';
+import {Color, Gradient, Transform} from '../models/trigger/blocks';
 import {getScalingFactor} from './index';
 import {Container} from '../models/trigger/inapp/container';
 
@@ -137,7 +137,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * Process transform block of the element
      */
     private processTransformBlock(): void {
-        const transform = this.inappElement.trf;
+        const transform = new Transform(this.inappElement.trf);
         if (!transform) {
             return;
         }
