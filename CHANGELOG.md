@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.11
+
+### Fixes
+1. Rendering condition for x(left) and y(top) position.
+2. Rotation of the text.
+
 ## 0.0.10
 
 ### Improvement:
