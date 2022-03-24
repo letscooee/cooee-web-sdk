@@ -152,7 +152,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
      */
     private registerAction(): void {
         const action = this.inappElement.clc;
-        if (!action) {
+        if (!action || Object.keys(action).length === 0) {
             return;
         }
 
@@ -160,6 +160,12 @@ export abstract class BlockProcessor<T extends BaseElement> {
             event.stopPropagation();
             new ClickActionExecutor(action).execute();
         });
+
+        if (!(this.inappElement instanceof Container)) {
+            this.renderer.setStyle(this.inappHTMLEl, 'cursor', `pointer`);
+        } else if (!(Object.keys(action).length === 1 && action.close !== undefined && action.close !== null)) {
+            this.renderer.setStyle(this.inappHTMLEl, 'cursor', `pointer`);
+        }
     }
 
     /**

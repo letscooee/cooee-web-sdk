@@ -18,5 +18,5 @@ export enum Permission {
     // eslint-disable-next-line no-unused-vars
     LOCATION = 2,
     // eslint-disable-next-line no-unused-vars
-    PUSH = 6
+    PUSH = 3,
 }
