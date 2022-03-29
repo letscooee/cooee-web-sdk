@@ -3,9 +3,11 @@ image: node:12
 stages:
   - build
   - test
+  - deploy
 
 before_script:
   - npm install
+  - cat $NPM_CREDENTIAL > ~/.npmrc
 
 cache:
   paths:
@@ -18,3 +20,21 @@ Lint Changes:
     - npx tsc
   only:
     - merge_requests
+
+Release on NPM:
+  stage: deploy
+  environment:
+    name: production
+  script:
+    - npm run build:production
+    - npm publish --access public
+    - |
+      curl -L -X POST 'http://purge.jsdelivr.net/' \
+      -H 'Cache-Control: no-cache' \
+      -H 'Content-Type: application/json' \
+      -d '{"path": [
+        "/npm/@letscooee/web-sdk/dist/sdk.min.js",
+        "/npm/@letscooee/web-sdk@latest/dist/sdk.min.js"
+      ]}'
+  only:
+    - tags
