@@ -28,5 +28,13 @@ Release on NPM:
   script:
     - npm run build:production
     - npm publish --access public
+    - |
+      curl -L -X POST 'http://purge.jsdelivr.net/' \
+      -H 'Cache-Control: no-cache' \
+      -H 'Content-Type: application/json' \
+      -d '{"path": [
+        "/npm/@letscooee/web-sdk/dist/sdk.min.js",
+        "/npm/@letscooee/web-sdk@latest/dist/sdk.min.js"
+      ]}'
   only:
     - tags
