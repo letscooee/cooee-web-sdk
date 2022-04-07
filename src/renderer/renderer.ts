@@ -11,6 +11,7 @@ export class Renderer {
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
+    private scalingFactor: number;
     private readonly doc: Document = document;
 
     // No need to instantiate this class.
@@ -47,6 +48,30 @@ export class Renderer {
         }
 
         return document.documentElement.clientHeight;
+    }
+
+    /**
+     * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
+     */
+    calculateScalingFactor(canvasWidth: number, canvasHeight: number): void {
+        const screenWidth = Renderer.get().getWidth();
+        const screenHeight = Renderer.get().getHeight();
+
+        let scalingFactor;
+        if (screenWidth < screenHeight) {
+            const shortEdge = Math.min(canvasWidth, canvasHeight);
+            scalingFactor = screenWidth / shortEdge;
+        } else {
+            const longEdge = Math.max(canvasWidth, canvasHeight);
+            scalingFactor = screenHeight / longEdge;
+        }
+
+        // The in-app should not scale beyond 100%
+        this.scalingFactor = Math.min(scalingFactor, 1);
+    }
+
+    getScalingFactor(): number {
+        return this.scalingFactor;
     }
 
     /**

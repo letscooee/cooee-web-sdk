@@ -1,9 +1,8 @@
-import {Renderer} from './renderer';
-import {BaseElement} from '../models/trigger/elements';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {Color, Gradient, Transform} from '../models/trigger/blocks';
-import {getScalingFactor} from './index';
+import {BaseElement} from '../models/trigger/elements';
 import {Container} from '../models/trigger/inapp/container';
+import {Renderer} from './renderer';
 
 /**
  * Process all the block of in-app
@@ -18,7 +17,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
 
-    private scalingFactor: number = getScalingFactor();
+    private readonly scalingFactor: number;
 
     protected readonly parentHTMLEl: HTMLElement;
     protected readonly inappElement: T;
@@ -27,6 +26,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;
+        this.scalingFactor = this.renderer.getScalingFactor();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();

@@ -13,7 +13,6 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
     constructor(private parent: HTMLElement, inappElement: InAppTrigger) {
         super(parent, inappElement);
-        this.renderer.setParentContainer(parent);
         this.inappHTMLEl = this.renderer.createElement('div');
     }
 

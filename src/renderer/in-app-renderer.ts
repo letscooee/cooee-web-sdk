@@ -9,6 +9,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
+import {Renderer} from './renderer';
 
 /**
  * Renders In App trigger
@@ -18,6 +19,8 @@ import {ContainerRenderer} from './container-renderer';
  */
 export class InAppRenderer {
 
+    private readonly renderer: Renderer = Renderer.get();
+    private readonly parent: HTMLElement;
     private rootContainer: HTMLDivElement;
     private ian: InAppTrigger;
 
@@ -26,7 +29,9 @@ export class InAppRenderer {
      *
      * @param parent Place the in-app in the given parent instead of the document.body.
      */
-    constructor(private parent?: HTMLElement) {
+    constructor(parent?: HTMLElement) {
+        this.parent = parent ?? document.body;
+        this.renderer.setParentContainer(this.parent);
     }
 
     /**
@@ -37,7 +42,7 @@ export class InAppRenderer {
         triggerData = new TriggerData(triggerData);
         this.ian = triggerData.ian!;
 
-        this.rootContainer = new RootContainerRenderer(this.parent ?? document.body, this.ian)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian)
             .render() as HTMLDivElement;
 
         try {
@@ -80,6 +85,7 @@ export class InAppRenderer {
             return;
         }
 
+        this.renderer.calculateScalingFactor(container.w, container.h);
         const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
             .render()
             .getHTMLElement();
