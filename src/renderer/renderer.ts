@@ -1,3 +1,5 @@
+import {Constants} from '../constants';
+
 /**
  * Utility class for creating and rendering elements.
  *
@@ -93,6 +95,16 @@ export class Renderer {
      */
     public setAttribute(element: HTMLElement, attrName: string, value: any): void {
         element.setAttribute(attrName, value as string);
+    }
+
+    /**
+     * Remove InApp trigger.
+     */
+    removeInApp(): void {
+        const rootDiv = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`) as HTMLDivElement;
+        if (rootDiv) {
+            rootDiv.parentElement!.removeChild(rootDiv);
+        }
     }
 
     /**

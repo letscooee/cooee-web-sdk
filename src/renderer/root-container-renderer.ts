@@ -23,7 +23,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
      */
     render(): HTMLElement {
         if (!this.parent) {
-            this.removeInApp();
+            this.renderer.removeInApp();
         }
 
         this.processBackgroundBlock();
@@ -47,17 +47,6 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
         });
 
         return this.inappHTMLEl;
-    }
-
-    // noinspection JSMethodCanBeStatic
-    /**
-     * Remove InApp trigger.
-     */
-    removeInApp(): void {
-        const rootDiv = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`) as HTMLDivElement;
-        if (rootDiv) {
-            rootDiv.parentElement!.removeChild(rootDiv);
-        }
     }
 
 }
