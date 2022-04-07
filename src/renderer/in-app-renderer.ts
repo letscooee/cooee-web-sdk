@@ -1,14 +1,14 @@
-import {Log} from '../utils/log';
-import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
-import {TriggerData} from '../models/trigger/trigger-data';
-import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
-import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
-import {ContainerRenderer} from './container-renderer';
+import {Event} from '../models/event/event';
+import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {TriggerData} from '../models/trigger/trigger-data';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {SafeHttpService} from '../services/safe-http-service';
-import {Event} from '../models/event/event';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Log} from '../utils/log';
+import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
+import {ContainerRenderer} from './container-renderer';
 
 /**
  * Renders In App trigger
@@ -18,7 +18,7 @@ import {Event} from '../models/event/event';
  */
 export class InAppRenderer {
 
-    private readonly rootContainer: HTMLDivElement;
+    private rootContainer: HTMLDivElement;
     private ian: InAppTrigger;
 
     /**
@@ -27,7 +27,6 @@ export class InAppRenderer {
      * @param parent Place the in-app in the given parent instead of the document.body.
      */
     constructor(private parent?: HTMLElement) {
-        this.rootContainer = new RootContainerRenderer(parent).render() as HTMLDivElement;
     }
 
     /**
@@ -37,6 +36,9 @@ export class InAppRenderer {
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
         this.ian = triggerData.ian!;
+
+        this.rootContainer = new RootContainerRenderer(this.parent ?? document.body, this.ian)
+            .render() as HTMLDivElement;
 
         try {
             this.renderContainer();
@@ -82,7 +84,7 @@ export class InAppRenderer {
             .render()
             .getHTMLElement();
 
-        // Forward compatibility
+        // Backward compatibility
         if (!this.ian.gvt) {
             this.ian.gvt = this.ian.cont.getOrigin();
         }

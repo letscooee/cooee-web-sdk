@@ -3,7 +3,7 @@ import {Background, Border, ClickAction, Shadow, Spacing, Transform} from '../bl
 export abstract class BaseElement {
 
     t: ElementType;
-    bg: Background;
+    bg?: Background;
     br: Border;
     clc: ClickAction;
     shd: Shadow;

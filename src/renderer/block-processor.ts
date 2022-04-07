@@ -171,17 +171,13 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process background block of the element
      */
-    private processBackgroundBlock(): void {
+    protected processBackgroundBlock(): void {
         const bg = this.inappElement.bg;
         if (!bg) {
             return;
         }
 
-        let htmlElement = this.inappHTMLEl;
-        // For container, the background must be applied to its parent i.e. root container
-        if (this.inappElement instanceof Container) {
-            htmlElement = htmlElement.parentElement!;
-        }
+        const htmlElement = this.inappHTMLEl;
 
         if (bg.glossy) {
             // Style for Apple devices
