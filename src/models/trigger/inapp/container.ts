@@ -7,6 +7,10 @@ export class Container extends BaseElement {
     constructor(data: Record<string, any>) {
         super(data);
         this.o = data.o ?? ContainerOrigin.C;
+
+        // For backward compatibility
+        this.w = this.w ?? 1080;
+        this.h = this.h ?? 1920;
     }
 
     getOrigin(): ContainerOrigin {
