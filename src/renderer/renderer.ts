@@ -52,6 +52,9 @@ export class Renderer {
 
     /**
      * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
+     *
+     * @param canvasWidth The width of the canvas to render.
+     * @param canvasHeight The height of the canvas to render.
      */
     calculateScalingFactor(canvasWidth: number, canvasHeight: number): void {
         const screenWidth = Renderer.get().getWidth();
@@ -59,7 +62,7 @@ export class Renderer {
 
         const longEdgeOfCanvas = Math.max(canvasWidth, canvasHeight);
         const shortEdgeOfScreen = Math.min(screenWidth, screenHeight);
-        let scalingFactor = shortEdgeOfScreen / longEdgeOfCanvas;
+        const scalingFactor = shortEdgeOfScreen / longEdgeOfCanvas;
 
         // The in-app should not scale beyond 100%
         this.scalingFactor = Math.min(scalingFactor, 1);
