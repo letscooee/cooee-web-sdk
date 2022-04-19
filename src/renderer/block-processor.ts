@@ -1,9 +1,8 @@
-import {Renderer} from './renderer';
-import {BaseElement} from '../models/trigger/elements';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {Color, Gradient, Transform} from '../models/trigger/blocks';
-import {getScalingFactor} from './index';
+import {BaseElement} from '../models/trigger/elements';
 import {Container} from '../models/trigger/inapp/container';
+import {Renderer} from './renderer';
 
 /**
  * Process all the block of in-app
@@ -18,7 +17,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
 
-    private scalingFactor: number = getScalingFactor();
+    private readonly scalingFactor: number;
 
     protected readonly parentHTMLEl: HTMLElement;
     protected readonly inappElement: T;
@@ -27,6 +26,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;
+        this.scalingFactor = this.renderer.getScalingFactor();
 
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
@@ -171,17 +171,13 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process background block of the element
      */
-    private processBackgroundBlock(): void {
+    protected processBackgroundBlock(): void {
         const bg = this.inappElement.bg;
         if (!bg) {
             return;
         }
 
-        let htmlElement = this.inappHTMLEl;
-        // For container, the background must be applied to its parent i.e. root container
-        if (this.inappElement instanceof Container) {
-            htmlElement = htmlElement.parentElement!;
-        }
+        const htmlElement = this.inappHTMLEl;
 
         if (bg.glossy) {
             // Style for Apple devices

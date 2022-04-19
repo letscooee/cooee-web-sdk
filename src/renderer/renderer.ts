@@ -1,3 +1,5 @@
+import {Constants} from '../constants';
+
 /**
  * Utility class for creating and rendering elements.
  *
@@ -9,6 +11,7 @@ export class Renderer {
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
+    private scalingFactor: number;
     private readonly doc: Document = document;
 
     // No need to instantiate this class.
@@ -45,6 +48,28 @@ export class Renderer {
         }
 
         return document.documentElement.clientHeight;
+    }
+
+    /**
+     * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
+     *
+     * @param canvasWidth The width of the canvas to render.
+     * @param canvasHeight The height of the canvas to render.
+     */
+    calculateScalingFactor(canvasWidth: number, canvasHeight: number): void {
+        const screenWidth = Renderer.get().getWidth();
+        const screenHeight = Renderer.get().getHeight();
+
+        const longEdgeOfCanvas = Math.max(canvasWidth, canvasHeight);
+        const shortEdgeOfScreen = Math.min(screenWidth, screenHeight);
+        const scalingFactor = shortEdgeOfScreen / longEdgeOfCanvas;
+
+        // The in-app should not scale beyond 100%
+        this.scalingFactor = Math.min(scalingFactor, 1);
+    }
+
+    getScalingFactor(): number {
+        return this.scalingFactor;
     }
 
     /**
@@ -93,6 +118,16 @@ export class Renderer {
      */
     public setAttribute(element: HTMLElement, attrName: string, value: any): void {
         element.setAttribute(attrName, value as string);
+    }
+
+    /**
+     * Remove InApp trigger.
+     */
+    removeInApp(): void {
+        const rootDiv = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`) as HTMLDivElement;
+        if (rootDiv) {
+            rootDiv.parentElement!.removeChild(rootDiv);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
-import {Container} from './container';
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements';
 import {ElementType} from '../elements/base-element';
+import {Container} from './container';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -8,15 +8,23 @@ import {ElementType} from '../elements/base-element';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class InAppTrigger {
+export class InAppTrigger extends BaseElement {
 
     cont: Container;
     elems: BaseElement[] = [];
     gvt: ContainerOrigin;
 
     constructor(data: Record<string, any>) {
+        // Only background is supported for in-apps
+        super({bg: data.bg});
         this.cont = new Container(data.cont);
         this.gvt = data.gvt;
+
+        // Backward compatibility
+        if (!this.bg) {
+            this.bg = this.cont.bg;
+            delete this.cont.bg;
+        }
 
         data.elems.forEach((rawElement: Record<string, any>) => {
             if (rawElement.t === ElementType.IMAGE) {

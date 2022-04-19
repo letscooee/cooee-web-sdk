@@ -13,9 +13,6 @@ export class ContainerRenderer extends BlockProcessor<Container> {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
         this.insertElement();
-        // Need to figure out the best way of doing this
-        this.inappElement.w = 1080;
-        this.inappElement.h = 1920;
     }
 
     /**
