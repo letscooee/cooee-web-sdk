@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.0.13
+
+### Features
+
+1. Support dynamic canvas size.
+2. Ability to set colors on in-app and container separately.
+
+### Improvements
+
+1. Add hand pointer for CTAs.
+2. Add push prompt CTA.
+
 ## 0.0.11, 0.0.12
 
 ### Fixes
