@@ -28,10 +28,12 @@ export class Renderer {
 
     /**
      * Get width of the parent most container where the Cooee's root div will render.
+     * <code>document.body.clientWidth</code> might not be same as <code>document.documentElement.clientWidth</code>.
+     *
      * @return width of the parent most container.
      */
     public getWidth(): number {
-        if (this.parentContainer) {
+        if (this.parentContainer && (this.parentContainer !== document.body)) {
             return this.parentContainer.clientWidth;
         }
 
@@ -40,10 +42,12 @@ export class Renderer {
 
     /**
      * Get height of the parent most container where the Cooee's root div will render.
+     * <code>document.body.clientHeight</code> might not be same as <code>document.documentElement.clientHeight</code>.
+     *
      * @return height of the parent most container.
      */
     public getHeight(): number {
-        if (this.parentContainer) {
+        if (this.parentContainer && (this.parentContainer !== document.body)) {
             return this.parentContainer.clientHeight;
         }
 
