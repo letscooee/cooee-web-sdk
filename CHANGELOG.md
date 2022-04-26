@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.14
+
+### Fixes
+
+1. Scaling down of in-app when rendered in full page.
+2. Enforce `display: block` on elements to overwrite site specific rules.
+
 ## 0.0.13
 
 ### Features
