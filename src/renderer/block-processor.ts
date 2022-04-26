@@ -52,6 +52,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.processTransformBlock();
         this.registerAction();
 
+        this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
         this.renderer.setStyle(this.inappHTMLEl, 'outline', 'none');
     }
 

@@ -22,7 +22,6 @@ export class ImageRenderer extends BlockProcessor<ImageElement> {
         this.renderer.setAttribute(this.inappHTMLEl, 'src', this.inappElement.src);
         this.renderer.setStyle(this.inappHTMLEl, 'max-width', 'none');
         this.renderer.setStyle(this.inappHTMLEl, 'max-height', 'none');
-        this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
         this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 auto');
         this.processCommonBlocks();
     }
