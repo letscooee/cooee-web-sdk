@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.15
+
+### Fixes
+
+1. Use the correct scaling factor for in-apps.
+
 ## 0.0.14
 
 ### Fixes
