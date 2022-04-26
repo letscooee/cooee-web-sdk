@@ -64,12 +64,14 @@ export class Renderer {
         const screenWidth = Renderer.get().getWidth();
         const screenHeight = Renderer.get().getHeight();
 
-        const longEdgeOfCanvas = Math.max(canvasWidth, canvasHeight);
-        const shortEdgeOfScreen = Math.min(screenWidth, screenHeight);
-        const scalingFactor = shortEdgeOfScreen / longEdgeOfCanvas;
+        if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
+            this.scalingFactor = screenWidth / canvasWidth;
+        } else {
+            this.scalingFactor = screenHeight / canvasHeight;
+        }
 
         // The in-app should not scale beyond 100%
-        this.scalingFactor = Math.min(scalingFactor, 1);
+        this.scalingFactor = Math.min(this.scalingFactor, 1);
     }
 
     getScalingFactor(): number {
