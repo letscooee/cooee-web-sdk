@@ -50,6 +50,7 @@ export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
         this.renderer.setStyle(partHTMLEl, 'font-style', part.i ? 'italic' : 'normal');
         this.renderer.setStyle(partHTMLEl, 'text-decoration', decoration.join(' '));
         this.renderer.setStyle(partHTMLEl, 'color', part.c ?? 'inherit');
+        this.renderer.setStyle(partHTMLEl, 'font-family', 'inherit');
     }
 
     /**
