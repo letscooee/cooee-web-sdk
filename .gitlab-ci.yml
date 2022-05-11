@@ -1,4 +1,4 @@
-image: node:12
+image: node:latest
 
 stages:
   - build
@@ -34,7 +34,9 @@ Release on NPM:
       -H 'Content-Type: application/json' \
       -d '{"path": [
         "/npm/@letscooee/web-sdk/dist/sdk.min.js",
-        "/npm/@letscooee/web-sdk@latest/dist/sdk.min.js"
+        "/npm/@letscooee/web-sdk@latest/dist/sdk.min.js",
+        "/npm/@letscooee/web-sdk/dist/sdk-preview.min.js",
+        "/npm/@letscooee/web-sdk@latest/dist/sdk-preview.min.js"
       ]}'
   only:
     - tags
