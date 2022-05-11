@@ -127,11 +127,11 @@ export class HttpAPIService {
      * @param {Record[]} pastOrdersData past order data of the user
      * @param {Record} properties additional properties
      */
-    sendShopifyEvents(pastOrdersData: Record<string, any>[], properties: Record<string, any>): void {
+    sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        const body = {pastOrdersData, properties};
+        const body = {pastOrdersData};
 
         this.doHTTP<EventResponse>('POST', '/v1/event/trackShopify', body, headers)
             .then(() => {

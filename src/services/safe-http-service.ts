@@ -57,7 +57,7 @@ export class SafeHttpService {
      */
     public sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
-            this.httpApiService.sendShopifyEvents(pastOrdersData, this.addShopifyEventVariable());
+            this.httpApiService.sendShopifyEvents(pastOrdersData);
         });
     }
 
@@ -106,20 +106,6 @@ export class SafeHttpService {
         event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
-    }
-
-    /**
-     * Add values to for Shopify past order events.
-     *
-     * @return properties
-     * @private
-     */
-    private addShopifyEventVariable(): Record<string, any> {
-        return {
-            screenName: '',
-            sessionID: this.sessionManager.getCurrentSessionID(),
-            sessionNumber: this.sessionManager.getCurrentSessionNumber(),
-        };
     }
 
 }
