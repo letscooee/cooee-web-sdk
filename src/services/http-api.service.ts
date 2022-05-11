@@ -127,13 +127,13 @@ export class HttpAPIService {
      * @param {Record[]} pastOrdersData past order data of the user
      * @param {Record} properties additional properties
      */
-    sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
+    sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
         const body = {pastOrdersData};
 
-        this.doHTTP<EventResponse>('POST', '/v1/event/trackShopify', body, headers)
+        this.doHTTP<EventResponse>('POST', '/v1/event/trackPastOrders', body, headers)
             .then(() => {
                 Log.log('Sent Past Orders');
                 LocalStorageHelper.setBoolean(Constants.STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT, true);

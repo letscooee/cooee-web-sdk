@@ -55,9 +55,9 @@ export class SafeHttpService {
      *
      * @param {Record[]} pastOrdersData
      */
-    public sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
+    public sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
-            this.httpApiService.sendShopifyEvents(pastOrdersData);
+            this.httpApiService.sendPastOrders(pastOrdersData);
         });
     }
 

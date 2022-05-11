@@ -102,7 +102,7 @@ export default class CooeeSDK {
      *
      * @param {Record[]} pastOrdersData
      */
-    static sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
+    static sendShopifyPastOrders(pastOrdersData: Record<string, any>[]): void {
         // Check if the website is Shopify store
         if (!(window.Shopify && window.Shopify.shop)) {
             Log.error('This is not a Shopify store');
@@ -115,7 +115,7 @@ export default class CooeeSDK {
             return;
         }
 
-        this.INSTANCE.safeHttpCallService.sendShopifyEvents(pastOrdersData);
+        this.INSTANCE.safeHttpCallService.sendPastOrders(pastOrdersData);
     }
 
 }
