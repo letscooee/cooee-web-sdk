@@ -30,6 +30,7 @@ export class Constants {
     static STORAGE_TRIGGER_START_TIME: string = 'tst';
     static STORAGE_ACTIVE_TRIGGER: string = 'at';
     static STORAGE_ACTIVE_TRIGGERS: string = 'ats';
+    static STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT: string = 'spods';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;

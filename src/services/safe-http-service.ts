@@ -51,6 +51,17 @@ export class SafeHttpService {
     }
 
     /**
+     * Queue shopify data call till the sdk token is fetch for safe call.
+     *
+     * @param {Record[]} pastOrdersData
+     */
+    public sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.sendShopifyEvents(pastOrdersData, this.addShopifyEventVariable());
+        });
+    }
+
+    /**
      * Queue sending user data/property till the sdk token is fetch for safe call.
      *
      * @param {Props} data user data and property.
@@ -95,6 +106,20 @@ export class SafeHttpService {
         event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
+    }
+
+    /**
+     * Add values to for Shopify past order events.
+     *
+     * @return properties
+     * @private
+     */
+    private addShopifyEventVariable(): Record<string, any> {
+        return {
+            screenName: '',
+            sessionID: this.sessionManager.getCurrentSessionID(),
+            sessionNumber: this.sessionManager.getCurrentSessionNumber(),
+        };
     }
 
 }

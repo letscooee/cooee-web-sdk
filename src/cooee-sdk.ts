@@ -4,6 +4,15 @@ import {SafeHttpService} from './services/safe-http-service';
 import {Props} from './types';
 import {Bootstrap} from './init/bootstrap';
 import {RuntimeData} from './utils/runtime-data';
+import {Log} from './utils/log';
+import {LocalStorageHelper} from './utils/local-storage-helper';
+import {Constants} from './constants';
+
+declare global {
+    interface Window {
+        Shopify: any;
+    }
+}
 
 /**
  * Public consumable interface for developers.
@@ -86,6 +95,27 @@ export default class CooeeSDK {
         }
 
         this.INSTANCE.safeHttpCallService.updateProfile(data);
+    }
+
+    /**
+     * Send shopify past order data to the server
+     *
+     * @param {Record[]} pastOrdersData
+     */
+    static sendShopifyEvents(pastOrdersData: Record<string, any>[]): void {
+        // Check if the website is Shopify store
+        if (!(window.Shopify && window.Shopify.shop)) {
+            Log.error('This is not a Shopify store');
+            return;
+        }
+
+        // Check if data is already sent
+        if (LocalStorageHelper.getBoolean(Constants.STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT, false)) {
+            // TODO: Should we show log message?
+            return;
+        }
+
+        this.INSTANCE.safeHttpCallService.sendShopifyEvents(pastOrdersData);
     }
 
 }
