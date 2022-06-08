@@ -185,6 +185,11 @@ export abstract class BlockProcessor<T extends BaseElement> {
             const webkitStyleName = '-webkit-' + styleName;
             const styleValue = `blur(${bg.glossy.radius}px)`;
 
+            if (!CSS.supports(webkitStyleName, styleValue) && !CSS.supports(styleName, styleValue)) {
+                this.renderer.setStyle(htmlElement, 'background', bg.glossy.fallback!.rgba);
+                return;
+            }
+
             // Style for Apple devices
             this.renderer.setStyle(htmlElement, webkitStyleName, styleValue);
 
@@ -193,16 +198,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
 
             if (bg.glossy.color) {
                 this.processColourBlock(bg.glossy.color, 'background', htmlElement);
-            }
-
-            if (!(CSS.supports(webkitStyleName, styleValue) || CSS.supports(styleName, styleValue))) {
-                if (bg.glossy.fallback) {
-                    this.renderer.setStyle(htmlElement, 'background', bg.glossy.fallback.rgba);
-                } else {
-                    // Default fallback color is black(#000000) with alpha 50%
-                    const fallbackColor = new Color({h: '#000000', a: 50});
-                    this.renderer.setStyle(htmlElement, 'background', fallbackColor.rgba);
-                }
             }
         } else if (bg.solid) {
             if (bg.solid.grad) {

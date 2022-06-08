@@ -2,6 +2,9 @@ import {Color} from './color';
 
 export class Glossy {
 
+    // Default fallback color is black(#000000) with alpha 50%
+    private static readonly DEFAULT_FALLBACK = new Color({h: '#000000', a: 50});
+
     readonly r: number;
     readonly c?: Color;
     readonly fb?: Color;
@@ -25,7 +28,7 @@ export class Glossy {
     }
 
     get fallback(): Color | undefined {
-        return this.fb;
+        return this.fb ?? Glossy.DEFAULT_FALLBACK;
     }
 
 }
