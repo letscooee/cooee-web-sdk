@@ -181,11 +181,20 @@ export abstract class BlockProcessor<T extends BaseElement> {
         const htmlElement = this.inappHTMLEl;
 
         if (bg.glossy) {
+            const styleName = 'backdrop-filter';
+            const webkitStyleName = '-webkit-' + styleName;
+            const styleValue = `blur(${bg.glossy.radius}px)`;
+
+            if (!CSS.supports(webkitStyleName, styleValue) && !CSS.supports(styleName, styleValue)) {
+                this.renderer.setStyle(htmlElement, 'background', bg.glossy.fallback!.rgba);
+                return;
+            }
+
             // Style for Apple devices
-            this.renderer.setStyle(htmlElement, '-webkit-backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(htmlElement, webkitStyleName, styleValue);
 
             // Style for other devices
-            this.renderer.setStyle(htmlElement, 'backdrop-filter', `blur(${bg.glossy.radius}px)`);
+            this.renderer.setStyle(htmlElement, styleName, styleValue);
 
             if (bg.glossy.color) {
                 this.processColourBlock(bg.glossy.color, 'background', htmlElement);
