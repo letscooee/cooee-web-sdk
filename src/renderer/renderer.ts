@@ -8,6 +8,9 @@ import {Constants} from '../constants';
  */
 export class Renderer {
 
+    private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';
+    private static readonly DOCUMENT_QUIRKS_MODE = 'BackCompat';
+
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
@@ -37,7 +40,9 @@ export class Renderer {
             return this.parentContainer.clientWidth;
         }
 
-        return document.documentElement.clientWidth;
+        return document.compatMode === Renderer.DOCUMENT_STANDARD_MODE ?
+            document.documentElement.clientWidth :
+            window.innerWidth;
     }
 
     /**
@@ -51,7 +56,9 @@ export class Renderer {
             return this.parentContainer.clientHeight;
         }
 
-        return document.documentElement.clientHeight;
+        return document.compatMode === Renderer.DOCUMENT_STANDARD_MODE ?
+            document.documentElement.clientHeight :
+            window.innerHeight;
     }
 
     /**
