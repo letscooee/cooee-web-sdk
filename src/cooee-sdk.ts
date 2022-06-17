@@ -94,5 +94,8 @@ export default class CooeeSDK {
  * Self executing function to initialize the SDK.
  */
 (function (): void {
-    new Bootstrap().init();
+    if (!window.CooeeSDK.scriptLoaded) {
+        new Bootstrap().init();
+        window.CooeeSDK.scriptLoaded = true;
+    }
 })();
