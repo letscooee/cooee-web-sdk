@@ -11,6 +11,9 @@ import {BlockProcessor} from './block-processor';
  */
 export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
+    // https://stackoverflow.com/a/25461690/1775026
+    private static readonly MAX_Z_INDEX = '2147483647';
+
     constructor(private parent: HTMLElement, inappElement: InAppTrigger) {
         super(parent, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
@@ -34,7 +37,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'position', 'fixed');
         }
 
-        this.renderer.setStyle(this.inappHTMLEl, 'z-index', '10000000');
+        this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
         this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
         this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
         this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
