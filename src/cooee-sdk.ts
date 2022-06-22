@@ -95,7 +95,7 @@ export default class CooeeSDK {
  */
 (function (): void {
     if (!window.CooeeSDK.scriptLoaded) {
-        new Bootstrap().init();
         window.CooeeSDK.scriptLoaded = true;
+        new Bootstrap().init();
     }
 })();
