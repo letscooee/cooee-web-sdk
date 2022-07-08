@@ -4,8 +4,8 @@ import {DevicePropertiesCollector} from '../device/properties-collector';
 import {Constants} from '../constants';
 import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
-import ObjectID from 'bson-objectid';
 import {Log} from '../utils/log';
+import {ObjectId} from 'bson';
 
 /**
  * Service that deals with the user/device authentication.
@@ -179,7 +179,7 @@ export class UserAuthService {
         let uuid: string = LocalStorageHelper.getString(Constants.STORAGE_DEVICE_UUID, '');
 
         if (!uuid) {
-            uuid = new ObjectID().toHexString();
+            uuid = new ObjectId().toHexString();
             LocalStorageHelper.setString(Constants.STORAGE_DEVICE_UUID, uuid);
         }
 
