@@ -43,7 +43,7 @@
         "webpack-dev-server": "^4.1.1"
     },
     "dependencies": {
-        "bson-objectid": "^2.0.1",
+        "bson": "^4.6.5",
         "hex-rgb": "^5.0.0",
         "hex-to-rgba": "^2.0.1",
         "rxjs": "^7.3.0",

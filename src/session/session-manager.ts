@@ -1,9 +1,9 @@
-import ObjectID from 'bson-objectid';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Constants} from '../constants';
 import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 import {SafeHttpService} from '../services/safe-http-service';
+import {ObjectId} from 'bson';
 
 /**
  * Manages the user's current session in the app.
@@ -42,8 +42,6 @@ export class SessionManager {
     /**
      * Create a new session.
      *
-     * @param {boolean} createNew If a session does not exists and <code>createNew</code> is <true></true>,
-     *                  then create a new session.
      * @return {string} The current or new session id.
      */
     public getCurrentSessionID(): string | null {
@@ -89,7 +87,7 @@ export class SessionManager {
         LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false);
 
         this.currentSessionStartTime = new Date();
-        this.currentSessionID = new ObjectID().toHexString();
+        this.currentSessionID = new ObjectId().toHexString();
 
         LocalStorageHelper.setNumber(Constants.STORAGE_SESSION_START_TIME, this.currentSessionStartTime.getTime());
         LocalStorageHelper.setString(Constants.STORAGE_SESSION_ID, this.currentSessionID);
