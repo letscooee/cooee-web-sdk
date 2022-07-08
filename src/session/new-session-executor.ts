@@ -6,6 +6,7 @@ import {UserAuthService} from '../services/user-auth.service';
 import {ReplaySubject} from 'rxjs';
 import {SafeHttpService} from '../services/safe-http-service';
 import {DevicePropertiesCollector} from '../device/properties-collector';
+import {Log} from '../utils/log';
 
 /**
  * PostLaunchActivity initialized when app is launched
@@ -28,6 +29,11 @@ export class NewSessionExecutor {
      * @param {string} appSecret provided to client
      */
     init(appID: string, appSecret: string): void {
+        if (Constants.BOT_UA_REGEX.test(navigator.userAgent)) {
+            Log.log('This seems to be a bot. Disabling SDK');
+            return;
+        }
+
         this.userAuthService.init(appID, appSecret)
             .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
