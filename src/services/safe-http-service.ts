@@ -51,6 +51,17 @@ export class SafeHttpService {
     }
 
     /**
+     * Queue shopify data call till the sdk token is fetch for safe call.
+     *
+     * @param {Record[]} pastOrdersData
+     */
+    public sendPastOrders(pastOrdersData: Record<string, any>[]): void {
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.sendPastOrders(pastOrdersData);
+        });
+    }
+
+    /**
      * Queue sending user data/property till the sdk token is fetch for safe call.
      *
      * @param {Props} data user data and property.
