@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.0.16
+
+### Features
+
+1. Use fallback color if `backdrop-filter` is not supported.
+
+### Fixes
+
+1. Use `mongo-bson` instead of `bson-objectid` to analyse if this library creates duplicate records.
+2. Explicitly set font-family on inner elements.
+3. Broken height on some websites.
+4. Prevent double loading of the SDK.
+5. Use highest z-index possible.
+
 ## 0.0.15
 
 ### Fixes
