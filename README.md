@@ -26,7 +26,7 @@ code before calling any other CooeeSDK functions.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk@latest/dist/sdk.min.js" async></script>
 <script>
-    window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: []};
+    window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: [], screen: []};
     CooeeSDK.account.push({"appID": "MY_COOEE_APP_ID"});
 </script>
 ```

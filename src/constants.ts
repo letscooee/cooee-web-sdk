@@ -42,4 +42,8 @@ export class Constants {
         Constants.SDK_VERSION_CODE = parseInt(rawCode, 10);
     }
 
+    // region
+    static EVENT_SCREEN_VIEW: string = 'CE Screen View';
+    // endregion
+
 }

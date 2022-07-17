@@ -98,6 +98,31 @@ export default class CooeeSDK {
     }
 
     /**
+     * Set current screen name where user navigated.
+     *
+     * @param screenName Name of the screen. Like Login, Cart, Wishlist etc.
+     */
+    static setScreen(screenName: string): void {
+        if (!screenName) {
+            Log.log('Trying to set empty/null/undefined screen name');
+            return;
+        }
+
+        const runtime = RuntimeData.getInstance();
+
+        // previous screen
+        const ps = runtime.getScreen();
+        runtime.setScreen(screenName);
+
+        if (!ps) {
+            this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW));
+            return;
+        }
+
+        this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, {ps}));
+    }
+
+    /**
      * Send shopify past order data to the server
      *
      * @param {Record[]} pastOrdersData

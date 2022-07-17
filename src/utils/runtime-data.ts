@@ -1,5 +1,6 @@
 import {LocalStorageHelper} from './local-storage-helper';
 import {Constants} from '../constants';
+import {Log} from './log';
 
 /**
  * A simple data holder class that contains runtime state of the application/SDK.
@@ -16,6 +17,7 @@ export class RuntimeData {
     private lastEnterInactive: Date | null = null;
     private webAppVersion: string | undefined;
     private isDebug: boolean = false;
+    private screen: string;
 
     /**
      * Private constructor to make this class singleton.
@@ -132,6 +134,25 @@ export class RuntimeData {
         }
 
         return ((new Date().getTime() - this.lastEnterInactive.getTime()) / 1000);
+    }
+
+    /**
+     * Set current screen
+     *
+     * @param screen screen name
+     */
+    public setScreen(screen: string): void {
+        Log.log(`Updated screen - ${screen}`);
+        this.screen = screen;
+    }
+
+    /**
+     * Get current screen set by user
+     *
+     * @return current screen name
+     */
+    public getScreen(): string {
+        return this.screen;
     }
 
 }
