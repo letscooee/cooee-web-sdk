@@ -1,5 +1,7 @@
+import {Constants} from '../constants';
 import CooeeSDK from '../cooee-sdk';
 import {Map} from '../types';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
 
 /**
  * To use the Web SDK in a website where there is no build system (like NodeJS/WebPack) and where the web SDK is
@@ -24,6 +26,7 @@ import {Map} from '../types';
 export class ObjectMeddler {
 
     private existingSDKObject = window.CooeeSDK;
+    private appIDReceived: boolean;
 
     /**
      * Interfere/replace the <code>push</code> method of JavaScript <code>Array</code> and pass the future data to
@@ -42,9 +45,14 @@ export class ObjectMeddler {
         this.meddleEvents();
         this.meddleProfile();
 
-        this.existingSDKObject.account.forEach(this.processAccount);
-        this.existingSDKObject.events.forEach(this.processEvent);
-        this.existingSDKObject.profile.forEach(this.processProfile);
+        this.existingSDKObject.account.forEach(this.processAccount.bind(this));
+        this.existingSDKObject.events.forEach(this.processEvent.bind(this));
+        this.existingSDKObject.profile.forEach(this.processProfile.bind(this));
+
+        const lastAppID = LocalStorageHelper.getString(Constants.STORAGE_APP_ID);
+        if (!this.appIDReceived && lastAppID) {
+            this.existingSDKObject.account.push({appID: lastAppID});
+        }
     }
 
     /**
@@ -102,6 +110,7 @@ export class ObjectMeddler {
 
         const keys = Object.keys(data);
         if (keys.includes('appID')) {
+            this.appIDReceived = true;
             CooeeSDK.init(data.appID);
         } else if (keys.includes('appVersion')) {
             CooeeSDK.setWebAppVersion(data.appVersion);
