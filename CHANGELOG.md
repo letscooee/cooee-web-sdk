@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.17
+
+### Features
+
+1. Use the `web` target to avoid loading polyfills.
+
 ## 0.0.16
 
 ### Features
