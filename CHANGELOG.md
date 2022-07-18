@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.18
+
+1. Store & read app id from local storage when available.
+2. Remove the use of app secret.
+
 ## 0.0.17
 
 ### Features
