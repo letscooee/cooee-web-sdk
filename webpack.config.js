@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: './src/index.ts',
-    target: 'es5',
+    target: ['web'],
     mode: 'production',
     devServer: {
         static: path.join(__dirname, 'apps', 'old-school'),
@@ -27,11 +27,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
-        fallback: {
-            crypto: require.resolve('crypto-browserify'),
-            stream: require.resolve('stream-browserify'),
-            util: require.resolve('util')
-        }
     },
     output: {
         publicPath: 'dist',
