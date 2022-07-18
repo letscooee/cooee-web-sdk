@@ -11,6 +11,7 @@ import {Constants} from './constants';
 declare global {
     interface Window {
         Shopify: any;
+        cooeeMainScriptLoaded: boolean;
     }
 }
 
@@ -124,8 +125,8 @@ export default class CooeeSDK {
  * Self executing function to initialize the SDK.
  */
 (function (): void {
-    if (!window.CooeeSDK.scriptLoaded) {
-        window.CooeeSDK.scriptLoaded = true;
+    if (!window.cooeeMainScriptLoaded) {
+        window.cooeeMainScriptLoaded = true;
         new Bootstrap().init();
     }
 })();
