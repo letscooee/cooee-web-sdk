@@ -15,13 +15,11 @@ export class DeviceAuthRequest {
      * Public constructor
      *
      * @param {string} appID provided to the client.
-     * @param {string} appSecret provided to the client.
      * @param {string} uuid UUID of the device/browser.
      * @param {Props} props Different properties collected by SDK.
      */
     constructor(
         readonly appID: string,
-        readonly appSecret: string,
         readonly uuid: string,
         readonly props: Props,
     ) {

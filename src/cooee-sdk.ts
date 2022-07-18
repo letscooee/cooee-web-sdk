@@ -1,16 +1,17 @@
-import {Event} from './models/event/event';
-import {NewSessionExecutor} from './session/new-session-executor';
-import {SafeHttpService} from './services/safe-http-service';
-import {Props} from './types';
-import {Bootstrap} from './init/bootstrap';
-import {RuntimeData} from './utils/runtime-data';
-import {Log} from './utils/log';
-import {LocalStorageHelper} from './utils/local-storage-helper';
 import {Constants} from './constants';
+import {Bootstrap} from './init/bootstrap';
+import {Event} from './models/event/event';
+import {SafeHttpService} from './services/safe-http-service';
+import {NewSessionExecutor} from './session/new-session-executor';
+import {Props} from './types';
+import {LocalStorageHelper} from './utils/local-storage-helper';
+import {Log} from './utils/log';
+import {RuntimeData} from './utils/runtime-data';
 
 declare global {
     interface Window {
         Shopify: any;
+        cooeeMainScriptLoaded: boolean;
     }
 }
 
@@ -40,10 +41,15 @@ export default class CooeeSDK {
      * Initialize the SDK with credentials.
      *
      * @param {string} appID total active seconds
-     * @param {string} appSecret total active seconds
      */
-    static init(appID: string, appSecret: string): void {
-        this.INSTANCE.newSessionExecutor.init(appID, appSecret);
+    static init(appID: string): void {
+        appID = appID?.trim();
+        if (!appID) {
+            return;
+        }
+
+        this.INSTANCE.newSessionExecutor.init(appID);
+        LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
     }
 
     /**
@@ -124,8 +130,8 @@ export default class CooeeSDK {
  * Self executing function to initialize the SDK.
  */
 (function (): void {
-    if (!window.CooeeSDK.scriptLoaded) {
-        window.CooeeSDK.scriptLoaded = true;
+    if (!window.cooeeMainScriptLoaded) {
+        window.cooeeMainScriptLoaded = true;
         new Bootstrap().init();
     }
 })();

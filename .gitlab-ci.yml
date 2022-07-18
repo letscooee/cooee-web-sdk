@@ -1,4 +1,4 @@
-image: node:latest
+image: node:lts
 
 stages:
   - build
@@ -8,6 +8,7 @@ stages:
 before_script:
   - npm install
   - cat $NPM_CREDENTIAL > ~/.npmrc
+  - cat ~/.npmrc
 
 cache:
   paths:
@@ -18,6 +19,7 @@ Lint Changes:
   script:
     - npm run lint
     - npx tsc
+    - npm run build:production
   only:
     - merge_requests
 
@@ -26,7 +28,6 @@ Release on NPM:
   environment:
     name: production
   script:
-    - npm run build:production
     - npm publish --access public
     - |
       curl -L -X POST 'http://purge.jsdelivr.net/' \

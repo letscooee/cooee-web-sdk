@@ -25,10 +25,9 @@ export class NewSessionExecutor {
      * Initialize the SDK using credentials.
      *
      * @param {string} appID provided to client
-     * @param {string} appSecret provided to client
      */
-    init(appID: string, appSecret: string): void {
-        this.userAuthService.init(appID, appSecret)
+    init(appID: string): void {
+        this.userAuthService.init(appID)
             .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
@@ -36,7 +35,7 @@ export class NewSessionExecutor {
             .catch(() => {
                 // Reattempt authentication in 30 seconds
                 setTimeout(() => {
-                    this.init(appID, appSecret);
+                    this.init(appID);
                 }, 30 * 1000);
             });
 

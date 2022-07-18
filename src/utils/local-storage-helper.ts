@@ -15,7 +15,7 @@ export class LocalStorageHelper {
      * @param {string} defaultValue default value if key not present
      * @return {string} value stored .
      */
-    static getString(key: string, defaultValue: string): string {
+    static getString(key: string, defaultValue: string = ''): string {
         return LocalStorageHelper.LOCAL_STORAGE.getItem(key) || defaultValue;
     }
 
@@ -74,25 +74,49 @@ export class LocalStorageHelper {
     }
 
     /**
-     * Get value from local storage.
+     * Get key-value data from local storage for the given key.
      *
      * @param {string} key key provided for the stored value.
      * @return {any} value stored.
      */
-    static getObject(key: string): any {
+    static getObject(key: string): Record<string, any> {
         try {
             return JSON.parse(LocalStorageHelper.getString(key, ''));
         } catch (ignored) {
-            return null;
+            return {};
         }
     }
 
     /**
-     * Set value in local storage as json string.
+     * Get an array value from local storage for the given key.
+     *
+     * @param {string} key key provided for the stored value.
+     * @param defaultValue The default value to return.
+     * @return {any} value stored.
+     */
+    static getArray(key: string, defaultValue: any[] = []): any[] {
+        try {
+            return JSON.parse(LocalStorageHelper.getString(key, ''));
+        } catch (ignored) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Set a key-value object in local storage.
      * @param {string} key key provided for the storing value.
      * @param {any} value value stored.
      */
-    static setObject(key: string, value: any): void {
+    static setObject(key: string, value: Record<string, any>): void {
+        LocalStorageHelper.setString(key, JSON.stringify(value));
+    }
+
+    /**
+     * Set a key-value object in local storage.
+     * @param {string} key key provided for the storing value.
+     * @param {any} value value stored.
+     */
+    static setArray(key: string, value: any[]): void {
         LocalStorageHelper.setString(key, JSON.stringify(value));
     }
 

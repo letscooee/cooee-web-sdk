@@ -22,7 +22,6 @@ export class UserAuthService {
     private sdkToken: string = '';
     private userID: string = '';
     private appID: string = '';
-    private appSecret: string = '';
 
     /**
      * Private constructor to make this class singleton.
@@ -45,12 +44,10 @@ export class UserAuthService {
      * Initialize the service with credentials to be sent on http call.
      *
      * @param {string} appID provided to client
-     * @param {string} appSecret provided to client
      * @return {Promise} to confirm token is fetched
      */
-    init(appID: string, appSecret: string): Promise<void> {
+    init(appID: string): Promise<void> {
         this.appID = appID;
-        this.appSecret = appSecret;
 
         return this.acquireSDKToken();
     }
@@ -162,7 +159,6 @@ export class UserAuthService {
 
         return new DeviceAuthRequest(
             this.appID,
-            this.appSecret,
             this.getOrCreateUUID(),
             props,
         );
