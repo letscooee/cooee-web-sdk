@@ -1,7 +1,7 @@
-import {TriggerData} from './trigger-data';
-import {LocalStorageHelper} from '../../utils/local-storage-helper';
 import {Constants} from '../../constants';
+import {LocalStorageHelper} from '../../utils/local-storage-helper';
 import {EmbeddedTrigger} from './embedded-trigger';
+import {TriggerData} from './trigger-data';
 
 /**
  * A small helper class for any kind of engagement trigger like caching or retrieving from local storage.
@@ -20,7 +20,7 @@ export class TriggerHelper {
             return;
         }
 
-        let activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
+        let activeTriggers = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS) as EmbeddedTrigger[];
 
         if (!activeTriggers) {
             activeTriggers = [];
@@ -42,7 +42,7 @@ export class TriggerHelper {
      * @return EmbeddedTrigger[] list of active triggers
      */
     static getActiveTriggers(): EmbeddedTrigger[] {
-        const activeTriggers: EmbeddedTrigger[] = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS);
+        const activeTriggers = LocalStorageHelper.getArray(Constants.STORAGE_ACTIVE_TRIGGERS) as EmbeddedTrigger[];
 
         if (!activeTriggers) {
             return [];

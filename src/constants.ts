@@ -18,6 +18,8 @@ export class Constants {
     static CANVAS_HEIGHT = 1920;
 
     // region Local Storage Keys
+    // Do not change the local storage id as this is also being used in Shopify
+    static STORAGE_APP_ID: string = 'cooaid';
     static STORAGE_USER_ID: string = 'uid';
     static STORAGE_SDK_TOKEN: string = 'st';
     static STORAGE_DEVICE_UUID: string = 'uuid';

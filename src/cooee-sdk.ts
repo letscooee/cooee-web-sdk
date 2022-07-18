@@ -1,12 +1,12 @@
-import {Event} from './models/event/event';
-import {NewSessionExecutor} from './session/new-session-executor';
-import {SafeHttpService} from './services/safe-http-service';
-import {Props} from './types';
-import {Bootstrap} from './init/bootstrap';
-import {RuntimeData} from './utils/runtime-data';
-import {Log} from './utils/log';
-import {LocalStorageHelper} from './utils/local-storage-helper';
 import {Constants} from './constants';
+import {Bootstrap} from './init/bootstrap';
+import {Event} from './models/event/event';
+import {SafeHttpService} from './services/safe-http-service';
+import {NewSessionExecutor} from './session/new-session-executor';
+import {Props} from './types';
+import {LocalStorageHelper} from './utils/local-storage-helper';
+import {Log} from './utils/log';
+import {RuntimeData} from './utils/runtime-data';
 
 declare global {
     interface Window {
@@ -43,7 +43,13 @@ export default class CooeeSDK {
      * @param {string} appID total active seconds
      */
     static init(appID: string): void {
+        appID = appID?.trim();
+        if (!appID) {
+            return;
+        }
+
         this.INSTANCE.newSessionExecutor.init(appID);
+        LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
     }
 
     /**
