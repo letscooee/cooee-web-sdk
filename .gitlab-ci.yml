@@ -8,7 +8,6 @@ stages:
 before_script:
   - npm install
   - cat $NPM_CREDENTIAL > ~/.npmrc
-  - cat ~/.npmrc
 
 cache:
   paths:
