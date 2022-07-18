@@ -18,6 +18,7 @@ Lint Changes:
   script:
     - npm run lint
     - npx tsc
+    - npm run build:production
   only:
     - merge_requests
 
@@ -26,7 +27,6 @@ Release on NPM:
   environment:
     name: production
   script:
-    - npm run build:production
     - npm publish --access public
     - |
       curl -L -X POST 'http://purge.jsdelivr.net/' \
