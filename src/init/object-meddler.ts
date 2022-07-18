@@ -14,7 +14,7 @@ import {Map} from '../types';
  *     window.CooeeSDK = window.CooeeSDK || {events:[], profile:[], account:[]};
  * </code>
  *
- * Now, developers can simply use the the three array objects to push the data. Once the web SDK is loaded, this
+ * Now, developers can simply use the three array objects to push the data. Once the web SDK is loaded, this
  * class will process all the data from that existing object/arrays and also will hook into the "push" method of
  * Array object so that future data can be directly passed to {@link CooeeSDK}.
  *
@@ -102,7 +102,7 @@ export class ObjectMeddler {
 
         const keys = Object.keys(data);
         if (keys.includes('appID')) {
-            CooeeSDK.init(data.appID, data.appSecret);
+            CooeeSDK.init(data.appID);
         } else if (keys.includes('appVersion')) {
             CooeeSDK.setWebAppVersion(data.appVersion);
         } else if (keys.includes('debug')) {
