@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.19
+
+1. Do not allow SDK to kick-in if being used by a Bot.
+
 ## 0.0.18
 
 1. Store & read app id from local storage when available.
