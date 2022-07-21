@@ -1,11 +1,12 @@
-import {SessionManager} from './session-manager';
-import {LocalStorageHelper} from '../utils/local-storage-helper';
-import {Constants} from '../constants';
-import {Event} from '../models/event/event';
-import {UserAuthService} from '../services/user-auth.service';
 import {ReplaySubject} from 'rxjs';
-import {SafeHttpService} from '../services/safe-http-service';
+import {Constants} from '../constants';
 import {DevicePropertiesCollector} from '../device/properties-collector';
+import {Event} from '../models/event/event';
+import {SafeHttpService} from '../services/safe-http-service';
+import {UserAuthService} from '../services/user-auth.service';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Log} from '../utils/log';
+import {SessionManager} from './session-manager';
 
 /**
  * PostLaunchActivity initialized when app is launched
@@ -27,6 +28,11 @@ export class NewSessionExecutor {
      * @param {string} appID provided to client
      */
     init(appID: string): void {
+        if (Constants.BOT_UA_REGEX.test(navigator.userAgent)) {
+            Log.log('This seems to be a bot. Disabling SDK');
+            return;
+        }
+
         this.userAuthService.init(appID)
             .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
