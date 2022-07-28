@@ -10,6 +10,7 @@ import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
+import {FontService} from '../services/font.service';
 
 /**
  * Renders In App trigger
@@ -96,8 +97,10 @@ export class InAppRenderer {
         }
         Object.assign(containerHTMLElement.style, this.ian.getStyles());
 
-        this.ian.elems?.forEach((element: BaseElement) => {
-            this.renderElement(containerHTMLElement, element);
+        new FontService().loadAllFonts(this.ian);
+
+        this.ian.elems?.forEach(async (element: BaseElement) => {
+            await this.renderElement(containerHTMLElement, element);
         });
     }
 
