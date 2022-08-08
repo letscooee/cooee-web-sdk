@@ -104,22 +104,21 @@ export default class CooeeSDK {
      */
     static setScreen(screenName: string): void {
         if (!screenName) {
-            Log.log('Trying to set empty/null/undefined screen name');
             return;
         }
 
         const runtime = RuntimeData.getInstance();
 
-        // previous screen
-        const ps = runtime.getScreen();
+        const previousScreen = runtime.getScreen();
         runtime.setScreen(screenName);
 
-        if (!ps) {
-            this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW));
+        const props: Record<string, any> = {};
+        if (previousScreen) {
+            props.ps = previousScreen;
             return;
         }
 
-        this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, {ps}));
+        this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, props));
     }
 
     /**

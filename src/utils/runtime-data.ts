@@ -1,6 +1,5 @@
 import {LocalStorageHelper} from './local-storage-helper';
 import {Constants} from '../constants';
-import {Log} from './log';
 
 /**
  * A simple data holder class that contains runtime state of the application/SDK.
@@ -142,7 +141,6 @@ export class RuntimeData {
      * @param screen screen name
      */
     public setScreen(screen: string): void {
-        Log.log(`Updated screen - ${screen}`);
         this.screen = screen;
     }
 
