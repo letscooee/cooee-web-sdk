@@ -3,6 +3,7 @@ import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
 import {HttpAPIService} from './http-api.service';
 import {Props} from '../types';
+import {RuntimeData} from '../utils/runtime-data';
 
 /**
  * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.
@@ -101,8 +102,7 @@ export class SafeHttpService {
      * @private
      */
     private addEventVariable(event: Event): void {
-        // TODO Use actual screen name
-        event.screenName = location.pathname;
+        event.screenName = RuntimeData.getInstance().getScreen();
         event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();

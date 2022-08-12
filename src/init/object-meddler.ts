@@ -34,20 +34,23 @@ export class ObjectMeddler {
      */
     meddle(): void {
         if (!this.existingSDKObject) {
-            this.existingSDKObject = window.CooeeSDK = {events: [], profile: [], account: []};
+            this.existingSDKObject = window.CooeeSDK = {events: [], profile: [], account: [], screen: []};
         }
 
         this.existingSDKObject.account = this.existingSDKObject.account ?? [];
         this.existingSDKObject.profile = this.existingSDKObject.profile ?? [];
         this.existingSDKObject.events = this.existingSDKObject.events ?? [];
+        this.existingSDKObject.screen = this.existingSDKObject.screen ?? [];
 
         this.meddleAccount();
         this.meddleEvents();
         this.meddleProfile();
+        this.meddleScreen();
 
         this.existingSDKObject.account.forEach(this.processAccount.bind(this));
         this.existingSDKObject.events.forEach(this.processEvent.bind(this));
         this.existingSDKObject.profile.forEach(this.processProfile.bind(this));
+        this.existingSDKObject.screen.forEach(this.processScreen.bind(this));
 
         const lastAppID = LocalStorageHelper.getString(Constants.STORAGE_APP_ID);
         if (!this.appIDReceived && lastAppID) {
@@ -101,6 +104,16 @@ export class ObjectMeddler {
     }
 
     /**
+     * Hook into "screen".
+     * @private
+     */
+    private meddleScreen(): void {
+        this.overwritePush(this.existingSDKObject.screen, (...args: Array<any>) => {
+            this.processScreen(args[0]);
+        });
+    }
+
+    /**
      * Process the existing & future account data pushed to <code>CooeeSDK.account</code>.
      * @param data The key-value data to process.
      * @private
@@ -139,6 +152,17 @@ export class ObjectMeddler {
         if (!data) return;
 
         CooeeSDK.updateProfile(data);
+    }
+
+    /**
+     * Process screen name set by app.
+     * @param screenName screen name.
+     * @private
+     */
+    private processScreen(screenName: string): void {
+        if (!screenName) return;
+
+        CooeeSDK.setScreen(screenName);
     }
 
 }
