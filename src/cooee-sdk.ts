@@ -121,7 +121,6 @@ export default class CooeeSDK {
         const props: Record<string, any> = {};
         if (previousScreen) {
             props.ps = previousScreen;
-            return;
         }
 
         this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, props));
