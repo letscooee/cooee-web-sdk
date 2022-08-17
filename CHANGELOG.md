@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.20
+
+1. Support fonts listed client-portal.
+
 ## 0.0.19
 
 1. Do not allow SDK to kick-in if being used by a Bot.
