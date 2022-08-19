@@ -44,6 +44,10 @@ export class Constants {
         Constants.SDK_VERSION_CODE = parseInt(rawCode, 10);
     }
 
+    // region
+    static EVENT_SCREEN_VIEW: string = 'CE Screen View';
+    // endregion
+
     private static BOT_USER_AGENTS_PATTERN: string = '(' +
         'googlebot\/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|' +
         'java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|' +

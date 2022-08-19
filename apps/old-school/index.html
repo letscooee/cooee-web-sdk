@@ -20,7 +20,7 @@
     <!--<script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk/dist/sdk.min.js" async></script>-->
     <script src="/live-dist/sdk.min.js" async></script>
     <script>
-        window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: []};
+        window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: [], screen: []};
         CooeeSDK.account.push({debug: false});
         CooeeSDK.account.push({appVersion: "1.2.3+12030"});
         CooeeSDK.account.push({appID: "5f9136107d618d7d123cc118"});
@@ -36,6 +36,11 @@
             }
         });
         CooeeSDK.events.push(["Add To Cart", {foo: 2}])
+
+        setTimeout(()=>{
+            CooeeSDK.screen.push(`Screen ${new Date()}`);
+            CooeeSDK.events.push(["View Cart", {foo: 2}]);
+        }, 10000);
 
         document.addEventListener('onCooeeCTA', function (event) {
             const payload = event.detail;

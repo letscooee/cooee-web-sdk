@@ -16,6 +16,7 @@ export class RuntimeData {
     private lastEnterInactive: Date | null = null;
     private webAppVersion: string | undefined;
     private isDebug: boolean = false;
+    private screen: string;
 
     /**
      * Private constructor to make this class singleton.
@@ -132,6 +133,24 @@ export class RuntimeData {
         }
 
         return ((new Date().getTime() - this.lastEnterInactive.getTime()) / 1000);
+    }
+
+    /**
+     * Set current screen
+     *
+     * @param screen screen name
+     */
+    public setScreen(screen: string): void {
+        this.screen = screen;
+    }
+
+    /**
+     * Get current screen set by user
+     *
+     * @return current screen name
+     */
+    public getScreen(): string {
+        return this.screen;
     }
 
 }
