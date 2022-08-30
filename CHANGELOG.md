@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.21
+
+1. Introduce endpoint to set screen name.
+
 ## 0.0.20
 
 1. Support fonts listed client-portal.
