@@ -11,6 +11,7 @@ import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from 
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
 import {FontService} from '../services/font.service';
+import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 
 /**
  * Renders In App trigger
@@ -49,9 +50,11 @@ export class InAppRenderer {
         try {
             this.renderContainer();
 
-            const event: Event = new Event('CE Trigger Displayed', {'triggerID': triggerData.id});
-            SafeHttpService.getInstance().sendEvent(event);
+            const event: Event = new Event('CE Trigger Displayed');
+            event.trigger = new EmbeddedTrigger(triggerData);
+            SafeHttpService.getInstance().sendEvent(event, true);
 
+            LocalStorageHelper.setObject(Constants.STORAGE_CURRENT_TRIGGER, event.trigger);
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {

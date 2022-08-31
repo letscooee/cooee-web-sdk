@@ -8,6 +8,7 @@ import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {Permission} from '../blocks/click-action';
+import {EmbeddedTrigger} from '../embedded-trigger';
 
 /**
  * Performs click to action on in-app elements
@@ -111,7 +112,7 @@ export class ClickActionExecutor {
         Renderer.get().removeInApp();
 
         const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-        const triggerID = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER)?.triggerID;
+        const trigger = LocalStorageHelper.getObject(Constants.STORAGE_CURRENT_TRIGGER) as EmbeddedTrigger;
 
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 
@@ -124,13 +125,16 @@ export class ClickActionExecutor {
         }
 
         const eventProps: Props = {
-            'triggerID': triggerID,
             'closeBehaviour': closeBehaviour,
             'duration': diffInSeconds,
         };
-        this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
+
+        const event: Event = new Event('CE Trigger Closed', eventProps);
+        event.trigger = trigger;
+        this.apiService.sendEvent(event, true);
 
         LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
+        LocalStorageHelper.remove(Constants.STORAGE_CURRENT_TRIGGER);
     }
 
     /**

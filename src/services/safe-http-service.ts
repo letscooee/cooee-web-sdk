@@ -43,11 +43,12 @@ export class SafeHttpService {
      * Queue events till the sdk token is fetch for safe call.
      *
      * @param {Event} event
+     * @param isTrigger true, if event is an engagement event.
      */
-    public sendEvent(event: Event): void {
+    public sendEvent(event: Event, isTrigger: boolean = false): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
             this.addEventVariable(event);
-            this.httpApiService.sendEvent(event);
+            this.httpApiService.sendEvent(event, isTrigger);
         });
     }
 

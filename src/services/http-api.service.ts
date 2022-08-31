@@ -92,19 +92,22 @@ export class HttpAPIService {
      * Create/Send event call to the server.
      *
      * @param {Event} event event to be sent
+     * @param isTrigger true, if event is an engagement event.
      */
-    sendEvent(event: Event): void {
+    sendEvent(event: Event, isTrigger: boolean): void {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
         event.activeTriggers = TriggerHelper.getActiveTriggers();
 
-        const trigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER) as EmbeddedTrigger;
+        if (!isTrigger) {
+            const trigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER) as EmbeddedTrigger;
 
-        if (trigger) {
-            event.trigger = trigger;
-            if (trigger.triggerID === 'test') {
-                return;
+            if (trigger) {
+                event.trigger = trigger;
+                if (trigger.triggerID === 'test') {
+                    return;
+                }
             }
         }
 
