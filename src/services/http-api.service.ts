@@ -104,6 +104,8 @@ export class HttpAPIService {
             const trigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER) as EmbeddedTrigger;
 
             if (trigger) {
+                trigger.updateExpired();
+
                 event.trigger = trigger;
                 if (trigger.triggerID === 'test') {
                     return;
