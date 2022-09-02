@@ -98,7 +98,7 @@ export class UserAuthService {
         Log.log('User ID:', this.userID);
 
         this.apiService.setAPIToken(this.sdkToken);
-        this.apiService.setUserId(this.userID);
+        this.apiService.setUserID(this.userID);
     }
 
     /**
@@ -143,7 +143,7 @@ export class UserAuthService {
      */
     saveUserDataInStorage(data: DeviceAuthResponse): void {
         this.sdkToken = data.sdkToken;
-        this.userID = data.id;
+        this.userID = data.userID;
 
         this.updateAPIClient();
 

@@ -3,7 +3,8 @@
  */
 export interface DeviceAuthResponse {
 
-    id: string; // user-id from server
+    userID: string; // user-id from server
     sdkToken: string; // sdk-token from server
+    deviceID: string; // device-id from server
 
 }

@@ -9,6 +9,7 @@ import {InAppRenderer} from '../renderer/in-app-renderer';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
+import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -152,13 +153,31 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP('PUT', '/v1/user/update', data, headers)
-            .then(() => {
+        this.doHTTP<DeviceAuthResponse>('PUT', '/v1/user/update', data, headers)
+            .then((response: DeviceAuthResponse) => {
                 Log.log('Updated user profile');
+                this.updateUserIDAndToken(response);
             })
             .catch((error) => {
                 Log.error('Error saving user profile', error);
             });
+    }
+
+    /**
+     * Updates userID and sdkToken received as a response from calling /user/update api. This would help in merging
+     * profile.
+     * @param response
+     */
+    updateUserIDAndToken(response: DeviceAuthResponse): void {
+        if (response.userID) {
+            this.setUserID(response.userID);
+            LocalStorageHelper.setString(Constants.STORAGE_USER_ID, response.userID);
+        }
+
+        if (response.sdkToken) {
+            this.setAPIToken(response.sdkToken);
+            LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, response.sdkToken);
+        }
     }
 
     /**
@@ -236,7 +255,7 @@ export class HttpAPIService {
      *
      * @param {string} id
      */
-    setUserId(id: string): void {
+    setUserID(id: string): void {
         this.userID = id ?? '';
     }
 
