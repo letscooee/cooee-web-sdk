@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.22
+
+1. Rollback legacy "CE Screen View" event.
+2. Use a JS Flag to turn it off.
+
 ## 0.0.21
 
 1. Introduce endpoint to set screen name.
