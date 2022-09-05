@@ -1,6 +1,6 @@
-import {VisibilityListener} from './visibility-listener';
 import {CommonListeners} from './common-listeners';
 import {ObjectMeddler} from './object-meddler';
+import {VisibilityListener} from './visibility-listener';
 
 /**
  * A one time initializer class which initialises the SDK. This is used internally by the SDK
@@ -16,7 +16,10 @@ export class Bootstrap {
      */
     init(): void {
         new VisibilityListener().listen();
-        new CommonListeners().listen();
+        // @ts-ignore
+        if (!window['disableLegacyCooeeScreenView']) {
+            new CommonListeners().listen();
+        }
         new ObjectMeddler().meddle();
     }
 
