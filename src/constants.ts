@@ -45,7 +45,14 @@ export class Constants {
     }
 
     // region
-    static EVENT_SCREEN_VIEW: string = 'CE Screen View';
+    static readonly EVENT_SCREEN_VIEW: string = 'CE Screen View';
+    static readonly EVENT_APP_INSTALLED: string = 'CE App Installed';
+    static readonly EVENT_APP_LAUNCHED: string = 'CE App Launched';
+    static readonly EVENT_SESSION_CONCLUDED: string = 'CE Session Concluded';
+    static readonly EVENT_APP_FOREGROUND: string = 'CE App Foreground';
+    static readonly EVENT_APP_BACKGROUND: string = 'CE App Background';
+    static readonly EVENT_TRIGGER_DISPLAYED: string = 'CE Trigger Displayed';
+    static readonly EVENT_TRIGGER_CLOSED: string = 'CE Trigger Closed';
     // endregion
 
     private static BOT_USER_AGENTS_PATTERN: string = '(' +

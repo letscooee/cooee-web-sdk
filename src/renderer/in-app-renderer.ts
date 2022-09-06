@@ -49,7 +49,7 @@ export class InAppRenderer {
         try {
             this.renderContainer();
 
-            const event: Event = new Event('CE Trigger Displayed', {'triggerID': triggerData.id});
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {'triggerID': triggerData.id});
             SafeHttpService.getInstance().sendEvent(event);
 
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());

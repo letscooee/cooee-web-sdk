@@ -1,5 +1,6 @@
 import {Event} from '../models/event/event';
 import {SafeHttpService} from '../services/safe-http-service';
+import {Constants} from '../constants';
 
 /**
  * Add the common listeners globally.
@@ -16,7 +17,7 @@ export class CommonListeners {
      */
     listen(): void {
         window.onpageshow = () => {
-            this.apiService.sendEvent(new Event('CE Screen View', {'screenName': location.pathname}));
+            this.apiService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, {'screenName': location.pathname}));
         };
     }
 
