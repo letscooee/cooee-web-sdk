@@ -1,5 +1,6 @@
 import {Props} from '../../types';
 import {EmbeddedTrigger} from '../trigger/embedded-trigger';
+import {ObjectId} from 'bson';
 
 /**
  * Event class is sent as body to server when a user event needs to be tracked.
@@ -16,6 +17,7 @@ export class Event {
     public activeTriggers: EmbeddedTrigger[] = [];
     public trigger: EmbeddedTrigger;
 
+    private readonly id: ObjectId;
     private readonly occurred: string;
 
     /**
@@ -28,6 +30,7 @@ export class Event {
         readonly name: string,
         readonly properties: Props = {},
     ) {
+        this.id = new ObjectId();
         this.occurred = new Date().toISOString();
     }
 
