@@ -128,7 +128,7 @@ export class ClickActionExecutor {
             'closeBehaviour': closeBehaviour,
             'duration': diffInSeconds,
         };
-        this.apiService.sendEvent(new Event('CE Trigger Closed', eventProps));
+        this.apiService.sendEvent(new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps));
 
         LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
     }

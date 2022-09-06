@@ -73,7 +73,7 @@ export class NewSessionExecutor {
     /**
      * Check if app is launched for first time
      *
-     * @return {boolean} true if app is launched for first time, else false
+     * @return true, if app is launched for first time; else false
      */
     private isAppFirstTimeLaunch(): boolean {
         if (LocalStorageHelper.getBoolean(Constants.STORAGE_FIRST_TIME_LAUNCH, true)) {
@@ -88,7 +88,7 @@ export class NewSessionExecutor {
      * Runs when app is opened for the first time after sdkToken is received from server asynchronously
      */
     private async sendFirstLaunchEvent(): Promise<void> {
-        const event = new Event('CE App Installed', {});
+        const event = new Event(Constants.EVENT_APP_INSTALLED, {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
     }
@@ -97,7 +97,7 @@ export class NewSessionExecutor {
      * Runs every time when app is opened for a new session
      */
     private async sendSuccessiveLaunchEvent(): Promise<void> {
-        const event = new Event('CE App Launched', {});
+        const event = new Event(Constants.EVENT_APP_LAUNCHED, {});
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
     }
