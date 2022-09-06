@@ -4,6 +4,7 @@ import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 import {SafeHttpService} from '../services/safe-http-service';
 import {ObjectId} from 'bson';
+import {Event} from '../models/event/event';
 
 /**
  * Manages the user's current session in the app.
@@ -51,7 +52,7 @@ export class SessionManager {
     /**
      * Check if new session is required.
      *
-     * @return {boolean} true, if new session required.
+     * @return true, if new session required.
      */
     private isNewSessionRequired(): boolean {
         if (!LocalStorageHelper.getString(Constants.STORAGE_SESSION_ID, '')) {
@@ -83,14 +84,13 @@ export class SessionManager {
             return;
         }
 
-        // Make sure to clear the flag for "Web Launched" event for new session
-        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false);
-
         this.currentSessionStartTime = new Date();
         this.currentSessionID = new ObjectId().toHexString();
 
         LocalStorageHelper.setNumber(Constants.STORAGE_SESSION_START_TIME, this.currentSessionStartTime.getTime());
         LocalStorageHelper.setString(Constants.STORAGE_SESSION_ID, this.currentSessionID);
+
+        SafeHttpService.getInstance().sendEvent(new Event(Constants.EVENT_SESSION_STARTED));
 
         this.bumpSessionNumber();
     }
@@ -108,7 +108,7 @@ export class SessionManager {
     /**
      * Get current session number.
      *
-     * @return {number} session number.
+     * @return session number.
      */
     public getCurrentSessionNumber(): number {
         return this.currentSessionNumber || 0;
@@ -117,7 +117,7 @@ export class SessionManager {
     /**
      * This will return the total duration of the session calculating from last active stored in local storage
      *
-     * @return {number} total session duration in seconds.
+     * @return total session duration in seconds.
      * @private
      */
     private getTotalDurationInSeconds(): number {
@@ -170,7 +170,7 @@ export class SessionManager {
     /**
      * Get last active time from storage.
      *
-     * @return {number} last active time in number.
+     * @return last active time in number.
      * @private
      */
     private getLastActive(): number {

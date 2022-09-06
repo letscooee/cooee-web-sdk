@@ -54,13 +54,6 @@ export class NewSessionExecutor {
     execute(): void {
         this.sessionManager.checkForNewSession();
 
-        // Prevent double sending the "Web Launched"/"Web Installed" event
-        if (LocalStorageHelper.getBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false)) {
-            return;
-        }
-
-        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, true);
-
         if (this.isAppFirstTimeLaunch()) {
             // noinspection JSIgnoredPromiseFromCall
             this.sendFirstLaunchEvent();
@@ -98,8 +91,15 @@ export class NewSessionExecutor {
      */
     private async sendSuccessiveLaunchEvent(): Promise<void> {
         const event = new Event(Constants.EVENT_APP_LAUNCHED, {});
+
+        const sessionID = sessionStorage.getItem(Constants.SESSION_STORAGE_ID);
+        if (sessionID) {
+            return;
+        }
+
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
+        sessionStorage.setItem(Constants.SESSION_STORAGE_ID, event.stringID);
     }
 
 }

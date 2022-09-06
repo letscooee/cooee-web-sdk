@@ -34,4 +34,8 @@ export class Event {
         this.occurred = new Date().toISOString();
     }
 
+    get stringID(): string {
+        return this.id.toHexString();
+    }
+
 }
