@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.23
+
+1. Add `id` on sending event.
+
 ## 0.0.22
 
 1. Rollback legacy "CE Screen View" event.
