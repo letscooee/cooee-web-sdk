@@ -1,4 +1,5 @@
 import {Constants} from '../constants';
+import {Desktop} from '../models/trigger/blocks/desktop';
 
 /**
  * Utility class for creating and rendering elements.
@@ -66,10 +67,12 @@ export class Renderer {
      *
      * @param canvasWidth The width of the canvas to render.
      * @param canvasHeight The height of the canvas to render.
+     * @param desk Maximum desktop height restriction.
      */
-    calculateScalingFactor(canvasWidth: number, canvasHeight: number): void {
-        const screenWidth = Renderer.get().getWidth();
-        const screenHeight = Renderer.get().getHeight();
+    calculateScalingFactor(canvasWidth: number, canvasHeight: number, desk?: Desktop): void {
+        const maxScreenConsider = desk?.max ?? 800;
+        const screenWidth = Math.min(Renderer.get().getWidth(), maxScreenConsider);
+        const screenHeight = Math.min(Renderer.get().getHeight(), maxScreenConsider);
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;

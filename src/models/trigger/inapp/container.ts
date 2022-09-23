@@ -1,12 +1,15 @@
 import {BaseElement} from '../elements';
+import {Desktop} from '../blocks/desktop';
 
 export class Container extends BaseElement {
 
     private o: ContainerOrigin;
+    desk?: Desktop;
 
     constructor(data: Record<string, any>) {
         super(data);
         this.o = data.o ?? ContainerOrigin.C;
+        this.desk = data.desk;
 
         // For backward compatibility
         this.w = this.w ?? 1080;

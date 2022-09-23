@@ -86,7 +86,7 @@ export class InAppRenderer {
             return;
         }
 
-        this.renderer.calculateScalingFactor(container.w, container.h);
+        this.renderer.calculateScalingFactor(container.w, container.h, container.desk);
         const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
             .render()
             .getHTMLElement();
