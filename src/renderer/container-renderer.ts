@@ -1,5 +1,6 @@
 import {Container} from '../models/trigger/inapp/container';
 import {BlockProcessor} from './block-processor';
+import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 
 /**
  * Renders container element.
@@ -9,9 +10,12 @@ import {BlockProcessor} from './block-processor';
  */
 export class ContainerRenderer extends BlockProcessor<Container> {
 
-    constructor(parentElement: HTMLElement, inappElement: Container) {
+    readonly ian: InAppTrigger;
+
+    constructor(parentElement: HTMLElement, inappElement: Container, ian: InAppTrigger) {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
+        this.ian = ian;
         this.insertElement();
     }
 
@@ -23,6 +27,22 @@ export class ContainerRenderer extends BlockProcessor<Container> {
         this.processCommonBlocks();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
         return this;
+    }
+
+    protected processWidthAndHeight(): void {
+        super.processWidthAndHeight();
+
+        /*
+         * Changes the InApp div style to hide BG of InApp
+         */
+        if (this.ian.gvt !== ContainerOrigin.C) {
+            this.renderer.setStyle(this.parentHTMLEl, 'width', this.getSizePx(this.inappElement.w));
+            this.renderer.setStyle(this.parentHTMLEl, 'height', this.getSizePx(this.inappElement.h));
+            this.renderer.setStyle(this.parentHTMLEl, 'top', 'unset');
+            this.renderer.setStyle(this.parentHTMLEl, 'left', 'unset');
+            // eslint-disable-next-line guard-for-in
+            Object.assign(this.parentHTMLEl.style, this.ian.getStyles());
+        }
     }
 
 }

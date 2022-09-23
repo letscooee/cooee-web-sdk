@@ -87,7 +87,7 @@ export class InAppRenderer {
         }
 
         this.renderer.calculateScalingFactor(container.w, container.h, container.desk);
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, this.ian)
             .render()
             .getHTMLElement();
 
