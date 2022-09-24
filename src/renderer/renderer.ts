@@ -70,7 +70,7 @@ export class Renderer {
      * @param desk Maximum desktop height restriction.
      */
     calculateScalingFactor(canvasWidth: number, canvasHeight: number, desk?: Desktop): void {
-        const maxScreenConsider = desk?.max ?? 800;
+        const maxScreenConsider = desk?.max ?? 1200;
         const screenWidth = Math.min(Renderer.get().getWidth(), maxScreenConsider);
         const screenHeight = Math.min(Renderer.get().getHeight(), maxScreenConsider);
 
