@@ -1,6 +1,6 @@
 import {Constants} from '../constants';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 
 /**
@@ -38,10 +38,8 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
         }
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
-        this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
-        this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
-        this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
-        this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
+
+        this.addProperties();
 
         this.insertElement();
         this.inappHTMLEl.addEventListener('click', () => {
@@ -49,6 +47,30 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
         });
 
         return this.inappHTMLEl;
+    }
+
+    /**
+     * Applies style with respect to InApp gravity
+     * @private
+     */
+    private addProperties(): void {
+        const container = this.inappElement.cont;
+
+        if (this.inappElement.gvt !== ContainerOrigin.C) {
+            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(container.w));
+            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
+
+            if (container.desk?.max) {
+                this.renderer.setStyle(this.inappHTMLEl, 'margin', '20px');
+            }
+            // eslint-disable-next-line guard-for-in
+            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
+        } else {
+            this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
+            this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
+            this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
+            this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
+        }
     }
 
 }

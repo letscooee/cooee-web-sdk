@@ -59,7 +59,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process width and height
      */
-    private processWidthAndHeight(): void {
+    protected processWidthAndHeight(): void {
         this.renderer.setStyle(this.inappHTMLEl, 'box-sizing', 'border-box');
 
         if (this.inappElement.w) {

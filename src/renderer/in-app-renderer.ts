@@ -42,6 +42,7 @@ export class InAppRenderer {
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
         this.ian = triggerData.ian!;
+        this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian)
             .render() as HTMLDivElement;
@@ -86,7 +87,6 @@ export class InAppRenderer {
             return;
         }
 
-        this.renderer.calculateScalingFactor(container.w, container.h);
         const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
             .render()
             .getHTMLElement();
