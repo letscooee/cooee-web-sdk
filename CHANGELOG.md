@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.24
+
+1. Feature: Ability to control the size of the in-app.
+2. Feature: Non-bocking UI of in-app.
+
 ## 0.0.23
 
 1. Add `id` on sending event.
