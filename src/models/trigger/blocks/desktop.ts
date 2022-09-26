@@ -1,5 +1,5 @@
 export class Desktop {
 
-    max?: number = 1200;
+    max?: number;
 
 }
