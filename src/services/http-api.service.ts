@@ -64,7 +64,7 @@ export class HttpAPIService {
         if (!browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
             const xmlHttpRequest = new XMLHttpRequest();
             xmlHttpRequest.open('POST', url, false);
-            headers.forEach((value, key) => {
+            headers.forEach((value: string, key: string) => {
                 xmlHttpRequest.setRequestHeader(key, value);
             });
             xmlHttpRequest.send(JSON.stringify(body));

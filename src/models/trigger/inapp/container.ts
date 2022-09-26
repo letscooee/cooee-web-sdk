@@ -3,8 +3,8 @@ import {Desktop} from '../blocks/desktop';
 
 export class Container extends BaseElement {
 
-    private o: ContainerOrigin;
-    desk?: Desktop;
+    private readonly o: ContainerOrigin;
+    readonly desk?: Desktop;
 
     constructor(data: Record<string, any>) {
         super(data);

@@ -1,6 +1,5 @@
 import {Container} from '../models/trigger/inapp/container';
 import {BlockProcessor} from './block-processor';
-import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 
 /**
  * Renders container element.
@@ -10,12 +9,9 @@ import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
  */
 export class ContainerRenderer extends BlockProcessor<Container> {
 
-    readonly ian: InAppTrigger;
-
-    constructor(parentElement: HTMLElement, inappElement: Container, ian: InAppTrigger) {
+    constructor(parentElement: HTMLElement, inappElement: Container) {
         super(parentElement, inappElement);
         this.inappHTMLEl = this.renderer.createElement('div');
-        this.ian = ian;
         this.insertElement();
     }
 

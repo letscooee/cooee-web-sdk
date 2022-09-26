@@ -87,7 +87,7 @@ export class InAppRenderer {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, this.ian)
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
             .render()
             .getHTMLElement();
 
