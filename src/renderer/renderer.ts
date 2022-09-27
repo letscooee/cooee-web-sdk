@@ -64,6 +64,15 @@ export class Renderer {
     }
 
     /**
+     * Only check for desktop browser size (standard copied from Bootstrap CSS).
+     *
+     * @return boolean
+     */
+    public isDesktop(): boolean {
+        return Renderer.get().getWidth() > 992;
+    }
+
+    /**
      * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
      *
      * @param canvasWidth The width of the canvas to render.
@@ -71,9 +80,14 @@ export class Renderer {
      * @param desk Maximum desktop height restriction.
      */
     calculateScalingFactor(canvasWidth: number, canvasHeight: number, desk?: Desktop): void {
-        const maxScreenConsider = desk?.max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
-        const screenWidth = Math.min(Renderer.get().getWidth(), maxScreenConsider);
-        const screenHeight = Math.min(Renderer.get().getHeight(), maxScreenConsider);
+        let screenWidth = Renderer.get().getWidth();
+        let screenHeight = Renderer.get().getHeight();
+
+        if (this.isDesktop() && desk?.max) {
+            const maxScreenConsider = desk.max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
+            screenWidth = Math.min(screenWidth, maxScreenConsider);
+            screenHeight = Math.min(screenHeight, maxScreenConsider);
+        }
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;
