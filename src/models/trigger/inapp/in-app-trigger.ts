@@ -13,12 +13,15 @@ export class InAppTrigger extends BaseElement {
     cont: Container;
     elems: BaseElement[] = [];
     gvt: ContainerOrigin;
+    readonly cover: boolean;
 
     constructor(data: Record<string, any>) {
         // Only background is supported for in-apps
         super({bg: data.bg});
         this.cont = new Container(data.cont);
         this.gvt = data.gvt;
+        // Explicitly checking for "undefined" for backward compatibility for already running in-apps
+        this.cover = data.cover === undefined ? true : data.cover;
 
         // Backward compatibility
         if (!this.bg) {

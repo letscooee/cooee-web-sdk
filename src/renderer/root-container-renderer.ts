@@ -1,7 +1,8 @@
 import {Constants} from '../constants';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
+import {Renderer} from './renderer';
 
 /**
  * Renders root container.
@@ -28,14 +29,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.removeInApp();
         }
 
-        this.processBackgroundBlock();
         this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
-
-        if (this.parent !== document.body) {
-            this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
-        } else {
-            this.renderer.setStyle(this.inappHTMLEl, 'position', 'fixed');
-        }
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
 
@@ -56,20 +50,28 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
     private addProperties(): void {
         const container = this.inappElement.cont;
 
-        if (this.inappElement.gvt !== ContainerOrigin.C) {
-            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(container.w));
-            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
-
-            if (container.desk?.max) {
-                this.renderer.setStyle(this.inappHTMLEl, 'margin', '20px');
-            }
-            // eslint-disable-next-line guard-for-in
-            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
-        } else {
+        if (this.inappElement.cover) {
+            this.processBackgroundBlock();
             this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
             this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
+        } else {
+            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(container.w));
+            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
+
+            // Only check for desktop browser size (standard copied from Bootstrap CSS)
+            if (container.desk?.max && Renderer.get().getWidth() > 992) {
+                this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
+            }
+
+            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
+        }
+
+        if (this.parent !== document.body) {
+            this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
+        } else {
+            this.renderer.setStyle(this.inappHTMLEl, 'position', 'fixed');
         }
     }
 
