@@ -4,6 +4,11 @@ export interface ClickAction {
 
     readonly iab?: Props;
     readonly ext?: Props;
+
+    /**
+     * Goto URL- Opens url in same tab
+     */
+    readonly gu?: Props;
     readonly pmpt?: Permission;
     readonly up?: Props;
     readonly kv?: Props;

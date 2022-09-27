@@ -19,6 +19,8 @@ export class ClickActionExecutor {
 
     private readonly action: ClickAction;
     protected readonly apiService: SafeHttpService;
+    // noinspection HttpUrlsUsage
+    private readonly DEFAULT_PROTOCOL = 'http://';
 
     /**
      * Constructor
@@ -35,6 +37,7 @@ export class ClickActionExecutor {
     execute(): void {
         this.externalAction();
         this.iabAction();
+        this.gotoURLAction();
         this.upAction();
         this.kvAction();
         this.prompt();
@@ -48,6 +51,23 @@ export class ClickActionExecutor {
     externalAction(): void {
         if (this.action.ext) {
             window.open(this.action.ext.u, '_blank')?.focus();
+        }
+    }
+
+    /**
+     * Opens URL in same tab by prepending protocol in the URL if not exist.
+     */
+    gotoURLAction(): void {
+        if (this.action.gu) {
+            let url = this.action.gu.u as string;
+
+            // Explicitly checking :// because URL can have http://, https://, ftp://, etc.
+            if (url.indexOf('://') === -1) {
+                // noinspection HttpUrlsUsage
+                url = `${this.DEFAULT_PROTOCOL}${url}`;
+            }
+
+            window.open(url, '_self');
         }
     }
 
