@@ -93,9 +93,8 @@ export class ClickActionExecutor {
      * Performs kv action i.e. send key-value pair to the application.
      */
     kvAction(): void {
-        if (this.action.kv) {
-            document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': this.action.kv}));
-        }
+        const mergedKV = {...this.action.custKV, ...this.action.kv};
+        document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': mergedKV}));
     }
 
     /**

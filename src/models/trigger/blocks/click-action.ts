@@ -12,6 +12,7 @@ export interface ClickAction {
     readonly pmpt?: Permission;
     readonly up?: Props;
     readonly kv?: Props;
+    readonly custKV?: Props;
     readonly share?: Props;
     readonly close: boolean;
 
