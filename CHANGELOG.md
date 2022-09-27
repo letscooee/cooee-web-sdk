@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.25
+
+1. Fix: Scrolling of in-app notification.
+2. Feature: Use cover to process in-app background.
+
 ## 0.0.24
 
 1. Feature: Ability to control the size of the in-app.
