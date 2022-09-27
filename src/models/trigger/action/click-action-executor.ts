@@ -19,8 +19,6 @@ export class ClickActionExecutor {
 
     private readonly action: ClickAction;
     protected readonly apiService: SafeHttpService;
-    // noinspection HttpUrlsUsage
-    private readonly DEFAULT_PROTOCOL = 'http://';
 
     /**
      * Constructor
@@ -55,18 +53,31 @@ export class ClickActionExecutor {
     }
 
     /**
+     * Check of given string is valid URL and has valid protocol.
+     *
+     * @param url {string} value to be checked.
+     * @return boolean Returns true if url is valid and has protocol.
+     */
+    isValidURL(url: string): boolean {
+        try {
+            const tempURL = new URL(url);
+            return !!tempURL.protocol;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
      * Opens URL in same tab by prepending protocol in the URL if not exist.
      */
     gotoURLAction(): void {
         if (this.action.gu) {
-            let url = this.action.gu.u as string;
+            let url: string = this.action.gu.u;
 
-            // Explicitly checking :// because URL can have http://, https://, ftp://, etc.
-            if (url.indexOf('://') === -1) {
-                // noinspection HttpUrlsUsage
-                url = `${this.DEFAULT_PROTOCOL}${url}`;
+            if (!this.isValidURL(url)) {
+                url = `//${url}`;
             }
-
+            console.log(url);
             window.open(url, '_self');
         }
     }
