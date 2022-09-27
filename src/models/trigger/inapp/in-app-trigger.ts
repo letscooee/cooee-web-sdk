@@ -20,7 +20,7 @@ export class InAppTrigger extends BaseElement {
         super({bg: data.bg});
         this.cont = new Container(data.cont);
         this.gvt = data.gvt;
-        // Explicitly checking for "undefined" for backward compatibility for already created in-apps
+        // Explicitly checking for "undefined" for backward compatibility for already running in-apps
         this.cover = data.cover === undefined ? true : data.cover;
 
         // Backward compatibility

@@ -12,6 +12,7 @@ export class Renderer {
     private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';
     private static readonly DOCUMENT_QUIRKS_MODE = 'BackCompat';
     private static readonly DEFAULT_MAX_DESKTOP_SIZE = 1200;
+    private static readonly DEFAULT_DESKTOP_SIZE = 992;
 
     private static _instance: Renderer;
 
@@ -69,7 +70,7 @@ export class Renderer {
      * @return boolean
      */
     public isDesktop(): boolean {
-        return Renderer.get().getWidth() > 992;
+        return Renderer.get().getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
     }
 
     /**
