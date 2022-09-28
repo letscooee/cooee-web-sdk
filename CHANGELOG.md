@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.26
+
+1. Fix: Preview in case parent element is not body. 
+
 ## 0.0.25
 
 1. Fix: Scrolling of in-app notification.
