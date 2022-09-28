@@ -70,6 +70,10 @@ export class Renderer {
      * @return boolean
      */
     public isDesktop(): boolean {
+        if (this.parentContainer !== document.body) {
+            return this.parentContainer.clientWidth > this.parentContainer.clientHeight;
+        }
+
         return Renderer.get().getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
     }
 
