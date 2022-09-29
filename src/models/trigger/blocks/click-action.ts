@@ -1,13 +1,17 @@
-import {Props} from '../../../types';
-
 export interface ClickAction {
 
-    readonly iab?: Props;
-    readonly ext?: Props;
+    readonly iab?: Record<string, any>;
+    readonly ext?: Record<string, any>;
+
+    /**
+     * Goto URL- Opens url in same tab
+     */
+    readonly gu?: Record<string, any>;
     readonly pmpt?: Permission;
-    readonly up?: Props;
-    readonly kv?: Props;
-    readonly share?: Props;
+    readonly up?: Record<string, any>;
+    readonly kv?: Record<string, any>;
+    readonly custKV?: Record<string, any>;
+    readonly share?: Record<string, any>;
     readonly close: boolean;
 
 }

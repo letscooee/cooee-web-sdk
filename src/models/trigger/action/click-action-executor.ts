@@ -35,6 +35,7 @@ export class ClickActionExecutor {
     execute(): void {
         this.externalAction();
         this.iabAction();
+        this.gotoURLAction();
         this.upAction();
         this.kvAction();
         this.prompt();
@@ -48,6 +49,37 @@ export class ClickActionExecutor {
     externalAction(): void {
         if (this.action.ext) {
             window.open(this.action.ext.u, '_blank')?.focus();
+        }
+    }
+
+    /**
+     * Check of given string is valid URL and has valid protocol.
+     *
+     * @param url {string} value to be checked.
+     * @return boolean Returns true if url is valid and has protocol.
+     */
+    isValidURL(url: string): boolean {
+        try {
+            new URL(url);
+        } catch (e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Opens URL in same tab by prepending protocol in the URL if not exist.
+     */
+    gotoURLAction(): void {
+        if (this.action.gu) {
+            let url: string = this.action.gu.u;
+
+            if (!this.isValidURL(url)) {
+                url = `//${url}`;
+            }
+
+            window.open(url, '_self');
         }
     }
 
@@ -73,9 +105,8 @@ export class ClickActionExecutor {
      * Performs kv action i.e. send key-value pair to the application.
      */
     kvAction(): void {
-        if (this.action.kv) {
-            document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': this.action.kv}));
-        }
+        const mergedKV = {...this.action.custKV, ...this.action.kv};
+        document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': mergedKV}));
     }
 
     /**
