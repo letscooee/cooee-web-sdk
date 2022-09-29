@@ -60,11 +60,12 @@ export class ClickActionExecutor {
      */
     isValidURL(url: string): boolean {
         try {
-            const tempURL = new URL(url);
-            return !!tempURL.protocol;
+            new URL(url);
         } catch (e) {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -77,7 +78,7 @@ export class ClickActionExecutor {
             if (!this.isValidURL(url)) {
                 url = `//${url}`;
             }
-            console.log(url);
+
             window.open(url, '_self');
         }
     }
