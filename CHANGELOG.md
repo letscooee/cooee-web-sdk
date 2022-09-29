@@ -1,8 +1,14 @@
 # Change Log
 
+## 0.0.27
+
+### Feature: 
+
+1. Added Go to URL CTA.
+
 ## 0.0.26
 
-1. Fix: Preview in case parent element is not body. 
+1. Fix: Preview in case parent element is not body.\ 
 
 ## 0.0.25
 
