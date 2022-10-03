@@ -47,7 +47,7 @@ export class ClickActionExecutor {
      * Performs external action where url is opened in new tab/window.
      */
     externalAction(): void {
-        if (this.action.ext) {
+        if (this.action.ext?.u) {
             window.open(this.action.ext.u, '_blank')?.focus();
         }
     }
@@ -72,7 +72,7 @@ export class ClickActionExecutor {
      * Opens URL in same tab by prepending protocol in the URL if not exist.
      */
     gotoURLAction(): void {
-        if (this.action.gu) {
+        if (this.action.gu?.u) {
             let url: string = this.action.gu.u;
 
             if (!this.isValidURL(url)) {
@@ -87,7 +87,7 @@ export class ClickActionExecutor {
      * Performs in-app browser action i.e open url in <code>iFrame</code>
      */
     iabAction(): void {
-        if (this.action.iab) {
+        if (this.action.iab?.u) {
             new IFrameRenderer().render(this.action.iab.u as string);
         }
     }
