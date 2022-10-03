@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.28
+
+### Fix:
+
+1. Checking empty URLs for CTA.
+
 ## 0.0.27
 
 ### Feature: 
