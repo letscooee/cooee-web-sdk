@@ -92,14 +92,14 @@ export class NewSessionExecutor {
     private async sendSuccessiveLaunchEvent(): Promise<void> {
         const event = new Event(Constants.EVENT_APP_LAUNCHED, {});
 
-        const sessionID = sessionStorage.getItem(Constants.SESSION_STORAGE_ID);
+        const sessionID = sessionStorage.getItem(Constants.SESSION_STORAGE_SAME);
         if (sessionID) {
             return;
         }
 
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
-        sessionStorage.setItem(Constants.SESSION_STORAGE_ID, event.stringID);
+        sessionStorage.setItem(Constants.SESSION_STORAGE_SAME, '1');
     }
 
 }

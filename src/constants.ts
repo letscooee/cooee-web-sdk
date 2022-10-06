@@ -36,7 +36,7 @@ export class Constants {
     // endregion
 
     // region Session Storage Keys
-    static SESSION_STORAGE_ID: string = 'id';
+    static SESSION_STORAGE_SAME: string = 'same';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
