@@ -84,7 +84,7 @@ export class ClickActionExecutor {
     }
 
     /**
-     * Performs in-app browser action i.e open url in <code>iFrame</code>
+     * Performs in-app browser action i.e. open url in <code>iFrame</code>
      */
     iabAction(): void {
         if (this.action.iab?.u) {
@@ -147,8 +147,7 @@ export class ClickActionExecutor {
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 
         let closeBehaviour;
-        if (this.action.ext || this.action.up || this.action.kv ||
-            this.action.iab || this.action.pmpt || this.action.share) {
+        if (this.containsCTAOtherThanClose()) {
             closeBehaviour = 'CTA';
         } else {
             closeBehaviour = 'Close';
@@ -162,6 +161,27 @@ export class ClickActionExecutor {
         this.apiService.sendEvent(new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps));
 
         LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
+    }
+
+    /**
+     * Checks of {@link ClickAction} contains CTA other than close.
+     * @return {true} if CTA contains any other CTA other than close.
+     * @private
+     */
+    private containsCTAOtherThanClose(): boolean {
+        return this.isEmpty(this.action.ext) || this.isEmpty(this.action.up) || this.isEmpty(this.action.kv) ||
+            this.isEmpty(this.action.iab) || !!this.action.pmpt || this.isEmpty(this.action.share) ||
+            this.isEmpty(this.action.gu) || this.isEmpty(this.action.custKV);
+    }
+
+    /**
+     * Checks if given record is empty or not.
+     * @param record Record need to checked.
+     * @return {true} if record is not undefined and contains at least one key.
+     * @private
+     */
+    private isEmpty(record: Record<string, any>): boolean {
+        return !!record && Object.keys(record).length > 0;
     }
 
     /**
