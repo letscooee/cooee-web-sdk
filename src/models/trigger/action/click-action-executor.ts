@@ -1,13 +1,13 @@
 import {Constants} from '../../../constants';
 import {IFrameRenderer} from '../../../renderer';
-import {Renderer} from '../../../renderer/renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Props} from '../../../types';
 import {LocalStorageHelper} from '../../../utils/local-storage-helper';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
-import {Permission} from '../blocks/click-action';
+import {ClickActionType, Permission} from '../blocks/click-action';
+import {Renderer} from '../../../renderer/renderer';
 
 /**
  * Performs click to action on in-app elements
@@ -33,14 +33,47 @@ export class ClickActionExecutor {
      * Execute CTAs on element click event
      */
     execute(): void {
-        this.externalAction();
-        this.iabAction();
-        this.gotoURLAction();
+        let mergedKV = this.action.custKV;
+
+        switch (this.action.at) {
+            case ClickActionType.EXTERNAL:
+                this.externalAction();
+                break;
+            case ClickActionType.IAB:
+                this.iabAction();
+                break;
+            case ClickActionType.SAME_TAB:
+                this.gotoURLAction();
+                break;
+            case ClickActionType.SHARE:
+                this.shareAction();
+                break;
+            case ClickActionType.PROMPT:
+                this.prompt();
+                break;
+            case ClickActionType.KEY_VALUE:
+            case ClickActionType.KV_ADD_TO_CART:
+            case ClickActionType.KV_COUPON_CODE:
+            case ClickActionType.KV_VIEW_CATEGORY:
+            case ClickActionType.KV_VIEW_ITEM:
+                mergedKV = {...mergedKV, ...this.action.kv};
+                break;
+            case undefined:
+                break;
+            default:
+                // Stop execution of the CTA if this.action.at is invalid
+                Log.error('Received an invalid ClickActionType: ', this.action.at);
+                return;
+        }
+
+        /*
+        For UP, custKV & close ClickActionType will always undefined. Also, custKV and close must run with all
+        ClickActionType.
+         */
         this.upAction();
-        this.kvAction();
-        this.prompt();
+        this.kvAction(mergedKV);
+
         this.closeAction();
-        this.shareAction();
     }
 
     /**
@@ -48,7 +81,13 @@ export class ClickActionExecutor {
      */
     externalAction(): void {
         if (this.action.ext?.u) {
-            window.open(this.action.ext.u, '_blank')?.focus();
+            let url: string = this.action.ext.u;
+
+            if (!this.isValidURL(url)) {
+                url = `//${url}`;
+            }
+
+            window.open(url, '_blank')?.focus();
         }
     }
 
@@ -88,7 +127,13 @@ export class ClickActionExecutor {
      */
     iabAction(): void {
         if (this.action.iab?.u) {
-            new IFrameRenderer().render(this.action.iab.u as string);
+            let url: string = this.action.iab.u;
+
+            if (!this.isValidURL(url)) {
+                url = `//${url}`;
+            }
+
+            new IFrameRenderer().render(url);
         }
     }
 
@@ -102,10 +147,10 @@ export class ClickActionExecutor {
     }
 
     /**
-     * Performs kv action i.e. send key-value pair to the application.
+     * Sends key-value pair to the application.
+     * @param mergedKV KV to be sent on listener
      */
-    kvAction(): void {
-        const mergedKV = {...this.action.custKV, ...this.action.kv};
+    kvAction(mergedKV: Record<string, any> | undefined): void {
         document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': mergedKV}));
     }
 
@@ -147,7 +192,7 @@ export class ClickActionExecutor {
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 
         let closeBehaviour;
-        if (this.containsCTAOtherThanClose()) {
+        if (this.containsCTA()) {
             closeBehaviour = 'CTA';
         } else {
             closeBehaviour = 'Close';
@@ -168,10 +213,16 @@ export class ClickActionExecutor {
      * @return {true} if CTA contains any other CTA other than close.
      * @private
      */
-    private containsCTAOtherThanClose(): boolean {
-        return this.isEmpty(this.action.ext) || this.isEmpty(this.action.up) || this.isEmpty(this.action.kv) ||
-            this.isEmpty(this.action.iab) || !!this.action.pmpt || this.isEmpty(this.action.share) ||
-            this.isEmpty(this.action.gu) || this.isEmpty(this.action.custKV);
+    private containsCTA(): boolean {
+        /*
+        If this.action.at is present it means KV/EXT/IAB/GU/PMPT is present.
+        If this.action.at is not present we need to check for custKV and UP.
+         */
+        if (this.action.at) {
+            return true;
+        }
+
+        return !(this.isEmpty(this.action.custKV) && this.isEmpty(this.action.up));
     }
 
     /**
@@ -180,8 +231,12 @@ export class ClickActionExecutor {
      * @return {true} if record is not undefined and contains at least one key.
      * @private
      */
-    private isEmpty(record: Record<string, any>): boolean {
-        return !!record && Object.keys(record).length > 0;
+    private isEmpty(record: Record<string, any> | undefined): boolean {
+        if (!record) {
+            return true;
+        }
+
+        return Object.keys(record).length === 0;
     }
 
     /**
