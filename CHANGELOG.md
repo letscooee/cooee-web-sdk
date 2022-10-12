@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.29
+
+### Feature:
+
+1. Validation of CTA data.
+
 ## 0.0.28
 
 ### Fix:
