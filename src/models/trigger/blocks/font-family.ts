@@ -14,12 +14,12 @@ export class FontFamily {
 export class FontDetails {
 
     style: FontStyle;
-    files: { url: string }[];
+    url: string;
 
     constructor(data?: Record<string, any>) {
         data = data ?? {};
         this.style = data.style;
-        this.files = data.files;
+        this.url = data.url;
     }
 
     getFontDescriptor(): FontFaceDescriptors {
@@ -30,7 +30,7 @@ export class FontDetails {
     }
 
     getURLs(): string {
-        return `url('${this.files[0]?.url}') format('truetype')`;
+        return `url('${this.url}') format('truetype')`;
     }
 
 }

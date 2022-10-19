@@ -1,7 +1,6 @@
-import {AVAILABLE_FONT_FAMILIES} from '../models/trigger/blocks/fonts';
 import {BaseElement, TextElement} from '../models/trigger/elements';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {FontDetails, FontFamily} from '../models/trigger/blocks/font-family';
+import {FontDetails, FontFamily, FontStyle} from '../models/trigger/blocks/font-family';
 
 /**
  * A utility service to load and handle the fonts.
@@ -25,9 +24,11 @@ export class FontService {
 
         const promises: Promise<any>[] = [];
 
-        family.fonts.forEach((font: FontDetails) => {
-            const myFont = new FontFace(family.name, font.getURLs(), font.getFontDescriptor());
-            promises.push(myFont.load());
+        family.fonts?.forEach((font: FontDetails) => {
+            if (font.url) {
+                const myFont = new FontFace(family.name, this.getURL(font.url), this.getFontDescriptor(font.style));
+                promises.push(myFont.load());
+            }
         });
 
         this.loadedFonts.push(family.name);
@@ -39,38 +40,23 @@ export class FontService {
         });
     }
 
-    /**
-     * Load a font-family from the given name by looking it into the default/available fonts and app's custom fonts.
-     *
-     * @param name The name of the font.
-     */
-    async loadFamilyByName(name: string): Promise<void> {
-        const family = await this.findFamilyByName(name);
-        if (!family) {
-            console.log('No font family found with name %s', name);
-            return;
-        }
-
-        await this.loadFamily(family);
-    }
-
-    loadAllFonts(inApp: InAppTrigger): void {
-        inApp?.elems?.forEach(async (element: BaseElement) => {
+    async loadAllFonts(inApp: InAppTrigger): Promise<void> {
+        inApp?.elems?.forEach((element: BaseElement) => {
             if (element instanceof TextElement) {
-                await this.loadFamilyByName(element.font.ff);
+                this.loadFamily(element.font.fmly);
             }
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    private findFamilyByName(name: string): FontFamily | null {
-        const family = AVAILABLE_FONT_FAMILIES.find((item) => item.name === name);
-        if (family) {
-            return family;
-        }
+    getFontDescriptor(style: FontStyle): FontFaceDescriptors {
+        return {
+            style: style === FontStyle.ITALICS || style === FontStyle.BOLD_ITALICS ? 'italic' : 'normal',
+            weight: style === FontStyle.BOLD_ITALICS || style === FontStyle.BOLD ? '700' : '400',
+        };
+    }
 
-        // TODO find from the custom fonts
-        return null;
+    getURL(url: string): string {
+        return `url('${url}')  format('truetype')`;
     }
 
 }
