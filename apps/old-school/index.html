@@ -18,7 +18,7 @@
 <body>
     <iframe src="https://example.com" id="bg-website"></iframe>
     <!--<script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk/dist/sdk.min.js" async></script>-->
-    <script src="/live-dist/sdk.min.js" async></script>
+    <script src="/live-dist/sdk-preview.min.js"></script>
     <script>
         window.CooeeSDK = window.CooeeSDK || {events: [], profile: [], account: [], screen: []};
         CooeeSDK.account.push({debug: false});
@@ -55,6 +55,7 @@
             }
         }, false);
 
+        // new CooeePreview().render({id: 'test', ian: ian})
     </script>
 </body>
 </html>

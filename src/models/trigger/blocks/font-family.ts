@@ -1,7 +1,7 @@
 export class FontFamily {
 
-    name: string;
-    fonts: FontDetails[];
+    readonly name: string;
+    readonly fonts: FontDetails[];
 
     constructor(data?: Record<string, any>) {
         data = data ?? {};
@@ -29,7 +29,7 @@ export class FontDetails {
         };
     }
 
-    getURLs(): string {
+    getURL(): string {
         return `url('${this.url}') format('truetype')`;
     }
 

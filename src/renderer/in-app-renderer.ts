@@ -4,13 +4,13 @@ import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/tr
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
+import {FontService} from '../services/font.service';
 import {SafeHttpService} from '../services/safe-http-service';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
-import {FontService} from '../services/font.service';
 
 /**
  * Renders In App trigger
@@ -97,6 +97,7 @@ export class InAppRenderer {
         }
         Object.assign(containerHTMLElement.style, this.ian.getStyles());
 
+        // noinspection JSIgnoredPromiseFromCall
         new FontService().loadAllFonts(this.ian);
 
         this.ian.elems?.forEach(async (element: BaseElement) => {

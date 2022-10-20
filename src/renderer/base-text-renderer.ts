@@ -36,7 +36,7 @@ export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
         }
 
         this.renderer.setStyle(this.inappHTMLEl, 'font-size', this.getSizePx(font.s));
-        this.renderer.setStyle(this.inappHTMLEl, 'font-family', font.fmly.name);
+        this.renderer.setStyle(this.inappHTMLEl, 'font-family', font.family?.name);
         this.renderer.setStyle(this.inappHTMLEl, 'line-height', font.lh);
     }
 
