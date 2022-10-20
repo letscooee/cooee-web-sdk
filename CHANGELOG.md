@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.30
+
+### Features:
+
+1. Ability to use brand fonts.
+
 ## 0.0.29
 
 ### Feature:
