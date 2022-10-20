@@ -3,16 +3,16 @@ import {BaseElement} from './base-element';
 
 export class TextElement extends BaseElement {
 
-    c: Color;
-    f: Font;
-    alg: TextAlign = TextAlign.START;
-    prs: TextPart[];
+    readonly c: Color;
+    readonly f: Font;
+    readonly alg: TextAlign = TextAlign.START;
+    readonly prs: TextPart[];
 
     constructor(data: Record<string, any>) {
         super(data);
         this.prs = data.prs;
         this.alg = data.alg;
-        if (data.f) this.f = data.f;
+        if (data.f) this.f = new Font(data.f);
         if (data.c) this.c = new Color(data.c);
     }
 

@@ -28,6 +28,10 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
+    performance: {
+        maxAssetSize: (500 * 1000),
+        maxEntrypointSize: (500 * 1000),
+    },
     output: {
         publicPath: 'dist',
         library: {
