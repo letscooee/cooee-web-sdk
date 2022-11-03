@@ -3,6 +3,7 @@ import {Color, Gradient, Transform} from '../models/trigger/blocks';
 import {BaseElement} from '../models/trigger/elements';
 import {Container} from '../models/trigger/inapp/container';
 import {Renderer} from './renderer';
+import {TriggerData} from '../models/trigger/trigger-data';
 
 /**
  * Process all the block of in-app
@@ -21,9 +22,12 @@ export abstract class BlockProcessor<T extends BaseElement> {
     private readonly screenHeight: number = 0;
     private readonly scalingFactor: number;
 
-    protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
+    protected readonly triggerData: TriggerData;
+
+    protected constructor(parentHTMLEl: HTMLElement, inappElement: T, triggerData: TriggerData) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;
+        this.triggerData = triggerData;
         this.scalingFactor = this.renderer.getScalingFactor();
 
         this.screenWidth = this.renderer.getWidth();
@@ -176,7 +180,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
 
         this.inappHTMLEl.addEventListener('click', (event) => {
             event.stopPropagation();
-            new ClickActionExecutor(action).execute();
+            new ClickActionExecutor(action, this.triggerData).execute();
         });
 
         if (!(this.inappElement instanceof Container)) {

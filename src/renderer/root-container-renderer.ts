@@ -3,6 +3,7 @@ import {ClickActionExecutor} from '../models/trigger/action/click-action-executo
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {Renderer} from './renderer';
+import {TriggerData} from '../models/trigger/trigger-data';
 
 /**
  * Renders root container.
@@ -15,8 +16,8 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
     // https://stackoverflow.com/a/25461690/1775026
     private static readonly MAX_Z_INDEX = '2147483647';
 
-    constructor(private parent: HTMLElement, inappElement: InAppTrigger) {
-        super(parent, inappElement);
+    constructor(private parent: HTMLElement, inappElement: InAppTrigger, triggerData: TriggerData) {
+        super(parent, inappElement, triggerData);
         this.inappHTMLEl = this.renderer.createElement('div');
     }
 
@@ -37,7 +38,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
         this.insertElement();
         this.inappHTMLEl.addEventListener('click', () => {
-            new ClickActionExecutor({close: true}).execute();
+            new ClickActionExecutor({close: true}, this.triggerData).execute();
         });
 
         return this.inappHTMLEl;

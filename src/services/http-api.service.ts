@@ -102,7 +102,8 @@ export class HttpAPIService {
 
         const trigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER) as EmbeddedTrigger;
 
-        if (trigger) {
+        // `trigger` is set for 'Trigger Displayed' and 'Trigger Closed' events and it shouldn't be updated.
+        if (!event.trigger && trigger) {
             event.trigger = trigger;
             if (trigger.triggerID === 'test') {
                 return;
@@ -125,8 +126,7 @@ export class HttpAPIService {
     /**
      * Send shopify past order data to the server.
      *
-     * @param {Record[]} pastOrdersData past order data of the user
-     * @param {Record} properties additional properties
+     * @param pastOrdersData past order data of the user
      */
     sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         const headers = this.getDefaultHeaders();

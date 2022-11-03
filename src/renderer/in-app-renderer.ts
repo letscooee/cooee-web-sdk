@@ -11,6 +11,7 @@ import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
+import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 
 /**
  * Renders In App trigger
@@ -44,13 +45,14 @@ export class InAppRenderer {
         this.ian = triggerData.ian!;
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
 
-        this.rootContainer = new RootContainerRenderer(this.parent, this.ian)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerData)
             .render() as HTMLDivElement;
 
         try {
-            this.renderContainer();
+            this.renderContainer(triggerData);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {'triggerID': triggerData.id});
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {});
+            event.trigger = new EmbeddedTrigger(triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
             LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
@@ -64,14 +66,15 @@ export class InAppRenderer {
      * Render elements.
      * @param {HTMLElement} parentEl element to be rendered
      * @param {BaseElement} inappElement style and attributes data of the element
+     * @param triggerData
      */
-    private renderElement(parentEl: HTMLElement, inappElement: BaseElement): void {
+    private renderElement(parentEl: HTMLElement, inappElement: BaseElement, triggerData: TriggerData): void {
         if (inappElement instanceof TextElement) {
-            new TextRenderer(parentEl, inappElement).render();
+            new TextRenderer(parentEl, inappElement, triggerData).render();
         } else if (inappElement instanceof ImageElement) {
-            new ImageRenderer(parentEl, inappElement).render();
+            new ImageRenderer(parentEl, inappElement, triggerData).render();
         } else if (inappElement instanceof ShapeElement) {
-            new ShapeRenderer(parentEl, inappElement).render();
+            new ShapeRenderer(parentEl, inappElement, triggerData).render();
         } else {
             Log.error('Unsupported element type- ' + inappElement.type);
         }
@@ -79,15 +82,16 @@ export class InAppRenderer {
 
     /**
      * Render container from {@link ian} block.
+     * @param triggerData
      * @private
      */
-    private renderContainer(): void {
+    private renderContainer(triggerData: TriggerData): void {
         const container = this.ian?.cont;
         if (!container) {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerData)
             .render()
             .getHTMLElement();
 
@@ -101,7 +105,7 @@ export class InAppRenderer {
         new FontService().loadAllFonts(this.ian);
 
         this.ian.elems?.forEach(async (element: BaseElement) => {
-            await this.renderElement(containerHTMLElement, element);
+            await this.renderElement(containerHTMLElement, element, triggerData);
         });
     }
 

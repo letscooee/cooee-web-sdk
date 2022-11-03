@@ -8,6 +8,8 @@ import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {Renderer} from '../../../renderer/renderer';
+import {TriggerData} from '../trigger-data';
+import {EmbeddedTrigger} from '../embedded-trigger';
 
 /**
  * Performs click to action on in-app elements
@@ -18,15 +20,18 @@ import {Renderer} from '../../../renderer/renderer';
 export class ClickActionExecutor {
 
     private readonly action: ClickAction;
+    private readonly triggerData: TriggerData;
     protected readonly apiService: SafeHttpService;
 
     /**
      * Constructor
      * @param {ClickAction} action action data
+     * @param triggerData
      */
-    constructor(action: ClickAction) {
+    constructor(action: ClickAction, triggerData: TriggerData) {
         this.action = action;
         this.apiService = SafeHttpService.getInstance();
+        this.triggerData = triggerData;
     }
 
     /**
@@ -187,7 +192,6 @@ export class ClickActionExecutor {
         Renderer.get().removeInApp();
 
         const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-        const triggerID = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER)?.triggerID;
 
         const diffInSeconds = (new Date().getTime() - startTime) / 1000;
 
@@ -199,11 +203,13 @@ export class ClickActionExecutor {
         }
 
         const eventProps: Props = {
-            'triggerID': triggerID,
             'closeBehaviour': closeBehaviour,
             'duration': diffInSeconds,
         };
-        this.apiService.sendEvent(new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps));
+
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps);
+        event.trigger = new EmbeddedTrigger(this.triggerData);
+        this.apiService.sendEvent(event);
 
         LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
     }

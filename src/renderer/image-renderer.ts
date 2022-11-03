@@ -1,5 +1,6 @@
 import {ImageElement} from '../models/trigger/elements';
 import {BlockProcessor} from './block-processor';
+import {TriggerData} from '../models/trigger/trigger-data';
 
 /**
  * Renders image element present in in-app layer block.
@@ -9,8 +10,8 @@ import {BlockProcessor} from './block-processor';
  */
 export class ImageRenderer extends BlockProcessor<ImageElement> {
 
-    constructor(parentElement: HTMLElement, inappElement: ImageElement) {
-        super(parentElement, inappElement);
+    constructor(parentElement: HTMLElement, inappElement: ImageElement, triggerData: TriggerData) {
+        super(parentElement, inappElement, triggerData);
         this.inappHTMLEl = this.renderer.createElement('img');
         this.insertElement();
     }
