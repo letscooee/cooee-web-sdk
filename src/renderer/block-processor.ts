@@ -13,15 +13,13 @@ import {Renderer} from './renderer';
 export abstract class BlockProcessor<T extends BaseElement> {
 
     protected readonly renderer: Renderer = Renderer.get();
-
-    private readonly screenWidth: number = 0;
-    private readonly screenHeight: number = 0;
-
-    private readonly scalingFactor: number;
-
     protected readonly parentHTMLEl: HTMLElement;
     protected readonly inappElement: T;
+
     protected inappHTMLEl: HTMLElement;
+    private readonly screenWidth: number = 0;
+    private readonly screenHeight: number = 0;
+    private readonly scalingFactor: number;
 
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
         this.parentHTMLEl = parentHTMLEl;
@@ -50,6 +48,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.processBackgroundBlock();
         this.processSpaceBlock();
         this.processTransformBlock();
+        this.processTransparency();
         this.registerAction();
 
         this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
@@ -132,6 +131,15 @@ export abstract class BlockProcessor<T extends BaseElement> {
         if (space.pr) this.renderer.setStyle(this.inappHTMLEl, 'padding-right', this.getSizePx(space.pr));
 
         this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 !important');
+    }
+
+    private processTransparency(): void {
+        const transparency = this.inappElement.alpha;
+
+        if (!isNaN(transparency)) {
+            const opacity = (transparency / 100).toFixed(2);
+            this.renderer.setStyle(this.inappHTMLEl, 'opacity', opacity);
+        }
     }
 
     /**
