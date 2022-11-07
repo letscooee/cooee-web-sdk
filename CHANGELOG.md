@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.31
+
+### Features:
+
+1. Ability to apply transparency to the elements.
+2. Ability to add shadow to the elements.
+
 ## 0.0.30
 
 ### Features:
