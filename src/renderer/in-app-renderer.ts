@@ -10,7 +10,6 @@ import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
-import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
@@ -52,8 +51,7 @@ export class InAppRenderer {
             const triggerContext = new TriggerContext(new Date(), triggerData);
             this.renderContainer(triggerContext);
 
-            const embeddedTrigger = new EmbeddedTrigger(triggerContext.triggerData);
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, embeddedTrigger);
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerContext.triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
             TriggerHelper.storeActiveTrigger(triggerData);

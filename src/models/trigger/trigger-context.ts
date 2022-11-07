@@ -10,7 +10,8 @@ export class TriggerContext {
 
     constructor(
         private _startTime: Date,
-        private _triggerData: TriggerData) {
+        private _triggerData: TriggerData,
+    ) {
     }
 
     get startTime(): Date {

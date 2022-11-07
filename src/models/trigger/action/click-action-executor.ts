@@ -7,7 +7,6 @@ import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {Renderer} from '../../../renderer/renderer';
-import {EmbeddedTrigger} from '../embedded-trigger';
 import {TriggerContext} from '../trigger-context';
 
 /**
@@ -206,8 +205,7 @@ export class ClickActionExecutor {
             'duration': diffInSeconds,
         };
 
-        const embeddedTrigger = new EmbeddedTrigger(this.triggerContext.triggerData);
-        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, embeddedTrigger);
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
         this.apiService.sendEvent(event);
     }
 

@@ -1,6 +1,7 @@
 import {Props} from '../../types';
 import {EmbeddedTrigger} from '../trigger/embedded-trigger';
 import {ObjectId} from 'bson';
+import {TriggerData} from '../trigger/trigger-data';
 
 /**
  * Event class is sent as body to server when a user event needs to be tracked.
@@ -15,6 +16,7 @@ export class Event {
     public deviceProps: Props | null = null;
     public sessionNumber: number = 0;
     public activeTriggers: EmbeddedTrigger[] = [];
+    public trigger: EmbeddedTrigger;
 
     private readonly id: ObjectId;
     private readonly occurred: string;
@@ -24,15 +26,19 @@ export class Event {
      *
      * @param {string} name event name
      * @param {props} properties event properties.
-     * @param trigger
+     * @param triggerData trigger data.
      */
     constructor(
         readonly name: string,
         readonly properties: Props = {},
-        readonly trigger?: EmbeddedTrigger,
+        triggerData?: TriggerData,
     ) {
         this.id = new ObjectId();
         this.occurred = new Date().toISOString();
+
+        if (triggerData) {
+            this.trigger = new EmbeddedTrigger(triggerData);
+        }
     }
 
 }
