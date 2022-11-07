@@ -6,12 +6,12 @@ import {TriggerData} from '../models/trigger/trigger-data';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {FontService} from '../services/font.service';
 import {SafeHttpService} from '../services/safe-http-service';
-import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
 import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders In App trigger
@@ -40,7 +40,7 @@ export class InAppRenderer {
      * Renders in-app trigger from payload received
      * @param {TriggerData} triggerData {@link TriggerData}
      */
-    render(triggerData: TriggerData): void {
+    render(triggerData: any): void {
         triggerData = new TriggerData(triggerData);
         this.ian = triggerData.ian!;
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
@@ -49,13 +49,13 @@ export class InAppRenderer {
             .render() as HTMLDivElement;
 
         try {
-            this.renderContainer(triggerData);
+            const triggerContext = new TriggerContext(new Date(), triggerData);
+            this.renderContainer(triggerContext);
 
             const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {});
-            event.trigger = new EmbeddedTrigger(triggerData);
+            event.trigger = new EmbeddedTrigger(triggerContext.triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
-            LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
             Log.error(e);
@@ -66,15 +66,15 @@ export class InAppRenderer {
      * Render elements.
      * @param {HTMLElement} parentEl element to be rendered
      * @param {BaseElement} inappElement style and attributes data of the element
-     * @param triggerData
+     * @param triggerContext
      */
-    private renderElement(parentEl: HTMLElement, inappElement: BaseElement, triggerData: TriggerData): void {
+    private renderElement(parentEl: HTMLElement, inappElement: BaseElement, triggerContext: TriggerContext): void {
         if (inappElement instanceof TextElement) {
-            new TextRenderer(parentEl, inappElement, triggerData).render();
+            new TextRenderer(parentEl, inappElement, triggerContext).render();
         } else if (inappElement instanceof ImageElement) {
-            new ImageRenderer(parentEl, inappElement, triggerData).render();
+            new ImageRenderer(parentEl, inappElement, triggerContext).render();
         } else if (inappElement instanceof ShapeElement) {
-            new ShapeRenderer(parentEl, inappElement, triggerData).render();
+            new ShapeRenderer(parentEl, inappElement, triggerContext).render();
         } else {
             Log.error('Unsupported element type- ' + inappElement.type);
         }
@@ -82,16 +82,16 @@ export class InAppRenderer {
 
     /**
      * Render container from {@link ian} block.
-     * @param triggerData
+     * @param triggerContext
      * @private
      */
-    private renderContainer(triggerData: TriggerData): void {
+    private renderContainer(triggerContext: TriggerContext): void {
         const container = this.ian?.cont;
         if (!container) {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerData)
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerContext)
             .render()
             .getHTMLElement();
 
@@ -105,7 +105,7 @@ export class InAppRenderer {
         new FontService().loadAllFonts(this.ian);
 
         this.ian.elems?.forEach(async (element: BaseElement) => {
-            await this.renderElement(containerHTMLElement, element, triggerData);
+            await this.renderElement(containerHTMLElement, element, triggerContext);
         });
     }
 

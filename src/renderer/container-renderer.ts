@@ -1,6 +1,6 @@
 import {Container} from '../models/trigger/inapp/container';
 import {BlockProcessor} from './block-processor';
-import {TriggerData} from '../models/trigger/trigger-data';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders container element.
@@ -10,8 +10,8 @@ import {TriggerData} from '../models/trigger/trigger-data';
  */
 export class ContainerRenderer extends BlockProcessor<Container> {
 
-    constructor(parentElement: HTMLElement, inappElement: Container, triggerData: TriggerData) {
-        super(parentElement, inappElement, triggerData);
+    constructor(parentElement: HTMLElement, inappElement: Container, triggerContext: TriggerContext) {
+        super(parentElement, inappElement, triggerContext);
         this.inappHTMLEl = this.renderer.createElement('div');
         this.insertElement();
     }

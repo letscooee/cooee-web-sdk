@@ -1,7 +1,7 @@
 import {BaseTextRenderer} from './base-text-renderer';
 import {TextElement} from '../models/trigger/elements';
 import {TextPart} from '../models/trigger/elements/text-element';
-import {TriggerData} from '../models/trigger/trigger-data';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders text element present in in-app layer block.
@@ -11,8 +11,8 @@ import {TriggerData} from '../models/trigger/trigger-data';
  */
 export class TextRenderer extends BaseTextRenderer {
 
-    constructor(parentElement: HTMLElement, inappElement: TextElement, triggerData: TriggerData) {
-        super(parentElement, inappElement, triggerData);
+    constructor(parentElement: HTMLElement, inappElement: TextElement, triggerContext: TriggerContext) {
+        super(parentElement, inappElement, triggerContext);
         this.inappHTMLEl = this.renderer.createElement('div');
         this.insertElement();
     }

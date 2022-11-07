@@ -1,6 +1,6 @@
 import {ShapeElement} from '../models/trigger/elements';
 import {BlockProcessor} from './block-processor';
-import {TriggerData} from '../models/trigger/trigger-data';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders group element present in in-app layer block.
@@ -10,8 +10,8 @@ import {TriggerData} from '../models/trigger/trigger-data';
  */
 export class ShapeRenderer extends BlockProcessor<ShapeElement> {
 
-    constructor(parentElement: HTMLElement, inappElement: ShapeElement, triggerData: TriggerData) {
-        super(parentElement, inappElement, triggerData);
+    constructor(parentElement: HTMLElement, inappElement: ShapeElement, triggerContext: TriggerContext) {
+        super(parentElement, inappElement, triggerContext);
         this.inappHTMLEl = this.renderer.createElement('div');
         this.insertElement();
     }

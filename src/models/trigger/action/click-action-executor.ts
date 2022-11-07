@@ -2,14 +2,13 @@ import {Constants} from '../../../constants';
 import {IFrameRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Props} from '../../../types';
-import {LocalStorageHelper} from '../../../utils/local-storage-helper';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {Renderer} from '../../../renderer/renderer';
-import {TriggerData} from '../trigger-data';
 import {EmbeddedTrigger} from '../embedded-trigger';
+import {TriggerContext} from '../trigger-context';
 
 /**
  * Performs click to action on in-app elements
@@ -20,18 +19,18 @@ import {EmbeddedTrigger} from '../embedded-trigger';
 export class ClickActionExecutor {
 
     private readonly action: ClickAction;
-    private readonly triggerData: TriggerData;
+    private readonly triggerContext: TriggerContext;
     protected readonly apiService: SafeHttpService;
 
     /**
      * Constructor
      * @param {ClickAction} action action data
-     * @param triggerData
+     * @param triggerContext
      */
-    constructor(action: ClickAction, triggerData: TriggerData) {
+    constructor(action: ClickAction, triggerContext: TriggerContext) {
         this.action = action;
         this.apiService = SafeHttpService.getInstance();
-        this.triggerData = triggerData;
+        this.triggerContext = triggerContext;
     }
 
     /**
@@ -191,9 +190,9 @@ export class ClickActionExecutor {
 
         Renderer.get().removeInApp();
 
-        const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
+        const startTime = this.triggerContext.startTime;
 
-        const diffInSeconds = (new Date().getTime() - startTime) / 1000;
+        const diffInSeconds = (new Date().getTime() - startTime.getTime()) / 1000;
 
         let closeBehaviour;
         if (this.containsCTA()) {
@@ -208,10 +207,8 @@ export class ClickActionExecutor {
         };
 
         const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps);
-        event.trigger = new EmbeddedTrigger(this.triggerData);
+        event.trigger = new EmbeddedTrigger(this.triggerContext.triggerData);
         this.apiService.sendEvent(event);
-
-        LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
     }
 
     /**
