@@ -206,8 +206,8 @@ export class ClickActionExecutor {
             'duration': diffInSeconds,
         };
 
-        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps);
-        event.trigger = new EmbeddedTrigger(this.triggerContext.triggerData);
+        const embeddedTrigger = new EmbeddedTrigger(this.triggerContext.triggerData);
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, embeddedTrigger);
         this.apiService.sendEvent(event);
     }
 

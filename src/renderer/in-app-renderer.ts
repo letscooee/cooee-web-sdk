@@ -52,8 +52,8 @@ export class InAppRenderer {
             const triggerContext = new TriggerContext(new Date(), triggerData);
             this.renderContainer(triggerContext);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {});
-            event.trigger = new EmbeddedTrigger(triggerContext.triggerData);
+            const embeddedTrigger = new EmbeddedTrigger(triggerContext.triggerData);
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, embeddedTrigger);
             SafeHttpService.getInstance().sendEvent(event);
 
             TriggerHelper.storeActiveTrigger(triggerData);
