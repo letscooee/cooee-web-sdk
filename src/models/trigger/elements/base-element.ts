@@ -9,6 +9,7 @@ export abstract class BaseElement {
     shd: Shadow;
     spc: Spacing;
     trf: Transform;
+    a: number; // alpha/transparency
 
     w: number; // width
     h: number; // height
@@ -19,14 +20,19 @@ export abstract class BaseElement {
         this.t = data.t;
         if (data.bg) this.bg = new Background(data.bg);
         if (data.br) this.br = new Border(data.br);
+        if (data.shd) this.shd = new Shadow(data.shd);
         this.trf = new Transform(data.trf);
         this.clc = data.clc;
-        this.shd = data.shd;
         this.spc = data.spc;
         this.w = data.w;
         this.h = data.h;
         this.x = data.x;
         this.y = data.y;
+        this.a = data.a;
+    }
+
+    get alpha(): number {
+        return this.a ?? 100;
     }
 
     get type(): ElementType {
@@ -52,4 +58,5 @@ export enum ElementType {
     SHAPE = 100,
 
 }
+
 /* eslint-disable no-unused-vars */
