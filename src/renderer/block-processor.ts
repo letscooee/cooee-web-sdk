@@ -255,17 +255,8 @@ export abstract class BlockProcessor<T extends BaseElement> {
                 linearFunctionString += `, ${grad.c3}`;
             }
 
-            if (grad.c4) {
-                linearFunctionString += `, ${grad.c4}`;
-            }
-
-            if (grad.c5) {
-                linearFunctionString += `, ${grad.c5}`;
-            }
-
             linearFunctionString += `)`;
-            const gradient = linearFunctionString;
-            this.renderer.setStyle(this.inappHTMLEl, attribute, gradient);
+            this.renderer.setStyle(this.inappHTMLEl, attribute, linearFunctionString);
         }
     }
 

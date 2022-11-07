@@ -7,8 +7,6 @@ export interface Gradient {
     readonly c2: string;
     // optional
     readonly c3: string | undefined;
-    readonly c4: string | undefined;
-    readonly c5: string | undefined;
 
     readonly ang: number; // unused
 

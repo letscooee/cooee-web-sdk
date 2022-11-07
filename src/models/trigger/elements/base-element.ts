@@ -9,7 +9,7 @@ export abstract class BaseElement {
     shd: Shadow;
     spc: Spacing;
     trf: Transform;
-    a: number;  // alpha/transparency
+    a: number; // alpha/transparency
 
     w: number; // width
     h: number; // height
