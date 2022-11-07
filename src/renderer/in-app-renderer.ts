@@ -39,7 +39,7 @@ export class InAppRenderer {
      * Renders in-app trigger from payload received
      * @param {TriggerData} triggerData {@link TriggerData}
      */
-    render(triggerData: any): void {
+    render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
         this.ian = triggerData.ian!;
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);

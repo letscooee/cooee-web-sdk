@@ -17,13 +17,17 @@ export class EmbeddedTrigger {
         this.engagementID = data.engagementID;
         this.expireAt = data.expireAt;
 
-        if (this.isExpired) {
-            this.expired = this.isExpired;
-        }
+        this.updateExpired();
     }
 
     get isExpired(): boolean {
         return this.expireAt < new Date().getTime();
+    }
+
+    updateExpired(): void {
+        if (this.isExpired) {
+            this.expired = true;
+        }
     }
 
 }

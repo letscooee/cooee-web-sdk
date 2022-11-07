@@ -104,6 +104,7 @@ export class HttpAPIService {
 
         // `trigger` is set for 'Trigger Displayed' and 'Trigger Closed' events and it shouldn't be updated.
         if (!event.trigger && trigger) {
+            trigger.updateExpired();
             event.trigger = trigger;
             if (trigger.triggerID === 'test') {
                 return;
