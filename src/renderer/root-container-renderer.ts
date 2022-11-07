@@ -1,4 +1,3 @@
-import {Constants} from '../constants';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
@@ -27,10 +26,10 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
      */
     render(): HTMLElement {
         if (!this.parent) {
-            this.renderer.removeInApp();
+            this.renderer.removeInApp(this.triggerContext);
         }
 
-        this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
+        this.inappHTMLEl.classList.add(this.triggerContext.rootClassName);
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
 

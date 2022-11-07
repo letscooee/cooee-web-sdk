@@ -41,14 +41,14 @@ export class InAppRenderer {
      */
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
+        const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
 
-        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerData)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
             .render() as HTMLDivElement;
 
         try {
-            const triggerContext = new TriggerContext(new Date(), triggerData);
             this.renderContainer(triggerContext);
 
             const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerContext.triggerData);

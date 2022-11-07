@@ -1,5 +1,5 @@
-import {Constants} from '../constants';
 import {Desktop} from '../models/trigger/blocks/desktop';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Utility class for creating and rendering elements.
@@ -158,9 +158,11 @@ export class Renderer {
 
     /**
      * Remove InApp trigger.
+     *
+     * @param triggerContext
      */
-    removeInApp(): void {
-        const rootDiv = document.querySelector(`.${Constants.IN_APP_CONTAINER_NAME}`) as HTMLDivElement;
+    removeInApp(triggerContext: TriggerContext): void {
+        const rootDiv = document.querySelector(`.${triggerContext.rootClassName}`) as HTMLDivElement;
         if (rootDiv) {
             rootDiv.parentElement!.removeChild(rootDiv);
         }

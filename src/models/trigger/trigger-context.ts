@@ -1,4 +1,5 @@
 import {TriggerData} from './trigger-data';
+import {Constants} from '../../constants';
 
 /**
  *  A simple data holder class shared across different renderers.
@@ -20,6 +21,18 @@ export class TriggerContext {
 
     get triggerData(): TriggerData {
         return this._triggerData;
+    }
+
+    /**
+     * Returns name of the root div of the trigger. If test trigger, appending {@link startTime} with id.
+     */
+    get rootClassName(): string {
+        let id = this.triggerData.id.slice(-6);
+        if (id === 'test') {
+            id = this.startTime.getTime().toString();
+        }
+
+        return Constants.IN_APP_CONTAINER_NAME + '-' + id;
     }
 
 }

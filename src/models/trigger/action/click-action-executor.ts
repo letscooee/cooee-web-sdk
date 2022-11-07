@@ -187,7 +187,7 @@ export class ClickActionExecutor {
             return;
         }
 
-        Renderer.get().removeInApp();
+        Renderer.get().removeInApp(this.triggerContext);
 
         const startTime = this.triggerContext.startTime;
 
