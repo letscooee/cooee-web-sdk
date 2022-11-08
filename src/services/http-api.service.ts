@@ -10,6 +10,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 import {DeviceAuthResponse} from '../models/auth/device-auth-response';
+import {SessionManager} from '../session/session-manager';
 
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
@@ -80,6 +81,19 @@ export class HttpAPIService {
         return response.json();
     }
 
+    private async doGetHTTP<T>(url: string, headers: Headers): Promise<T> {
+        if (!url.startsWith('http')) {
+            url = Constants.API_URL + url;
+        }
+
+        const response = await fetch(url, {method: 'GET', headers, keepalive: true});
+        if (!response.ok) {
+            throw response;
+        }
+
+        return response.json();
+    }
+
     /**
      * Async call for registering device by making a call to backend
      *
@@ -125,8 +139,7 @@ export class HttpAPIService {
     /**
      * Send shopify past order data to the server.
      *
-     * @param {Record[]} pastOrdersData past order data of the user
-     * @param {Record} properties additional properties
+     * @param pastOrdersData past order data of the user
      */
     sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         const headers = this.getDefaultHeaders();
@@ -169,6 +182,10 @@ export class HttpAPIService {
      * @param response
      */
     updateUserIDAndToken(response: DeviceAuthResponse): void {
+        if (!Object.keys(response).length) {
+            return;
+        }
+
         if (response.userID) {
             this.setUserID(response.userID);
             LocalStorageHelper.setString(Constants.STORAGE_USER_ID, response.userID);
@@ -210,6 +227,21 @@ export class HttpAPIService {
         this.doHTTP('POST', '/v1/session/conclude', data, headers)
             .then((json) => {
                 Log.log('Conclude Session', json);
+            })
+            .catch((error) => {
+                Log.error(error);
+            });
+    }
+
+    logout(): void {
+        const headers = this.getDefaultHeaders();
+        headers.append('x-sdk-token', this.apiToken);
+
+        this.doGetHTTP<DeviceAuthResponse>('/v1/user/logout', headers)
+            .then((json) => {
+                Log.log('User logged out');
+                this.updateUserIDAndToken(json);
+                SessionManager.getInstance().startNewSession();
             })
             .catch((error) => {
                 Log.error(error);

@@ -54,7 +54,7 @@ export class SafeHttpService {
     /**
      * Queue shopify data call till the sdk token is fetch for safe call.
      *
-     * @param {Record[]} pastOrdersData
+     * @param pastOrdersData
      */
     public sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
@@ -92,6 +92,12 @@ export class SafeHttpService {
     public concludeSession(data: Props): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
             this.httpApiService.concludeSession(data);
+        });
+    }
+
+    public logout(): void {
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.logout();
         });
     }
 
