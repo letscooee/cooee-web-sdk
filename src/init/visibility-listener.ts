@@ -27,9 +27,6 @@ export class VisibilityListener {
     private readonly apiService = SafeHttpService.getInstance();
     private readonly runtimeData = RuntimeData.getInstance();
 
-    private totalActive = 0;
-    private totalInActive = 0;
-
     /**
      * Start listening the event.
      */
@@ -53,7 +50,6 @@ export class VisibilityListener {
     private async onVisible(): Promise<void> {
         this.runtimeData.setActive();
         const duration = this.runtimeData.getTimeForInactiveInSeconds();
-        this.totalInActive += duration;
 
         if (duration > Constants.IDLE_TIME_IN_SECONDS) {
             SessionManager.getInstance().conclude();
@@ -66,8 +62,7 @@ export class VisibilityListener {
         }
 
         const props: Props = {};
-        props[VisibilityListener.INACTIVE_DURATION] = duration - this.totalActive;
-        this.totalActive = 0;
+        props[VisibilityListener.INACTIVE_DURATION] = duration;
 
         const event = new Event(Constants.EVENT_APP_FOREGROUND, props);
         event.deviceProps = await new DevicePropertiesCollector().get();
@@ -82,15 +77,13 @@ export class VisibilityListener {
     private async onHidden(): Promise<void> {
         this.runtimeData.setInactive();
         const duration = this.runtimeData.getTimeForActiveInSeconds();
-        this.totalActive += duration;
 
         if (duration < VisibilityListener.AVG_ACTIVE_DURATION) {
             return;
         }
 
         const props: Props = {};
-        props[VisibilityListener.ACTIVE_DURATION] = duration - this.totalInActive;
-        this.totalInActive = 0;
+        props[VisibilityListener.ACTIVE_DURATION] = duration;
 
         this.apiService.sendEvent(new Event(Constants.EVENT_APP_BACKGROUND, props));
     }
