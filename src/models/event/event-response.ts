@@ -12,4 +12,7 @@ export interface EventResponse {
     eventID: string | undefined;
     sessionID: string | undefined;
 
+    userID: string;
+    sdkToken: string;
+
 }

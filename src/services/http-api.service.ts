@@ -130,6 +130,10 @@ export class HttpAPIService {
                 if (data.triggerData) {
                     new InAppRenderer().render(data.triggerData);
                 }
+
+                if (data.userID && data.sdkToken) {
+                    this.updateUserIDAndToken({userID: data.userID, sdkToken: data.sdkToken});
+                }
             })
             .catch((error) => {
                 Log.error('Error sending event', error);
