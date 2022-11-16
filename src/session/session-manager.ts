@@ -170,7 +170,7 @@ export class SessionManager {
     /**
      * Get last active time from storage.
      *
-     * @return last active time in number.
+     * @return last active time in milliseconds.
      * @private
      */
     private getLastActive(): number {
