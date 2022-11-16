@@ -12,6 +12,8 @@ import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {SessionManager} from '../session/session-manager';
 
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+
 /**
  * A base or lower level HTTP service which simply hits the backend for given request.
  *
@@ -49,31 +51,30 @@ export class HttpAPIService {
      *
      * @param method The HTTP method to invoke.
      * @param url URL to invoke.
-     * @param body The JSON body for the request.
      * @param headers Custom headers to pass.
+     * @param body The JSON body for the request.
      * @private
      * @return The responded data <code>T</code> if successful.
      * @see https://stackoverflow.com/a/66713599/2405040
      */
-    private async doHTTP<T>(method: string, url: string, body: any, headers: Headers): Promise<T> {
+    private async doHTTP<T>(method: HttpMethod, url: string, headers: Headers, body?: Record<string, any> | string)
+        : Promise<T> {
         if (!url.startsWith('http')) {
             url = Constants.API_URL + url;
         }
 
         const browserSupportsKeepalive = 'keepalive' in new Request('');
 
-        if (!browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
-            const xmlHttpRequest = new XMLHttpRequest();
-            xmlHttpRequest.open('POST', url, false);
-            headers.forEach((value: string, key: string) => {
-                xmlHttpRequest.setRequestHeader(key, value);
-            });
-            xmlHttpRequest.send(JSON.stringify(body));
-
-            return xmlHttpRequest.response.json();
+        if (body && !browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
+            return this.performXMLHttpRequest<T>(url, headers, body);
         }
 
-        const response = await fetch(url, {method, body: JSON.stringify(body), headers, keepalive: true});
+        const requestInit: RequestInit = {method, headers, keepalive: true};
+        if (body) {
+            requestInit.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(url, requestInit);
         if (!response.ok) {
             throw response;
         }
@@ -81,17 +82,15 @@ export class HttpAPIService {
         return response.json();
     }
 
-    private async doGetHTTP<T>(url: string, headers: Headers): Promise<T> {
-        if (!url.startsWith('http')) {
-            url = Constants.API_URL + url;
-        }
+    private performXMLHttpRequest<T>(url: string, headers: Headers, body: Record<string, any> | string): T {
+        const xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.open('POST', url, false);
+        headers.forEach((value: string, key: string) => {
+            xmlHttpRequest.setRequestHeader(key, value);
+        });
+        xmlHttpRequest.send(JSON.stringify(body));
 
-        const response = await fetch(url, {method: 'GET', headers, keepalive: true});
-        if (!response.ok) {
-            throw response;
-        }
-
-        return response.json();
+        return xmlHttpRequest.response.json();
     }
 
     /**
@@ -100,7 +99,7 @@ export class HttpAPIService {
      * @param {DeviceAuthRequest} userAuthRequest contains credentials
      */
     async registerDevice(userAuthRequest: DeviceAuthRequest): Promise<any> {
-        return this.doHTTP('POST', '/v1/device/validate', userAuthRequest, this.getDefaultHeaders());
+        return this.doHTTP('POST', '/v1/device/validate', this.getDefaultHeaders(), userAuthRequest);
     }
 
     /**
@@ -123,7 +122,7 @@ export class HttpAPIService {
             }
         }
 
-        this.doHTTP<EventResponse>('POST', '/v1/event/track', event, headers)
+        this.doHTTP<EventResponse>('POST', '/v1/event/track', headers, event)
             .then((data: EventResponse) => {
                 Log.log('Sent', event.name);
 
@@ -151,7 +150,7 @@ export class HttpAPIService {
 
         const body = {pastOrdersData};
 
-        this.doHTTP<EventResponse>('POST', '/v1/event/trackPastOrders', body, headers)
+        this.doHTTP<EventResponse>('POST', '/v1/event/trackPastOrders', headers, body)
             .then(() => {
                 Log.log('Sent Past Orders');
                 LocalStorageHelper.setBoolean(Constants.STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT, true);
@@ -170,7 +169,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP<DeviceAuthResponse>('PUT', '/v1/user/update', data, headers)
+        this.doHTTP<DeviceAuthResponse>('PUT', '/v1/user/update', headers, data)
             .then((response: DeviceAuthResponse) => {
                 Log.log('Updated user profile');
                 this.updateUserIDAndToken(response);
@@ -210,7 +209,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP('PUT', '/v1/device/update', data, headers)
+        this.doHTTP('PUT', '/v1/device/update', headers, data)
             .then(() => {
                 Log.log('Updated device property');
             })
@@ -228,7 +227,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doHTTP('POST', '/v1/session/conclude', data, headers)
+        this.doHTTP('POST', '/v1/session/conclude', headers, data)
             .then((json) => {
                 Log.log('Conclude Session', json);
             })
@@ -241,7 +240,7 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
         headers.append('x-sdk-token', this.apiToken);
 
-        this.doGetHTTP<DeviceAuthResponse>('/v1/user/logout', headers)
+        this.doHTTP<DeviceAuthResponse>('GET', '/v1/user/logout', headers)
             .then((json) => {
                 Log.log('User logged out');
                 this.updateUserIDAndToken(json);
