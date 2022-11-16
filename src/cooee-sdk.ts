@@ -65,7 +65,7 @@ export default class CooeeSDK {
      * Tell SDK that this is a staging/debug/development website so that the data collected from the SDK can be
      * excluded from the reporting dashboard and will not be passed to machine learning engines.
      *
-     * @param {boolean} debug Set to <code>true</code> if this is not the production website/webapp.
+     * @param debug Set to <code>true</code> if this is not the production website/webapp.
      */
     static setDebug(debug: boolean): void {
         this.INSTANCE.runtimeData.setDebugWebApp(debug);
@@ -129,7 +129,7 @@ export default class CooeeSDK {
     /**
      * Send shopify past order data to the server
      *
-     * @param {Record[]} pastOrdersData
+     * @param pastOrdersData
      */
     static sendShopifyPastOrders(pastOrdersData: Record<string, any>[]): void {
         // Check if the website is Shopify store
@@ -145,6 +145,10 @@ export default class CooeeSDK {
         }
 
         this.INSTANCE.safeHttpCallService.sendPastOrders(pastOrdersData);
+    }
+
+    static logout(): void {
+        this.INSTANCE.safeHttpCallService.logout();
     }
 
 }
