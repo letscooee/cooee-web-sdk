@@ -109,7 +109,6 @@ export class HttpAPIService {
      */
     sendEvent(event: Event): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         event.activeTriggers = TriggerHelper.getActiveTriggers();
 
@@ -146,7 +145,6 @@ export class HttpAPIService {
      */
     sendPastOrders(pastOrdersData: Record<string, any>[]): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         const body = {pastOrdersData};
 
@@ -167,7 +165,6 @@ export class HttpAPIService {
      */
     updateUserData(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP<DeviceAuthResponse>('PUT', '/v1/user/update', headers, data)
             .then((response: DeviceAuthResponse) => {
@@ -207,7 +204,6 @@ export class HttpAPIService {
      */
     updateDeviceProps(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('PUT', '/v1/device/update', headers, data)
             .then(() => {
@@ -225,7 +221,6 @@ export class HttpAPIService {
      */
     concludeSession(data: Props): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP('POST', '/v1/session/conclude', headers, data)
             .then((json) => {
@@ -238,7 +233,6 @@ export class HttpAPIService {
 
     logout(): void {
         const headers = this.getDefaultHeaders();
-        headers.append('x-sdk-token', this.apiToken);
 
         this.doHTTP<DeviceAuthResponse>('GET', '/v1/user/logout', headers)
             .then((json) => {
@@ -264,6 +258,10 @@ export class HttpAPIService {
         headers.set('sdk-version-code', Constants.SDK_VERSION_CODE.toString());
         headers.set('app-version', this.runtimeData.getWebAppVersion());
         headers.set('user-id', this.userID);
+
+        if (this.apiToken) {
+            headers.append('x-sdk-token', this.apiToken);
+        }
 
         if (Constants.SDK_DEBUG) {
             headers.set('sdk-debug', String(1));
