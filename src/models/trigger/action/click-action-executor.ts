@@ -2,12 +2,12 @@ import {Constants} from '../../../constants';
 import {IFrameRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Props} from '../../../types';
-import {LocalStorageHelper} from '../../../utils/local-storage-helper';
 import {Log} from '../../../utils/log';
 import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {Renderer} from '../../../renderer/renderer';
+import {TriggerContext} from '../trigger-context';
 
 /**
  * Performs click to action on in-app elements
@@ -18,15 +18,18 @@ import {Renderer} from '../../../renderer/renderer';
 export class ClickActionExecutor {
 
     private readonly action: ClickAction;
+    private readonly triggerContext: TriggerContext;
     protected readonly apiService: SafeHttpService;
 
     /**
      * Constructor
      * @param {ClickAction} action action data
+     * @param triggerContext
      */
-    constructor(action: ClickAction) {
+    constructor(action: ClickAction, triggerContext: TriggerContext) {
         this.action = action;
         this.apiService = SafeHttpService.getInstance();
+        this.triggerContext = triggerContext;
     }
 
     /**
@@ -184,12 +187,11 @@ export class ClickActionExecutor {
             return;
         }
 
-        Renderer.get().removeInApp();
+        Renderer.get().removeInApp(this.triggerContext);
 
-        const startTime = LocalStorageHelper.getNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
-        const triggerID = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER)?.triggerID;
+        const startTime = this.triggerContext.startTime;
 
-        const diffInSeconds = (new Date().getTime() - startTime) / 1000;
+        const diffInSeconds = (new Date().getTime() - startTime.getTime()) / 1000;
 
         let closeBehaviour;
         if (this.containsCTA()) {
@@ -199,13 +201,12 @@ export class ClickActionExecutor {
         }
 
         const eventProps: Props = {
-            'triggerID': triggerID,
             'closeBehaviour': closeBehaviour,
             'duration': diffInSeconds,
         };
-        this.apiService.sendEvent(new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps));
 
-        LocalStorageHelper.remove(Constants.STORAGE_TRIGGER_START_TIME);
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
+        this.apiService.sendEvent(event);
     }
 
     /**

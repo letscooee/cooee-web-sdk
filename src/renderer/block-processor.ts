@@ -3,6 +3,7 @@ import {Color, Gradient, Transform} from '../models/trigger/blocks';
 import {BaseElement} from '../models/trigger/elements';
 import {Container} from '../models/trigger/inapp/container';
 import {Renderer} from './renderer';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Process all the block of in-app
@@ -21,9 +22,12 @@ export abstract class BlockProcessor<T extends BaseElement> {
     private readonly screenHeight: number = 0;
     private readonly scalingFactor: number;
 
-    protected constructor(parentHTMLEl: HTMLElement, inappElement: T) {
+    protected readonly triggerContext: TriggerContext;
+
+    protected constructor(parentHTMLEl: HTMLElement, inappElement: T, triggerContext: TriggerContext) {
         this.parentHTMLEl = parentHTMLEl;
         this.inappElement = inappElement;
+        this.triggerContext = triggerContext;
         this.scalingFactor = this.renderer.getScalingFactor();
 
         this.screenWidth = this.renderer.getWidth();
@@ -73,7 +77,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
 
     /**
      * Get calculated size according to the device by multiplying it with scaling factor.
-     * @param {number} value size passed in payload
+     * @param value size passed in payload
      * @return number calculated size
      */
     protected getSizePx(value: number): string {
@@ -176,7 +180,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
 
         this.inappHTMLEl.addEventListener('click', (event) => {
             event.stopPropagation();
-            new ClickActionExecutor(action).execute();
+            new ClickActionExecutor(action, this.triggerContext).execute();
         });
 
         if (!(this.inappElement instanceof Container)) {

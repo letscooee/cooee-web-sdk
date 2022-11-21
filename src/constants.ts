@@ -29,7 +29,6 @@ export class Constants {
     static STORAGE_SESSION_START_EVENT_SENT: string = 'sses';
     static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
     static STORAGE_LAST_ACTIVE: string = 'la';
-    static STORAGE_TRIGGER_START_TIME: string = 'tst';
     static STORAGE_ACTIVE_TRIGGER: string = 'at';
     static STORAGE_ACTIVE_TRIGGERS: string = 'ats';
     static STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT: string = 'spods';

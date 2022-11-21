@@ -1,8 +1,8 @@
-import {Constants} from '../constants';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {Renderer} from './renderer';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders root container.
@@ -15,8 +15,8 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
     // https://stackoverflow.com/a/25461690/1775026
     private static readonly MAX_Z_INDEX = '2147483647';
 
-    constructor(private parent: HTMLElement, inappElement: InAppTrigger) {
-        super(parent, inappElement);
+    constructor(private parent: HTMLElement, inappElement: InAppTrigger, triggerContext: TriggerContext) {
+        super(parent, inappElement, triggerContext);
         this.inappHTMLEl = this.renderer.createElement('div');
     }
 
@@ -26,10 +26,10 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
      */
     render(): HTMLElement {
         if (!this.parent) {
-            this.renderer.removeInApp();
+            this.renderer.removeInApp(this.triggerContext);
         }
 
-        this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
+        this.inappHTMLEl.classList.add(this.triggerContext.rootClassName);
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
 
@@ -37,7 +37,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
         this.insertElement();
         this.inappHTMLEl.addEventListener('click', () => {
-            new ClickActionExecutor({close: true}).execute();
+            new ClickActionExecutor({close: true}, this.triggerContext).execute();
         });
 
         return this.inappHTMLEl;

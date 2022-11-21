@@ -6,11 +6,11 @@ import {TriggerData} from '../models/trigger/trigger-data';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {FontService} from '../services/font.service';
 import {SafeHttpService} from '../services/safe-http-service';
-import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from './';
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Renders In App trigger
@@ -41,19 +41,19 @@ export class InAppRenderer {
      */
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
+        const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
 
-        this.rootContainer = new RootContainerRenderer(this.parent, this.ian)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
             .render() as HTMLDivElement;
 
         try {
-            this.renderContainer();
+            this.renderContainer(triggerContext);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {'triggerID': triggerData.id});
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerContext.triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
-            LocalStorageHelper.setNumber(Constants.STORAGE_TRIGGER_START_TIME, new Date().getTime());
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
             Log.error(e);
@@ -64,14 +64,15 @@ export class InAppRenderer {
      * Render elements.
      * @param {HTMLElement} parentEl element to be rendered
      * @param {BaseElement} inappElement style and attributes data of the element
+     * @param triggerContext
      */
-    private renderElement(parentEl: HTMLElement, inappElement: BaseElement): void {
+    private renderElement(parentEl: HTMLElement, inappElement: BaseElement, triggerContext: TriggerContext): void {
         if (inappElement instanceof TextElement) {
-            new TextRenderer(parentEl, inappElement).render();
+            new TextRenderer(parentEl, inappElement, triggerContext).render();
         } else if (inappElement instanceof ImageElement) {
-            new ImageRenderer(parentEl, inappElement).render();
+            new ImageRenderer(parentEl, inappElement, triggerContext).render();
         } else if (inappElement instanceof ShapeElement) {
-            new ShapeRenderer(parentEl, inappElement).render();
+            new ShapeRenderer(parentEl, inappElement, triggerContext).render();
         } else {
             Log.error('Unsupported element type- ' + inappElement.type);
         }
@@ -79,15 +80,16 @@ export class InAppRenderer {
 
     /**
      * Render container from {@link ian} block.
+     * @param triggerContext
      * @private
      */
-    private renderContainer(): void {
+    private renderContainer(triggerContext: TriggerContext): void {
         const container = this.ian?.cont;
         if (!container) {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container)
+        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerContext)
             .render()
             .getHTMLElement();
 
@@ -101,7 +103,7 @@ export class InAppRenderer {
         new FontService().loadAllFonts(this.ian);
 
         this.ian.elems?.forEach(async (element: BaseElement) => {
-            await this.renderElement(containerHTMLElement, element);
+            await this.renderElement(containerHTMLElement, element, triggerContext);
         });
     }
 

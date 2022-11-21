@@ -112,9 +112,11 @@ export class HttpAPIService {
 
         event.activeTriggers = TriggerHelper.getActiveTriggers();
 
-        const trigger = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER) as EmbeddedTrigger;
+        const trigger = new EmbeddedTrigger(LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER));
 
-        if (trigger) {
+        // `trigger` is set for 'Trigger Displayed' and 'Trigger Closed' events and it shouldn't be updated.
+        if (!event.trigger && trigger) {
+            trigger.updateExpired();
             event.trigger = trigger;
             if (trigger.triggerID === 'test') {
                 return;

@@ -1,6 +1,7 @@
 import {TextElement} from '../models/trigger/elements';
 import {BlockProcessor} from './block-processor';
 import {TextAlign, TextPart} from '../models/trigger/elements/text-element';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Base class for rendering any text extending block from in-app.
@@ -10,8 +11,8 @@ import {TextAlign, TextPart} from '../models/trigger/elements/text-element';
  */
 export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
 
-    protected constructor(parentElement: HTMLElement, inappElement: TextElement) {
-        super(parentElement, inappElement);
+    protected constructor(parentElement: HTMLElement, inAppElement: TextElement, triggerContext: TriggerContext) {
+        super(parentElement, inAppElement, triggerContext);
     }
 
     abstract render(): void;
