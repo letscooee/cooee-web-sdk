@@ -90,16 +90,23 @@ export class NewSessionExecutor {
      * Runs every time when app is opened for a new session
      */
     private async sendSuccessiveLaunchEvent(): Promise<void> {
-        const event = new Event(Constants.EVENT_APP_LAUNCHED, {});
-
-        const sessionID = sessionStorage.getItem(Constants.SESSION_STORAGE_SAME);
-        if (sessionID) {
+        if (!this.isNewTabOpened()) {
             return;
         }
 
+        const event = new Event(Constants.EVENT_APP_LAUNCHED);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
-        sessionStorage.setItem(Constants.SESSION_STORAGE_SAME, '1');
+        sessionStorage.setItem(Constants.SESSION_STORAGE_TAB_OPENED, '1');
+    }
+
+    /**
+     * Check if a new tab is opened. Used to decide whether to send `App Launched` event.
+     * @return true, if new tab is opened.
+     * @private
+     */
+    private isNewTabOpened(): boolean {
+        return !sessionStorage.getItem(Constants.SESSION_STORAGE_TAB_OPENED);
     }
 
 }

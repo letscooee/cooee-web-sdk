@@ -20,9 +20,8 @@ export class VisibilityListener {
     private static readonly ACTIVE_DURATION = 'aDur';
     private static readonly INACTIVE_DURATION = 'iaDur';
 
-    // TODO: change this
-    private static readonly AVG_ACTIVE_DURATION = 10;
-    private static readonly AVG_INACTIVE_DURATION = 15;
+    private static readonly AVG_ACTIVE_DURATION_SECS = 15;
+    private static readonly AVG_INACTIVE_DURATION_SECS = 15;
 
     private readonly apiService = SafeHttpService.getInstance();
     private readonly runtimeData = RuntimeData.getInstance();
@@ -57,7 +56,7 @@ export class VisibilityListener {
             new NewSessionExecutor().execute();
         }
 
-        if (duration < VisibilityListener.AVG_INACTIVE_DURATION) {
+        if (duration < VisibilityListener.AVG_INACTIVE_DURATION_SECS) {
             return;
         }
 
@@ -78,7 +77,7 @@ export class VisibilityListener {
         this.runtimeData.setInactive();
         const duration = this.runtimeData.getTimeForActiveInSeconds();
 
-        if (duration < VisibilityListener.AVG_ACTIVE_DURATION) {
+        if (duration < VisibilityListener.AVG_ACTIVE_DURATION_SECS) {
             return;
         }
 
