@@ -156,6 +156,7 @@ export class UserAuthService {
      */
     private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
+        props['host'] = location.origin;
 
         return new DeviceAuthRequest(
             this.appID,
