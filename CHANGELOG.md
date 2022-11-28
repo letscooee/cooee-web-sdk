@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.0.32, 0.0.33
+
+### Features:
+
+1. Deprecate `event.props.triggerID` for trigger events and use `event.trigger` instead. 
+2. Expose logout API.
+3. Track `host` as `location.origin` in device properties.
+
 ## 0.0.31
 
 ### Features:
