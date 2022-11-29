@@ -98,7 +98,6 @@ export class NewSessionExecutor {
         const event = new Event(Constants.EVENT_APP_LAUNCHED);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
-        SessionStorageHelper.setString(Constants.SESSION_STORAGE_TAB_OPENED, '1');
     }
 
     /**
@@ -107,7 +106,12 @@ export class NewSessionExecutor {
      * @private
      */
     private isNewTabOpened(): boolean {
-        return !SessionStorageHelper.getString(Constants.SESSION_STORAGE_TAB_OPENED, '');
+        if (SessionStorageHelper.getString(Constants.SESSION_STORAGE_TAB_OPENED, '')) {
+            return false;
+        } else {
+            SessionStorageHelper.setString(Constants.SESSION_STORAGE_TAB_OPENED, '1');
+            return true;
+        }
     }
 
 }
