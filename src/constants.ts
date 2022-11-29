@@ -13,6 +13,7 @@ export class Constants {
 
     static SDK: string = 'WEB';
     static LOG_PREFIX: string = 'CooeeSDK';
+    static COOEE: string = 'cooee';
 
     static CANVAS_WIDTH = 1080;
     static CANVAS_HEIGHT = 1920;
