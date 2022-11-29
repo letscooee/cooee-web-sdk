@@ -7,6 +7,7 @@ import {UserAuthService} from '../services/user-auth.service';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {SessionManager} from './session-manager';
+import {SessionStorageHelper} from '../utils/session-storage-helper';
 
 /**
  * PostLaunchActivity initialized when app is launched
@@ -97,7 +98,7 @@ export class NewSessionExecutor {
         const event = new Event(Constants.EVENT_APP_LAUNCHED);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
-        sessionStorage.setItem(Constants.SESSION_STORAGE_TAB_OPENED, '1');
+        SessionStorageHelper.setString(Constants.SESSION_STORAGE_TAB_OPENED, '1');
     }
 
     /**
@@ -106,7 +107,7 @@ export class NewSessionExecutor {
      * @private
      */
     private isNewTabOpened(): boolean {
-        return !sessionStorage.getItem(Constants.SESSION_STORAGE_TAB_OPENED);
+        return !SessionStorageHelper.getString(Constants.SESSION_STORAGE_TAB_OPENED, '');
     }
 
 }
