@@ -20,9 +20,6 @@ export class VisibilityListener {
     private static readonly ACTIVE_DURATION = 'aDur';
     private static readonly INACTIVE_DURATION = 'iaDur';
 
-    private static readonly AVG_ACTIVE_DURATION_SECS = 15;
-    private static readonly AVG_INACTIVE_DURATION_SECS = 15;
-
     private readonly apiService = SafeHttpService.getInstance();
     private readonly runtimeData = RuntimeData.getInstance();
 
@@ -56,10 +53,6 @@ export class VisibilityListener {
             new NewSessionExecutor().execute();
         }
 
-        if (duration < VisibilityListener.AVG_INACTIVE_DURATION_SECS) {
-            return;
-        }
-
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
@@ -76,10 +69,6 @@ export class VisibilityListener {
     private async onHidden(): Promise<void> {
         this.runtimeData.setInactive();
         const duration = this.runtimeData.getTimeForActiveInSeconds();
-
-        if (duration < VisibilityListener.AVG_ACTIVE_DURATION_SECS) {
-            return;
-        }
 
         const props: Props = {};
         props[VisibilityListener.ACTIVE_DURATION] = duration;
