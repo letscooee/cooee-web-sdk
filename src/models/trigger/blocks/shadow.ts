@@ -10,10 +10,10 @@ export class Shadow {
 
     constructor(data: Partial<Shadow>) {
         data = data ?? {};
-        this.blur = data.blur as number;
-        this.spr = data.spr as number;
-        this.x = data.x as number;
-        this.y = data.y as number;
+        this.blur = data.blur ?? 0;
+        this.spr = data.spr ?? 0;
+        this.x = data.x ?? 0;
+        this.y = data.y ?? 0;
         this.clr = new Color(data.clr as Record<string, any>);
     }
 
