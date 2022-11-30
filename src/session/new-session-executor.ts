@@ -7,6 +7,7 @@ import {UserAuthService} from '../services/user-auth.service';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {SessionManager} from './session-manager';
+import {SessionStorageHelper} from '../utils/session-storage-helper';
 
 /**
  * PostLaunchActivity initialized when app is launched
@@ -54,13 +55,6 @@ export class NewSessionExecutor {
     execute(): void {
         this.sessionManager.checkForNewSession();
 
-        // Prevent double sending the "Web Launched"/"Web Installed" event
-        if (LocalStorageHelper.getBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, false)) {
-            return;
-        }
-
-        LocalStorageHelper.setBoolean(Constants.STORAGE_SESSION_START_EVENT_SENT, true);
-
         if (this.isAppFirstTimeLaunch()) {
             // noinspection JSIgnoredPromiseFromCall
             this.sendFirstLaunchEvent();
@@ -97,9 +91,27 @@ export class NewSessionExecutor {
      * Runs every time when app is opened for a new session
      */
     private async sendSuccessiveLaunchEvent(): Promise<void> {
-        const event = new Event(Constants.EVENT_APP_LAUNCHED, {});
+        if (!this.isNewTabOpened()) {
+            return;
+        }
+
+        const event = new Event(Constants.EVENT_APP_LAUNCHED);
         event.deviceProps = await new DevicePropertiesCollector().get();
         this.safeHttpCallService.sendEvent(event);
+    }
+
+    /**
+     * Check if a new tab is opened. Used to decide whether to send `App Launched` event.
+     * @return true, if new tab is opened.
+     * @private
+     */
+    private isNewTabOpened(): boolean {
+        if (SessionStorageHelper.getString(Constants.SESSION_STORAGE_TAB_OPENED, '')) {
+            return false;
+        } else {
+            SessionStorageHelper.setString(Constants.SESSION_STORAGE_TAB_OPENED, '1');
+            return true;
+        }
     }
 
 }

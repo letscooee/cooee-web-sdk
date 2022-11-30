@@ -13,6 +13,7 @@ export class Constants {
 
     static SDK: string = 'WEB';
     static LOG_PREFIX: string = 'CooeeSDK';
+    static COOEE: string = 'cooee';
 
     static CANVAS_WIDTH = 1080;
     static CANVAS_HEIGHT = 1920;
@@ -34,6 +35,10 @@ export class Constants {
     static STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT: string = 'spods';
     // endregion
 
+    // region Session Storage Keys
+    static SESSION_STORAGE_TAB_OPENED: string = 'to';
+    // endregion
+
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
 
     static IN_APP_CONTAINER_NAME: string = 'cooee-wrapper';
@@ -48,6 +53,7 @@ export class Constants {
     static readonly EVENT_APP_INSTALLED: string = 'CE App Installed';
     static readonly EVENT_APP_LAUNCHED: string = 'CE App Launched';
     static readonly EVENT_SESSION_CONCLUDED: string = 'CE Session Concluded';
+    static readonly EVENT_SESSION_STARTED: string = 'CE Session Started';
     static readonly EVENT_APP_FOREGROUND: string = 'CE App Foreground';
     static readonly EVENT_APP_BACKGROUND: string = 'CE App Background';
     static readonly EVENT_TRIGGER_DISPLAYED: string = 'CE Trigger Displayed';
