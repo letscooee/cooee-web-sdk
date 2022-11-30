@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.34
+
+### Features:
+
+1. Sending `CE Session Started` event.
+2. Support of direction in the shadow.
+
 ## 0.0.32, 0.0.33
 
 ### Features:
