@@ -36,7 +36,7 @@ export class Constants {
     // endregion
 
     // region Session Storage Keys
-    static SESSION_STORAGE_TAB_OPENED: string = 'to';
+    static SESSION_STORAGE_TAB_OPENED: string = 'tabop';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
