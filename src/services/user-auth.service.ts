@@ -6,6 +6,7 @@ import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ObjectId} from 'bson';
+import {detectIncognito} from 'detectincognitojs';
 
 /**
  * Service that deals with the user/device authentication.
@@ -157,6 +158,15 @@ export class UserAuthService {
     private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
         props['host'] = location.origin;
+
+        try {
+            const result = await detectIncognito()
+            if (result?.isPrivate) {
+                props['private'] = true;
+            }
+        } catch (e) {
+            // Suppress this
+        }
 
         return new DeviceAuthRequest(
             this.appID,

@@ -44,6 +44,7 @@
     "dependencies": {
         "bson": "^4.6.5",
         "crypto-browserify": "^3.12.0",
+        "detectincognitojs": "^1.1.2",
         "hex-rgb": "^5.0.0",
         "hex-to-rgba": "^2.0.1",
         "rxjs": "^7.3.0",
