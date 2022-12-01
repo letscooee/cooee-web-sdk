@@ -3,6 +3,7 @@ import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {Renderer} from './renderer';
 import {TriggerContext} from '../models/trigger/trigger-context';
+import {Constants} from "../constants";
 
 /**
  * Renders root container.
@@ -29,6 +30,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.removeInApp(this.triggerContext);
         }
 
+        this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
         this.inappHTMLEl.classList.add(this.triggerContext.rootClassName);
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
