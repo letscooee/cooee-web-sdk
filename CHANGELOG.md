@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.0.35
+
+### Features
+
+1. Track private/incognito window.
+2. Use a generic class name for all in-app triggers.
+
 ## 0.0.34
 
 ### Features:
