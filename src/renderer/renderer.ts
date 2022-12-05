@@ -147,6 +147,23 @@ export class Renderer {
     }
 
     /**
+     * Get style of the element
+     * @param element {HTMLElement} element whose style should be retrieved.
+     * @param styleName style name
+     * @return {string} value of the style
+     *
+     * @since 0.0.36
+     */
+    public getStyle(element: HTMLElement, styleName: string): string {
+        // Return if style is null or undefined
+        if (!styleName) {
+            return '';
+        }
+
+        return element.style.getPropertyValue(styleName);
+    }
+
+    /**
      * Set style of the element
      * @param {HTMLElement} element element on which attribute is added
      * @param {string} attrName attribute name

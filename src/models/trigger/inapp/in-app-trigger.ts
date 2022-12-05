@@ -1,6 +1,7 @@
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements';
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
+import {AutoClose} from '../blocks/AutoClose';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -14,6 +15,7 @@ export class InAppTrigger extends BaseElement {
     elems: BaseElement[] = [];
     gvt: ContainerOrigin;
     readonly cover: boolean;
+    readonly atcl: AutoClose;
 
     constructor(data: Record<string, any>) {
         // Only background is supported for in-apps
@@ -22,6 +24,7 @@ export class InAppTrigger extends BaseElement {
         this.gvt = data.gvt;
         // Explicitly checking for "undefined" for backward compatibility for already running in-apps
         this.cover = data.cover === undefined ? true : data.cover;
+        this.atcl = new AutoClose(data.atcl);
 
         // Backward compatibility
         if (!this.bg) {

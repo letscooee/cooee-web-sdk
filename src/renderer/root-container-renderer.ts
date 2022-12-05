@@ -3,7 +3,7 @@ import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {Renderer} from './renderer';
 import {TriggerContext} from '../models/trigger/trigger-context';
-import {Constants} from "../constants";
+import {Constants} from '../constants';
 
 /**
  * Renders root container.
