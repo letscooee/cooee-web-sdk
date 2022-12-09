@@ -1,4 +1,3 @@
-import {Desktop} from '../models/trigger/blocks/desktop';
 import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
@@ -82,14 +81,14 @@ export class Renderer {
      *
      * @param canvasWidth The width of the canvas to render.
      * @param canvasHeight The height of the canvas to render.
-     * @param desk Maximum desktop height restriction.
+     * @param max Maximum desktop height/width restriction.
      */
-    calculateScalingFactor(canvasWidth: number, canvasHeight: number, desk?: Desktop): void {
+    calculateScalingFactor(canvasWidth: number, canvasHeight: number, max?: number): void {
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
 
-        if (this.isDesktop() && desk?.max) {
-            const maxScreenConsider = desk.max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
+        if (max) {
+            const maxScreenConsider = max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
             screenWidth = Math.min(screenWidth, maxScreenConsider);
             screenHeight = Math.min(screenHeight, maxScreenConsider);
         }

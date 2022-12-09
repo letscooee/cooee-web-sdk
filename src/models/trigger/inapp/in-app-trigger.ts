@@ -1,6 +1,7 @@
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements';
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
+import {InAppView} from './inapp-view';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -8,20 +9,18 @@ import {Container} from './container';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class InAppTrigger extends BaseElement {
+export class InAppTrigger extends InAppView {
 
     cont: Container;
     elems: BaseElement[] = [];
-    gvt: ContainerOrigin;
-    readonly cover: boolean;
+    mob: InAppView;
 
     constructor(data: Record<string, any>) {
+        data = data ?? {};
         // Only background is supported for in-apps
-        super({bg: data.bg});
+        super(data);
         this.cont = new Container(data.cont);
-        this.gvt = data.gvt;
-        // Explicitly checking for "undefined" for backward compatibility for already running in-apps
-        this.cover = data.cover === undefined ? true : data.cover;
+        this.mob = new InAppView(data.mob);
 
         // Backward compatibility
         if (!this.bg) {
@@ -42,47 +41,52 @@ export class InAppTrigger extends BaseElement {
         });
     }
 
-    getStyles(): Record<string, any> {
+    getStyles(isDesktop: boolean): Record<string, any> {
+        let gravity = this.gvt ?? ContainerOrigin.C;
+        if (!isDesktop && this.mob.gvt) {
+            gravity = this.mob.gvt;
+        }
+
         let styles: Record<string, any>;
-        if (this.gvt === ContainerOrigin.NW) {
+        if (gravity === ContainerOrigin.NW) {
             styles = {
                 top: 0,
                 left: 0,
             };
-        } else if (this.gvt === ContainerOrigin.N) {
+        } else if (gravity === ContainerOrigin.N) {
             styles = {
                 top: 0,
                 left: '50%',
                 transform: 'translateX(-50%)',
             };
-        } else if (this.gvt === ContainerOrigin.NE) {
+        } else if (gravity === ContainerOrigin.NE) {
             styles = {
                 top: 0,
                 right: 0,
             };
-        } else if (this.gvt === ContainerOrigin.E) {
+        } else if (gravity === ContainerOrigin.E) {
             styles = {
                 top: '50%',
                 right: 0,
                 transform: 'translateY(-50%)',
             };
-        } else if (this.gvt === ContainerOrigin.SE) {
+        } else if (gravity === ContainerOrigin.SE) {
             styles = {
                 bottom: 0,
                 right: 0,
             };
-        } else if (this.gvt === ContainerOrigin.S) {
+        } else if (gravity === ContainerOrigin.S) {
             styles = {
                 bottom: 0,
                 left: '50%',
                 transform: 'translateX(-50%)',
             };
-        } else if (this.gvt === ContainerOrigin.SW) {
+        } else if (gravity === ContainerOrigin.SW) {
             styles = {
                 bottom: 0,
                 left: 0,
             };
-        } else if (this.gvt === ContainerOrigin.W) {
+        } else if (gravity === ContainerOrigin.W) {
             styles = {
                 top: '50%',
                 left: 0,

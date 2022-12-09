@@ -3,7 +3,7 @@ import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {Renderer} from './renderer';
 import {TriggerContext} from '../models/trigger/trigger-context';
-import {Constants} from "../constants";
+import {Constants} from '../constants';
 
 /**
  * Renders root container.
@@ -51,8 +51,13 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
      */
     private addProperties(): void {
         const container = this.inappElement.cont;
+        let cover = this.inappElement.cover;
 
-        if (this.inappElement.cover) {
+        if (!this.renderer.isDesktop()) {
+            cover = this.inappElement.mob.cover;
+        }
+
+        if (cover) {
             this.processBackgroundBlock();
             this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
@@ -63,11 +68,11 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
 
             // Only check for desktop browser size (standard copied from Bootstrap CSS)
-            if (container.desk?.max && Renderer.get().getWidth() > 992) {
+            if ((container.desk?.max || this.inappElement.max) && Renderer.get().getWidth() > 992) {
                 this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
             }
 
-            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
+            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles(this.renderer.isDesktop()));
         }
 
         if (this.parent !== document.body) {

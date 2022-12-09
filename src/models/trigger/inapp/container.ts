@@ -4,6 +4,8 @@ import {Desktop} from '../blocks/desktop';
 export class Container extends BaseElement {
 
     private readonly o: ContainerOrigin;
+
+    // TODO: 09/12/22 desk.max has been moved to ian.max should be removed
     readonly desk?: Desktop;
 
     constructor(data: Record<string, any>) {

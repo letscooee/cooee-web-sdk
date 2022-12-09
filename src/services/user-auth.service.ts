@@ -160,7 +160,7 @@ export class UserAuthService {
         props['host'] = location.origin;
 
         try {
-            const result = await detectIncognito()
+            const result = await detectIncognito();
             if (result?.isPrivate) {
                 props['private'] = true;
             }
