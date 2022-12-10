@@ -1,7 +1,6 @@
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
-import {Renderer} from './renderer';
 import {TriggerContext} from '../models/trigger/trigger-context';
 import {Constants} from '../constants';
 
@@ -63,12 +62,12 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(container.w));
             this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
 
-            // Only check for desktop browser size (standard copied from Bootstrap CSS)
-            if ((container.desk?.max || this.inappElement.max) && Renderer.get().getWidth() > 992) {
-                this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
-            }
-
             Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
+        }
+
+        // Add spacing around only when not centered
+        if (this.inappElement.gvt !== ContainerOrigin.C) {
+            this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
         }
 
         if (this.parent !== document.body) {

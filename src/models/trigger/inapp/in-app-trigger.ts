@@ -28,9 +28,9 @@ export class InAppTrigger extends InAppView {
         this.cont = new Container(data.cont);
         this.mob = new InAppView(data.mob);
 
-        this.max = this.max
+        this.max = this.max ??
             // This is for backward compatibility (remove after 31st May 2023)
-            ?? data.cont?.desk?.max;
+            data.cont?.desk?.max;
 
         // Backward compatibility
         if (!this.bg) {
