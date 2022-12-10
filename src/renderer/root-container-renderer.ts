@@ -51,11 +51,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
      */
     private addProperties(): void {
         const container = this.inappElement.cont;
-        let cover = this.inappElement.cover;
-
-        if (!this.renderer.isDesktop()) {
-            cover = this.inappElement.mob.cover;
-        }
+        const cover = this.inappElement.cover;
 
         if (cover) {
             this.processBackgroundBlock();
@@ -72,7 +68,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
                 this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
             }
 
-            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles(this.renderer.isDesktop()));
+            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
         }
 
         if (this.parent !== document.body) {

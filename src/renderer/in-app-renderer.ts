@@ -41,18 +41,15 @@ export class InAppRenderer {
      */
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
+
         const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
 
-        // Explicitly checking for ian.cont.desk.max first for backward compatibility
-        // TODO: 09/12/22 Checking for the ian.cont.desk.max should be removed
-        let max = this.ian.cont.desk?.max ?? this.ian.max;
-        if (this.renderer.isDesktop()) {
-            this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, max);
-        } else {
-            max = this.ian.mob.max;
-            this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, max);
+        if (!this.renderer.isDesktop()) {
+            this.ian.overrideMobileData();
         }
+
+        this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.max);
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
             .render() as HTMLDivElement;
@@ -102,7 +99,7 @@ export class InAppRenderer {
             .render()
             .getHTMLElement();
 
-        Object.assign(containerHTMLElement.style, this.ian.getStyles(this.renderer.isDesktop()));
+        Object.assign(containerHTMLElement.style, this.ian.getStyles());
 
         // noinspection JSIgnoredPromiseFromCall
         new FontService().loadAllFonts(this.ian);

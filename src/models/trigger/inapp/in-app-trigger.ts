@@ -41,52 +41,47 @@ export class InAppTrigger extends InAppView {
         });
     }
 
-    getStyles(isDesktop: boolean): Record<string, any> {
-        let gravity = this.gvt ?? ContainerOrigin.C;
-        if (!isDesktop && this.mob.gvt) {
-            gravity = this.mob.gvt;
-        }
-
+    getStyles(): Record<string, any> {
         let styles: Record<string, any>;
-        if (gravity === ContainerOrigin.NW) {
+        if (this.gvt === ContainerOrigin.NW) {
             styles = {
                 top: 0,
                 left: 0,
             };
-        } else if (gravity === ContainerOrigin.N) {
+        } else if (this.gvt === ContainerOrigin.N) {
             styles = {
                 top: 0,
                 left: '50%',
                 transform: 'translateX(-50%)',
             };
-        } else if (gravity === ContainerOrigin.NE) {
+        } else if (this.gvt === ContainerOrigin.NE) {
             styles = {
                 top: 0,
                 right: 0,
             };
-        } else if (gravity === ContainerOrigin.E) {
+        } else if (this.gvt === ContainerOrigin.E) {
             styles = {
                 top: '50%',
                 right: 0,
                 transform: 'translateY(-50%)',
             };
-        } else if (gravity === ContainerOrigin.SE) {
+        } else if (this.gvt === ContainerOrigin.SE) {
             styles = {
                 bottom: 0,
                 right: 0,
             };
-        } else if (gravity === ContainerOrigin.S) {
+        } else if (this.gvt === ContainerOrigin.S) {
             styles = {
                 bottom: 0,
                 left: '50%',
                 transform: 'translateX(-50%)',
             };
-        } else if (gravity === ContainerOrigin.SW) {
+        } else if (this.gvt === ContainerOrigin.SW) {
             styles = {
                 bottom: 0,
                 left: 0,
             };
-        } else if (gravity === ContainerOrigin.W) {
+        } else if (this.gvt === ContainerOrigin.W) {
             styles = {
                 top: '50%',
                 left: 0,
@@ -103,6 +98,12 @@ export class InAppTrigger extends InAppView {
         styles.position = 'absolute';
         styles.overflow = 'hidden';
         return styles;
+    }
+
+    overrideMobileData(): void {
+        this.max = this.cont?.desk?.max ?? this.mob.max ?? this.max;
+        this.cover = this.mob.cover ?? this.cover;
+        this.gvt = this.mob.gvt ?? this.gvt;
     }
 
 }

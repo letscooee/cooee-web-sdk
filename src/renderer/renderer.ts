@@ -87,11 +87,9 @@ export class Renderer {
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
 
-        if (max) {
-            const maxScreenConsider = max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
-            screenWidth = Math.min(screenWidth, maxScreenConsider);
-            screenHeight = Math.min(screenHeight, maxScreenConsider);
-        }
+        const maxScreenConsider = max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
+        screenWidth = Math.min(screenWidth, maxScreenConsider);
+        screenHeight = Math.min(screenHeight, maxScreenConsider);
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;
