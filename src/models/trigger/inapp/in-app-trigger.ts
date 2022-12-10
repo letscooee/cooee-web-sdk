@@ -13,7 +13,13 @@ export class InAppTrigger extends InAppView {
 
     cont: Container;
     elems: BaseElement[] = [];
-    mob: InAppView;
+
+    /**
+     * Do not use this property directly as the value of {@link #mob} is copied to {@link this} if the rendering
+     * is happening on a mobile view.
+     * @private
+     */
+    private mob: InAppView;
 
     constructor(data: Record<string, any>) {
         data = data ?? {};
@@ -100,7 +106,10 @@ export class InAppTrigger extends InAppView {
         return styles;
     }
 
-    overrideMobileData(): void {
+    /**
+     * We replace some values to {@link this} from {@link #mob} because this is a mobile browser.
+     */
+    overrideForMobileView(): void {
         this.max = this.cont?.desk?.max ?? this.mob.max ?? this.max;
         this.cover = this.mob.cover ?? this.cover;
         this.gvt = this.mob.gvt ?? this.gvt;

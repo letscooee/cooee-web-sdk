@@ -46,7 +46,7 @@ export class InAppRenderer {
         this.ian = triggerData.ian!;
 
         if (!this.renderer.isDesktop()) {
-            this.ian.overrideMobileData();
+            this.ian.overrideForMobileView();
         }
 
         this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.max);
