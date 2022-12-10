@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.1.1
+
+### Fix
+
+1. Set margin on the container instead of wrapper.
+2. Add a class in the container.
+
 ## 0.1.0
 
 ### Features
