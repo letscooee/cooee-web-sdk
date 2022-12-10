@@ -32,7 +32,7 @@ export class TriggerContext {
             id = this.startTime.getTime().toString();
         }
 
-        return Constants.IN_APP_CONTAINER_NAME + '-' + id;
+        return Constants.IN_APP_WRAPPER_NAME + '-' + id;
     }
 
 }

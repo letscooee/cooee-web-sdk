@@ -29,7 +29,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.removeInApp(this.triggerContext);
         }
 
-        this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
+        this.inappHTMLEl.classList.add(Constants.IN_APP_WRAPPER_NAME);
         this.inappHTMLEl.classList.add(this.triggerContext.rootClassName);
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);

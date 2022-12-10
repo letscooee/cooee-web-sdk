@@ -1,6 +1,7 @@
 import {Container} from '../models/trigger/inapp/container';
 import {BlockProcessor} from './block-processor';
 import {TriggerContext} from '../models/trigger/trigger-context';
+import {Constants} from '../constants';
 
 /**
  * Renders container element.
@@ -23,6 +24,7 @@ export class ContainerRenderer extends BlockProcessor<Container> {
     render(): this {
         this.processCommonBlocks();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
+        this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
         return this;
     }
 
