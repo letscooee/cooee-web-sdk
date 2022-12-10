@@ -10,7 +10,6 @@ export class Renderer {
 
     private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';
     private static readonly DOCUMENT_QUIRKS_MODE = 'BackCompat';
-    private static readonly DEFAULT_MAX_DESKTOP_SIZE = 1200;
     private static readonly DEFAULT_DESKTOP_SIZE = 992;
 
     private static _instance: Renderer;
@@ -87,9 +86,10 @@ export class Renderer {
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
 
-        const maxScreenConsider = max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
-        screenWidth = Math.min(screenWidth, maxScreenConsider);
-        screenHeight = Math.min(screenHeight, maxScreenConsider);
+        if (max) {
+            screenWidth = Math.min(screenWidth, max);
+            screenHeight = Math.min(screenHeight, max);
+        }
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;

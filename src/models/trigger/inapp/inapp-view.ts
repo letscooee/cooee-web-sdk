@@ -18,7 +18,7 @@ export class InAppView extends BaseElement {
         super(data);
 
         this.gvt = data.gvt ?? ContainerOrigin.C;
-        this.max = data.max ?? 1200;
+        this.max = data.max as number;
         this.cover = data.cover ?? true;
     }
 
