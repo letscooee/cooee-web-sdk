@@ -1,7 +1,7 @@
 {
     "name": "@letscooee/web-sdk",
     "description": "AI driven Personalized Notifications for Better Customer Engagement",
-    "version": "0.0.35",
+    "version": "0.1.0",
     "scripts": {
         "lint": "eslint 'src/**'",
         "prepack": "npm run build:production",

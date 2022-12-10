@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.0
+
+### Features
+
+1. Separate cover, max size and gravity configuration for mobile browsers.
+
 ## 0.0.35
 
 ### Features
