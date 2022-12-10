@@ -1,5 +1,5 @@
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
-import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {TriggerContext} from '../models/trigger/trigger-context';
 import {Constants} from '../constants';
@@ -63,11 +63,6 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
 
             Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
-        }
-
-        // Add spacing around only when not centered
-        if (this.inappElement.gvt !== ContainerOrigin.C) {
-            this.renderer.setStyle(this.inappHTMLEl, 'margin', '15px');
         }
 
         if (this.parent !== document.body) {
