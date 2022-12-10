@@ -3,10 +3,12 @@ import {Desktop} from '../blocks/desktop';
 
 export class Container extends BaseElement {
 
-    private readonly o: ContainerOrigin;
-
-    // TODO: 09/12/22 desk.max has been moved to ian.max should be removed
+    /**
+     * TODO: This is for backward compatibility (remove after 31st May 2023)
+     * @deprecated
+     */
     readonly desk?: Desktop;
+    private readonly o: ContainerOrigin;
 
     constructor(data: Record<string, any>) {
         super(data);

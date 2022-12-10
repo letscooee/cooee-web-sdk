@@ -11,8 +11,8 @@ import {InAppView} from './inapp-view';
  */
 export class InAppTrigger extends InAppView {
 
-    cont: Container;
-    elems: BaseElement[] = [];
+    readonly cont: Container;
+    readonly elems: BaseElement[] = [];
 
     /**
      * Do not use this property directly as the value of {@link #mob} is copied to {@link this} if the rendering
@@ -27,6 +27,10 @@ export class InAppTrigger extends InAppView {
         super(data);
         this.cont = new Container(data.cont);
         this.mob = new InAppView(data.mob);
+
+        this.max = this.max
+            // This is for backward compatibility (remove after 31st May 2023)
+            ?? data.cont?.desk?.max;
 
         // Backward compatibility
         if (!this.bg) {
@@ -110,7 +114,7 @@ export class InAppTrigger extends InAppView {
      * We replace some values to {@link this} from {@link #mob} because this is a mobile browser.
      */
     overrideForMobileView(): void {
-        this.max = this.cont?.desk?.max ?? this.mob.max ?? this.max;
+        this.max = this.mob.max ?? this.max;
         this.cover = this.mob.cover ?? this.cover;
         this.gvt = this.mob.gvt ?? this.gvt;
     }

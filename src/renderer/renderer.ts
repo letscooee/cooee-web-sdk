@@ -72,7 +72,7 @@ export class Renderer {
             return this.parentContainer.clientWidth > this.parentContainer.clientHeight;
         }
 
-        return Renderer.get().getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
+        return this.getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
     }
 
     /**
