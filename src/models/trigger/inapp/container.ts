@@ -3,8 +3,12 @@ import {Desktop} from '../blocks/desktop';
 
 export class Container extends BaseElement {
 
-    private readonly o: ContainerOrigin;
+    /**
+     * TODO: This is for backward compatibility (remove after 31st May 2023)
+     * @deprecated
+     */
     readonly desk?: Desktop;
+    private readonly o: ContainerOrigin;
 
     constructor(data: Record<string, any>) {
         super(data);

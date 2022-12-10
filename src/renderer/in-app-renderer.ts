@@ -41,9 +41,15 @@ export class InAppRenderer {
      */
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
+
         const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
-        this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.cont.desk);
+
+        if (!this.renderer.isDesktop()) {
+            this.ian.overrideForMobileView();
+        }
+
+        this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.max);
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
             .render() as HTMLDivElement;
@@ -93,10 +99,6 @@ export class InAppRenderer {
             .render()
             .getHTMLElement();
 
-        // Backward compatibility
-        if (!this.ian.gvt) {
-            this.ian.gvt = this.ian.cont.getOrigin();
-        }
         Object.assign(containerHTMLElement.style, this.ian.getStyles());
 
         // noinspection JSIgnoredPromiseFromCall

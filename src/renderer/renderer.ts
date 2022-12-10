@@ -1,4 +1,3 @@
-import {Desktop} from '../models/trigger/blocks/desktop';
 import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
@@ -11,7 +10,6 @@ export class Renderer {
 
     private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';
     private static readonly DOCUMENT_QUIRKS_MODE = 'BackCompat';
-    private static readonly DEFAULT_MAX_DESKTOP_SIZE = 1200;
     private static readonly DEFAULT_DESKTOP_SIZE = 992;
 
     private static _instance: Renderer;
@@ -74,7 +72,7 @@ export class Renderer {
             return this.parentContainer.clientWidth > this.parentContainer.clientHeight;
         }
 
-        return Renderer.get().getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
+        return this.getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
     }
 
     /**
@@ -82,16 +80,15 @@ export class Renderer {
      *
      * @param canvasWidth The width of the canvas to render.
      * @param canvasHeight The height of the canvas to render.
-     * @param desk Maximum desktop height restriction.
+     * @param max Maximum desktop height/width restriction.
      */
-    calculateScalingFactor(canvasWidth: number, canvasHeight: number, desk?: Desktop): void {
+    calculateScalingFactor(canvasWidth: number, canvasHeight: number, max?: number): void {
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
 
-        if (this.isDesktop() && desk?.max) {
-            const maxScreenConsider = desk.max ?? Renderer.DEFAULT_MAX_DESKTOP_SIZE;
-            screenWidth = Math.min(screenWidth, maxScreenConsider);
-            screenHeight = Math.min(screenHeight, maxScreenConsider);
+        if (max) {
+            screenWidth = Math.min(screenWidth, max);
+            screenHeight = Math.min(screenHeight, max);
         }
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {

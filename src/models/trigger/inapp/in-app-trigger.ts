@@ -1,6 +1,7 @@
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements';
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
+import {InAppView} from './inapp-view';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -8,20 +9,28 @@ import {Container} from './container';
  * @author Abhishek Taparia
  * @version 0.0.5
  */
-export class InAppTrigger extends BaseElement {
+export class InAppTrigger extends InAppView {
 
-    cont: Container;
-    elems: BaseElement[] = [];
-    gvt: ContainerOrigin;
-    readonly cover: boolean;
+    readonly cont: Container;
+    readonly elems: BaseElement[] = [];
+
+    /**
+     * Do not use this property directly as the value of {@link #mob} is copied to {@link this} if the rendering
+     * is happening on a mobile view.
+     * @private
+     */
+    private mob: InAppView;
 
     constructor(data: Record<string, any>) {
+        data = data ?? {};
         // Only background is supported for in-apps
-        super({bg: data.bg});
+        super(data);
         this.cont = new Container(data.cont);
-        this.gvt = data.gvt;
-        // Explicitly checking for "undefined" for backward compatibility for already running in-apps
-        this.cover = data.cover === undefined ? true : data.cover;
+        this.mob = new InAppView(data.mob);
+
+        this.max = this.max ??
+            // This is for backward compatibility (remove after 31st May 2023)
+            data.cont?.desk?.max;
 
         // Backward compatibility
         if (!this.bg) {
@@ -99,6 +108,15 @@ export class InAppTrigger extends BaseElement {
         styles.position = 'absolute';
         styles.overflow = 'hidden';
         return styles;
+    }
+
+    /**
+     * We replace some values to {@link this} from {@link #mob} because this is a mobile browser.
+     */
+    overrideForMobileView(): void {
+        this.max = this.mob.max ?? this.max;
+        this.cover = this.mob.cover ?? this.cover;
+        this.gvt = this.mob.gvt ?? this.gvt;
     }
 
 }
