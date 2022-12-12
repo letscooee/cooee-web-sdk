@@ -1,5 +1,6 @@
 import UAParser from 'ua-parser-js';
 import {Props} from '../types';
+import {Renderer} from '../renderer/renderer';
 
 /**
  * Collects basic information about the device and browser.
@@ -9,9 +10,12 @@ import {Props} from '../types';
  */
 export class DevicePropertiesCollector {
 
-    private parser = new UAParser();
+    private readonly parser: UAParser;
+    private readonly result: { [key: string]: any } = {};
 
-    private result: { [key: string]: any } = {};
+    constructor() {
+        this.parser = Renderer.get().getUAParser();
+    }
 
     /**
      * Get all the device properties.

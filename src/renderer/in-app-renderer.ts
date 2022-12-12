@@ -45,7 +45,7 @@ export class InAppRenderer {
         const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
 
-        if (!this.renderer.isDesktop()) {
+        if (this.renderer.isMobile() || triggerData.previewType === 'mobile') {
             this.ian.overrideForMobileView();
         }
 

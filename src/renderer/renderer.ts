@@ -1,4 +1,5 @@
 import {TriggerContext} from '../models/trigger/trigger-context';
+import UAParser from 'ua-parser-js';
 
 /**
  * Utility class for creating and rendering elements.
@@ -8,15 +9,13 @@ import {TriggerContext} from '../models/trigger/trigger-context';
  */
 export class Renderer {
 
-    private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';
-    private static readonly DOCUMENT_QUIRKS_MODE = 'BackCompat';
-    private static readonly DEFAULT_DESKTOP_SIZE = 992;
-
+    private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';  // The quirks mode is "BackCompat"
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
     private scalingFactor: number;
     private readonly doc: Document = document;
+    private readonly parser = new UAParser();
 
     // No need to instantiate this class.
     private constructor() {
@@ -28,6 +27,10 @@ export class Renderer {
         }
 
         return Renderer._instance;
+    }
+
+    getUAParser(): UAParser {
+        return this.parser;
     }
 
     /**
@@ -53,7 +56,7 @@ export class Renderer {
      * @return height of the parent most container.
      */
     public getHeight(): number {
-        if (this.parentContainer && (this.parentContainer !== document.body)) {
+        if (this.isParentNotBody()) {
             return this.parentContainer.clientHeight;
         }
 
@@ -63,16 +66,12 @@ export class Renderer {
     }
 
     /**
-     * Only check for desktop browser size (standard copied from Bootstrap CSS).
+     * Return true if the website is running in a mobile device.
      *
      * @return boolean
      */
-    public isDesktop(): boolean {
-        if (this.parentContainer !== document.body) {
-            return this.parentContainer.clientWidth > this.parentContainer.clientHeight;
-        }
-
-        return this.getWidth() > Renderer.DEFAULT_DESKTOP_SIZE;
+    public isMobile(): boolean {
+        return this.parser.getDevice().type === 'mobile';
     }
 
     /**
@@ -171,6 +170,14 @@ export class Renderer {
      */
     setParentContainer(container: HTMLElement): void {
         this.parentContainer = container;
+    }
+
+    /**
+     * Returns true if the in-app being rendered is within a given element which is not the document.body.
+     * @private
+     */
+    private isParentNotBody(): boolean {
+        return this.parentContainer !== document.body;
     }
 
 }
