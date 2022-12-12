@@ -1,0 +1,32 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Cooee's Web SDK</title>
+    <style>
+        #bg-website {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://example.com" id="bg-website"></iframe>
+    <!--<script src="https://cdn.jsdelivr.net/npm/@letscooee/web-sdk/dist/sdk.min.js" async></script>-->
+    <script src="./test.js"></script>
+    <script src="/live-dist/sdk.min.js"></script>
+    <script>
+        setTimeout(()=>{
+            CooeeSDK.events.push(["View Cart", {foo: 2}]);
+            CooeeSDK.events.push(["Add To Cart", {foo: 2}])
+        }, 5000);
+
+        // new CooeePreview().render({id: 'test', ian: ian})
+    </script>
+</body>
+</html>
