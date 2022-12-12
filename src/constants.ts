@@ -43,6 +43,7 @@ export class Constants {
 
     static IN_APP_WRAPPER_NAME: string = 'cooee-wrapper';
     static IN_APP_CONTAINER_NAME: string = 'cooee-container';
+    static IN_APP_DEFAULT_MARGIN: number = 15;       // 15px
 
     static {
         const rawCode = Constants.SDK_VERSION.split('.').map((item) => item.padStart(2, '0')).join('');

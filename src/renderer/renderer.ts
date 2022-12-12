@@ -1,5 +1,7 @@
 import {TriggerContext} from '../models/trigger/trigger-context';
 import UAParser from 'ua-parser-js';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {Constants} from '../constants';
 
 /**
  * Utility class for creating and rendering elements.
@@ -77,11 +79,13 @@ export class Renderer {
     /**
      * Calculate scaling factor according to parent most container where the in-app's root container will be rendered.
      *
-     * @param canvasWidth The width of the canvas to render.
-     * @param canvasHeight The height of the canvas to render.
-     * @param max Maximum desktop height/width restriction.
+     * @param inApp The in-app being rendered.
      */
-    calculateScalingFactor(canvasWidth: number, canvasHeight: number, max?: number): void {
+    calculateScalingFactor(inApp: InAppTrigger): void {
+        const max = inApp.max;
+        let canvasWidth = inApp.cont.w,
+            canvasHeight = inApp.cont.h;
+
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
 
@@ -89,6 +93,10 @@ export class Renderer {
             screenWidth = Math.min(screenWidth, max);
             screenHeight = Math.min(screenHeight, max);
         }
+
+        // Remove buffer from screen to allow padding
+        screenWidth -= Constants.IN_APP_DEFAULT_MARGIN * 2;
+        screenHeight -= Constants.IN_APP_DEFAULT_MARGIN * 2;
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;
@@ -176,7 +184,7 @@ export class Renderer {
      * Returns true if the in-app being rendered is within a given element which is not the document.body.
      * @private
      */
-    private isParentNotBody(): boolean {
+    isParentNotBody(): boolean {
         return this.parentContainer !== document.body;
     }
 

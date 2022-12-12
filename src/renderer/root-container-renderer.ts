@@ -1,4 +1,3 @@
-import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {TriggerContext} from '../models/trigger/trigger-context';
@@ -29,47 +28,88 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.removeInApp(this.triggerContext);
         }
 
+        this.insertElement();
+        this.processCommonBlocks();
         this.inappHTMLEl.classList.add(Constants.IN_APP_WRAPPER_NAME);
         this.inappHTMLEl.classList.add(this.triggerContext.rootClassName);
 
         this.renderer.setStyle(this.inappHTMLEl, 'z-index', RootContainerRenderer.MAX_Z_INDEX);
 
-        this.addProperties();
-
-        this.insertElement();
-        this.inappHTMLEl.addEventListener('click', () => {
-            new ClickActionExecutor({close: true}, this.triggerContext).execute();
-        });
-
         return this.inappHTMLEl;
     }
 
-    /**
-     * Applies style with respect to InApp gravity
-     * @private
-     */
-    private addProperties(): void {
-        const container = this.inappElement.cont;
-        const cover = this.inappElement.cover;
+    protected override processBackgroundBlock(): void {
+        // Do not process background if the in-app is not covering
+        if (this.inappElement.cover) {
+            super.processBackgroundBlock();
+        }
+    }
 
-        if (cover) {
-            this.processBackgroundBlock();
+    protected override processWidthAndHeight(): void {
+        const container = this.inappElement.cont;
+
+        if (this.inappElement.cover) {
+            if (this.renderer.isParentNotBody()) {
+                this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
+                this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
+            } else {
+                this.renderer.setStyle(this.inappHTMLEl, 'width', '100vw');
+                this.renderer.setStyle(this.inappHTMLEl, 'height', '100vh');
+            }
+
             this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
-            this.renderer.setStyle(this.inappHTMLEl, 'width', '100%');
-            this.renderer.setStyle(this.inappHTMLEl, 'height', '100%');
         } else {
-            this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(container.w));
-            this.renderer.setStyle(this.inappHTMLEl, 'height', this.getSizePx(container.h));
+            const containerCalculatedWidth = this.getScaledSize(container.w) + (Constants.IN_APP_DEFAULT_MARGIN * 2);
+            const containerCalculatedHeight = this.getScaledSize(container.h) + (Constants.IN_APP_DEFAULT_MARGIN * 2);
 
-            Object.assign(this.inappHTMLEl.style, this.inappElement.getStyles());
+            this.renderer.setStyle(this.inappHTMLEl, 'width', containerCalculatedWidth + 'px');
+            this.renderer.setStyle(this.inappHTMLEl, 'height', containerCalculatedHeight + 'px');
         }
+    }
 
-        if (this.parent !== document.body) {
+    protected override processSpaceBlock() {
+        // Adding some padding by default to avoid touching the screen
+        this.renderer.setStyle(this.inappHTMLEl, 'padding', Constants.IN_APP_DEFAULT_MARGIN + 'px');
+    }
+
+    protected override processDisplay(): void {
+        this.renderer.setStyle(this.inappHTMLEl, 'display', 'flex');
+        Object.assign(this.inappHTMLEl.style, this.inappElement.getStylesForWrapper());
+        // This is for the child i.e. container
+        Object.assign(this.inappHTMLEl.style, this.inappElement.getFlexStylesForContainer());
+    }
+
+    protected override processPositionBlock(): void {
+        if (this.renderer.isParentNotBody()) {
             this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
         } else {
             this.renderer.setStyle(this.inappHTMLEl, 'position', 'fixed');
         }
+    }
+
+    protected override processBorderBlock(): void {
+        return;
+    }
+
+    protected override processTransparency(): void {
+        return;
+    }
+
+    protected override processTransformBlock(): void {
+        return;
+    }
+
+    protected override processGradient(): void {
+        return;
+    }
+
+    protected override processShadow(): void {
+        return;
+    }
+
+    protected override registerAction(): void {
+        return;
     }
 
 }
