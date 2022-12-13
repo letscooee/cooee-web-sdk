@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.3
+
+### Fixes
+
+1. Close the in-app when clicked outside.
+
 ## 0.1.2
 
 ### Fixes
