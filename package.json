@@ -4,6 +4,7 @@
     "version": "0.1.1",
     "scripts": {
         "lint": "eslint 'src/**'",
+        "integrity": "./scripts/validate-integrity.sh",
         "prepack": "npm run build:production",
         "build": "tsc",
         "build:production": "webpack && webpack --config ./webpack-preview.config.js",

@@ -68,7 +68,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
         }
     }
 
-    protected override processSpaceBlock() {
+    protected override processSpaceBlock(): void {
         // Adding some padding by default to avoid touching the screen
         this.renderer.setStyle(this.inappHTMLEl, 'padding', Constants.IN_APP_DEFAULT_MARGIN + 'px');
     }

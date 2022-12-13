@@ -146,7 +146,8 @@ export class InAppTrigger extends InAppView {
         } else if (this.gvt === ContainerOrigin.SE) {
             x = 'flex-end';
             y = 'flex-end';
-        } else {        // For center or any other value
+        } else {
+            // For center or any other value
             x = 'center';
             y = 'center';
         }

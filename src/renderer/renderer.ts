@@ -11,7 +11,7 @@ import {Constants} from '../constants';
  */
 export class Renderer {
 
-    private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat';  // The quirks mode is "BackCompat"
+    private static readonly DOCUMENT_STANDARD_MODE = 'CSS1Compat'; // The quirks mode is "BackCompat"
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
@@ -83,8 +83,8 @@ export class Renderer {
      */
     calculateScalingFactor(inApp: InAppTrigger): void {
         const max = inApp.max;
-        let canvasWidth = inApp.cont.w,
-            canvasHeight = inApp.cont.h;
+        const canvasWidth = inApp.cont.w;
+        const canvasHeight = inApp.cont.h;
 
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
@@ -182,6 +182,8 @@ export class Renderer {
 
     /**
      * Returns true if the in-app being rendered is within a given element which is not the document.body.
+     *
+     * @return true if the container (where in-app is being rendered) is not document.body.
      * @private
      */
     isParentNotBody(): boolean {
