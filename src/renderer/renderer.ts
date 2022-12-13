@@ -94,9 +94,10 @@ export class Renderer {
             screenHeight = Math.min(screenHeight, max);
         }
 
-        // Remove buffer from screen to allow padding
-        screenWidth -= Constants.IN_APP_DEFAULT_MARGIN * 2;
-        screenHeight -= Constants.IN_APP_DEFAULT_MARGIN * 2;
+        // In order to add padding at all four sides of the wrapper, we are subtracting the padding size from the
+        // screen size so that the in-app can be resized accordingly
+        screenWidth -= Constants.IN_APP_DEFAULT_PADDING * 2;
+        screenHeight -= Constants.IN_APP_DEFAULT_PADDING * 2;
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;

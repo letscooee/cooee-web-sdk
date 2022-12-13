@@ -2,6 +2,7 @@ import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {BlockProcessor} from './block-processor';
 import {TriggerContext} from '../models/trigger/trigger-context';
 import {Constants} from '../constants';
+import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
 
 /**
  * Renders root container.
@@ -60,8 +61,8 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
         } else {
-            const containerCalculatedWidth = this.getScaledSize(container.w) + (Constants.IN_APP_DEFAULT_MARGIN * 2);
-            const containerCalculatedHeight = this.getScaledSize(container.h) + (Constants.IN_APP_DEFAULT_MARGIN * 2);
+            const containerCalculatedWidth = this.getScaledSize(container.w) + (Constants.IN_APP_DEFAULT_PADDING * 2);
+            const containerCalculatedHeight = this.getScaledSize(container.h) + (Constants.IN_APP_DEFAULT_PADDING * 2);
 
             this.renderer.setStyle(this.inappHTMLEl, 'width', containerCalculatedWidth + 'px');
             this.renderer.setStyle(this.inappHTMLEl, 'height', containerCalculatedHeight + 'px');
@@ -70,7 +71,7 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
     protected override processSpaceBlock(): void {
         // Adding some padding by default to avoid touching the screen
-        this.renderer.setStyle(this.inappHTMLEl, 'padding', Constants.IN_APP_DEFAULT_MARGIN + 'px');
+        this.renderer.setStyle(this.inappHTMLEl, 'padding', Constants.IN_APP_DEFAULT_PADDING + 'px');
     }
 
     protected override processDisplay(): void {
@@ -109,7 +110,9 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
     }
 
     protected override registerAction(): void {
-        return;
+        this.inappHTMLEl.addEventListener('click', () => {
+            new ClickActionExecutor({close: true}, this.triggerContext).execute();
+        });
     }
 
 }

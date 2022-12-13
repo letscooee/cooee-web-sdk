@@ -12,6 +12,11 @@ export class TriggerData {
     version: number;
     engagementID: string;
     internal: boolean;
+    /**
+     * In order to render in-app within a mobile view, the SDK uses the ua-parser-js library based on the
+     * user-agent. But for preview purposes on a desktop browser, we can't use user-agent to guess. This manual flag
+     * can let the SDK know that the rendering has to be according to the mobile view.
+     */
     previewType: 'mobile' | 'desktop';
 
     pn?: Props;
