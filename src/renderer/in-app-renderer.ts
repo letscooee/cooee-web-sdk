@@ -1,7 +1,7 @@
 import {Constants} from '../constants';
 import {Event} from '../models/event/event';
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
-import {ContainerOrigin, InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {FontService} from '../services/font.service';
@@ -45,11 +45,11 @@ export class InAppRenderer {
         const triggerContext = new TriggerContext(new Date(), triggerData);
         this.ian = triggerData.ian!;
 
-        if (!this.renderer.isDesktop()) {
+        if (this.renderer.isMobile() || triggerData.previewType === 'mobile') {
             this.ian.overrideForMobileView();
         }
 
-        this.renderer.calculateScalingFactor(this.ian.cont.w, this.ian.cont.h, this.ian.max);
+        this.renderer.calculateScalingFactor(this.ian);
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
             .render() as HTMLDivElement;
@@ -98,13 +98,6 @@ export class InAppRenderer {
         const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerContext)
             .render()
             .getHTMLElement();
-
-        Object.assign(containerHTMLElement.style, this.ian.getStyles());
-
-        // Add spacing around only when not centered
-        if (this.ian.gvt !== ContainerOrigin.C) {
-            this.renderer.setStyle(containerHTMLElement, 'margin', '15px');
-        }
 
         // noinspection JSIgnoredPromiseFromCall
         new FontService().loadAllFonts(this.ian);

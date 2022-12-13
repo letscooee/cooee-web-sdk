@@ -12,6 +12,7 @@ export class TriggerData {
     version: number;
     engagementID: string;
     internal: boolean;
+    previewType: 'mobile' | 'desktop';
 
     pn?: Props;
     ian?: InAppTrigger;
@@ -29,6 +30,7 @@ export class TriggerData {
         this.internal = data.internal;
         this.pn = data.pn;
         this.ian = new InAppTrigger(data.ian);
+        this.previewType = data.previewType;
     }
 
 }

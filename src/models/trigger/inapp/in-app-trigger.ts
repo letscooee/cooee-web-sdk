@@ -51,7 +51,11 @@ export class InAppTrigger extends InAppView {
         });
     }
 
-    getStyles(): Record<string, any> {
+    getStylesForWrapper(): Record<string, any> {
+        if (this.cover) {
+            return {};
+        }
+
         let styles: Record<string, any>;
         if (this.gvt === ContainerOrigin.NW) {
             styles = {
@@ -105,7 +109,51 @@ export class InAppTrigger extends InAppView {
             };
         }
 
-        styles.position = 'absolute';
+        styles.overflow = 'hidden';
+        return styles;
+    }
+
+    getFlexStylesForContainer(): Record<string, any> {
+        const styles: Record<string, any> = {
+            display: 'flex',
+            flexDirection: 'row',
+        };
+
+        let x: 'flex-start' | 'flex-end' | 'center';
+        let y: 'flex-start' | 'flex-end' | 'center';
+
+        if (this.gvt === ContainerOrigin.NW) {
+            x = 'flex-start';
+            y = 'flex-start';
+        } else if (this.gvt === ContainerOrigin.N) {
+            x = 'center';
+            y = 'flex-start';
+        } else if (this.gvt === ContainerOrigin.NE) {
+            x = 'flex-end';
+            y = 'flex-start';
+        } else if (this.gvt === ContainerOrigin.W) {
+            x = 'flex-start';
+            y = 'center';
+        } else if (this.gvt === ContainerOrigin.E) {
+            x = 'flex-end';
+            y = 'center';
+        } else if (this.gvt === ContainerOrigin.SW) {
+            x = 'flex-start';
+            y = 'flex-end';
+        } else if (this.gvt === ContainerOrigin.S) {
+            x = 'center';
+            y = 'flex-end';
+        } else if (this.gvt === ContainerOrigin.SE) {
+            x = 'flex-end';
+            y = 'flex-end';
+        } else {
+            // For center or any other value
+            x = 'center';
+            y = 'center';
+        }
+
+        styles.alignItems = y;
+        styles.justifyContent = x;
         styles.overflow = 'hidden';
         return styles;
     }

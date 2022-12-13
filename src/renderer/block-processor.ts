@@ -18,11 +18,10 @@ export abstract class BlockProcessor<T extends BaseElement> {
     protected readonly inappElement: T;
 
     protected inappHTMLEl: HTMLElement;
+    protected readonly triggerContext: TriggerContext;
     private readonly screenWidth: number = 0;
     private readonly screenHeight: number = 0;
     private readonly scalingFactor: number;
-
-    protected readonly triggerContext: TriggerContext;
 
     protected constructor(parentHTMLEl: HTMLElement, inappElement: T, triggerContext: TriggerContext) {
         this.parentHTMLEl = parentHTMLEl;
@@ -33,6 +32,8 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.screenWidth = this.renderer.getWidth();
         this.screenHeight = this.renderer.getHeight();
     }
+
+    abstract render(): void;
 
     getHTMLElement(): HTMLElement {
         return this.inappHTMLEl;
@@ -46,6 +47,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * Process all the common blocks that can be placed in layer and container
      */
     protected processCommonBlocks(): void {
+        this.processDisplay();
         this.processWidthAndHeight();
         this.processPositionBlock();
         this.processBorderBlock();
@@ -56,16 +58,18 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.processShadow();
         this.registerAction();
 
-        this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
+        this.renderer.setStyle(this.inappHTMLEl, 'box-sizing', 'border-box');
         this.renderer.setStyle(this.inappHTMLEl, 'outline', 'none');
+    }
+
+    protected processDisplay(): void {
+        this.renderer.setStyle(this.inappHTMLEl, 'display', 'block');
     }
 
     /**
      * Process width and height
      */
     protected processWidthAndHeight(): void {
-        this.renderer.setStyle(this.inappHTMLEl, 'box-sizing', 'border-box');
-
         if (this.inappElement.w) {
             this.renderer.setStyle(this.inappHTMLEl, 'width', this.getSizePx(this.inappElement.w));
         }
@@ -81,13 +85,17 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * @return number calculated size
      */
     protected getSizePx(value: number): string {
-        return (value * this.scalingFactor) + 'px';
+        return this.getScaledSize(value) + 'px';
+    }
+
+    protected getScaledSize(value: number): number {
+        return value * this.scalingFactor;
     }
 
     /**
      * Process position block of the element
      */
-    private processPositionBlock(): void {
+    protected processPositionBlock(): void {
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
         if (this.inappElement.x) this.renderer.setStyle(this.inappHTMLEl, 'left', this.getSizePx(this.inappElement.x));
         if (this.inappElement.y) this.renderer.setStyle(this.inappHTMLEl, 'top', this.getSizePx(this.inappElement.y));
@@ -96,7 +104,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process border block of the element
      */
-    private processBorderBlock(): void {
+    protected processBorderBlock(): void {
         const border = this.inappElement.br;
         if (!border) {
             return;
@@ -123,7 +131,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process space block of the element which include margin and padding.
      */
-    private processSpaceBlock(): void {
+    protected processSpaceBlock(): void {
         const space = this.inappElement.spc;
         if (!space) {
             return;
@@ -138,7 +146,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.renderer.setStyle(this.inappHTMLEl, 'margin', '0 !important');
     }
 
-    private processTransparency(): void {
+    protected processTransparency(): void {
         const transparency = this.inappElement.alpha;
 
         if (!isNaN(transparency)) {
@@ -147,7 +155,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
         }
     }
 
-    private processShadow(): void {
+    protected processShadow(): void {
         const shadow = this.inappElement.shd;
 
         if (shadow) {
@@ -158,7 +166,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Process transform block of the element
      */
-    private processTransformBlock(): void {
+    protected processTransformBlock(): void {
         const transform = new Transform(this.inappElement.trf);
         if (!transform) {
             return;
@@ -172,7 +180,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
     /**
      * Register click-to-action(CTA) block of the element
      */
-    private registerAction(): void {
+    protected registerAction(): void {
         const action = this.inappElement.clc;
         if (!action || Object.keys(action).length === 0) {
             return;
@@ -251,7 +259,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
      * @param {string} attribute attribute on which gradient needs to be applied
      * @private
      */
-    private processGradient(grad: Gradient, attribute: string): void {
+    protected processGradient(grad: Gradient, attribute: string): void {
         if (grad.type === 'LINEAR') {
             let linearFunctionString = `linear-gradient(${grad.ang}deg, ${grad.c1}, ${grad.c2}`;
 

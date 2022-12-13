@@ -5,15 +5,15 @@ module.exports = {
     target: ['web'],
     mode: 'production',
     devServer: {
-        static: path.join(__dirname, 'apps', 'old-school'),
+        static: path.join(__dirname, 'apps', 'tester-app'),
         devMiddleware: {
             publicPath: '/live-dist',
             writeToDisk: true,
         },
-        open: ['/'],
+        open: ['/index.html'],
         compress: true,
         hot: false,
-        watchFiles: ['src/**/*.*', 'apps/old-school/*.*'],
+        watchFiles: ['src/**/*.*', 'apps/tester-app/*.*'],
         port: 8000,
     },
     module: {

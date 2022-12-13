@@ -4,6 +4,7 @@
     "version": "0.1.1",
     "scripts": {
         "lint": "eslint 'src/**'",
+        "integrity": "./scripts/validate-integrity.sh",
         "prepack": "npm run build:production",
         "build": "tsc",
         "build:production": "webpack && webpack --config ./webpack-preview.config.js",
@@ -49,7 +50,7 @@
         "hex-to-rgba": "^2.0.1",
         "rxjs": "^7.3.0",
         "stream-browserify": "^3.0.0",
-        "ua-parser-js": "^1.0.2",
+        "ua-parser-js": "^1.0.32",
         "util": "^0.12.4"
     }
 }
