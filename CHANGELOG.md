@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.1.2
+
+### Fixes
+
+1. Properly check for mobile devices.
+2. Refactor the rendering of wrapper & container.
+3. By default add padding of 15px in all the cases.
+4. Upgrade ua-parser-js.
+
 ## 0.1.1
 
 ### Fix
