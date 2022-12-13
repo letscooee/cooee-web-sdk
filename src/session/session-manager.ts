@@ -90,9 +90,9 @@ export class SessionManager {
         LocalStorageHelper.setNumber(Constants.STORAGE_SESSION_START_TIME, this.currentSessionStartTime.getTime());
         LocalStorageHelper.setString(Constants.STORAGE_SESSION_ID, this.currentSessionID);
 
-        SafeHttpService.getInstance().sendEvent(new Event(Constants.EVENT_SESSION_STARTED));
-
         this.bumpSessionNumber();
+
+        SafeHttpService.getInstance().sendEvent(new Event(Constants.EVENT_SESSION_STARTED));
     }
 
     /**
@@ -164,7 +164,7 @@ export class SessionManager {
     private initializeSessionFromStorage(): void {
         this.currentSessionStartTime = new Date(LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_START_TIME, 0));
         this.currentSessionID = LocalStorageHelper.getString(Constants.STORAGE_SESSION_ID, '');
-        this.currentSessionNumber = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_NUMBER, 0);
+        this.currentSessionNumber = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_NUMBER, 1);
     }
 
     /**
