@@ -50,22 +50,6 @@ export class SessionManager {
     }
 
     /**
-     * Check if new session is required.
-     *
-     * @return true, if new session required.
-     */
-    private isNewSessionRequired(): boolean {
-        if (!LocalStorageHelper.getString(Constants.STORAGE_SESSION_ID, '')) {
-            return true;
-        }
-
-        const startDate: number = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_START_TIME, 0);
-        const diffInSec: number = (new Date().getTime() - startDate) / 1000;
-
-        return diffInSec > Constants.IDLE_TIME_IN_SECONDS;
-    }
-
-    /**
      * Start new session if required, otherwise initialize from session data from local storage.
      */
     public checkForNewSession(): void {
@@ -115,21 +99,6 @@ export class SessionManager {
     }
 
     /**
-     * This will return the total duration of the session calculating from last active stored in local storage
-     *
-     * @return total session duration in seconds.
-     * @private
-     */
-    private getTotalDurationInSeconds(): number {
-        if (RuntimeData.getInstance().isFirstActive()) {
-            throw new Error('This is the first time in foreground after launch');
-        }
-
-        // @ts-ignore
-        return ((this.getLastActive() - this.currentSessionStartTime.getTime()) / 1000);
-    }
-
-    /**
      * Conclude the current session by sending an event to the server followed by destroying it.
      */
     public conclude(): void {
@@ -154,6 +123,37 @@ export class SessionManager {
         this.currentSessionStartTime = undefined;
         LocalStorageHelper.remove(Constants.STORAGE_SESSION_ID);
         LocalStorageHelper.remove(Constants.STORAGE_SESSION_START_TIME);
+    }
+
+    /**
+     * Check if new session is required.
+     *
+     * @return true, if new session required.
+     */
+    private isNewSessionRequired(): boolean {
+        if (!LocalStorageHelper.getString(Constants.STORAGE_SESSION_ID, '')) {
+            return true;
+        }
+
+        const startDate: number = LocalStorageHelper.getNumber(Constants.STORAGE_SESSION_START_TIME, 0);
+        const diffInSec: number = (new Date().getTime() - startDate) / 1000;
+
+        return diffInSec > Constants.IDLE_TIME_IN_SECONDS;
+    }
+
+    /**
+     * This will return the total duration of the session calculating from last active stored in local storage
+     *
+     * @return total session duration in seconds.
+     * @private
+     */
+    private getTotalDurationInSeconds(): number {
+        if (RuntimeData.getInstance().isFirstActive()) {
+            throw new Error('This is the first time in foreground after launch');
+        }
+
+        // @ts-ignore
+        return ((this.getLastActive() - this.currentSessionStartTime.getTime()) / 1000);
     }
 
     /**

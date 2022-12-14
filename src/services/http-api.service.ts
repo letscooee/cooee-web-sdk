@@ -47,53 +47,6 @@ export class HttpAPIService {
     }
 
     /**
-     * Make server call and reject promise if the response code is non 2xx.
-     *
-     * @param method The HTTP method to invoke.
-     * @param url URL to invoke.
-     * @param headers Custom headers to pass.
-     * @param body The JSON body for the request.
-     * @private
-     * @return The responded data <code>T</code> if successful.
-     * @see https://stackoverflow.com/a/66713599/2405040
-     */
-    private async doHTTP<T>(method: HttpMethod, url: string, headers: Headers, body?: Record<string, any> | string)
-        : Promise<T> {
-        if (!url.startsWith('http')) {
-            url = Constants.API_URL + url;
-        }
-
-        const browserSupportsKeepalive = 'keepalive' in new Request('');
-
-        if (body && !browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
-            return this.performXMLHttpRequest<T>(url, headers, body);
-        }
-
-        const requestInit: RequestInit = {method, headers, keepalive: true};
-        if (body) {
-            requestInit.body = JSON.stringify(body);
-        }
-
-        const response = await fetch(url, requestInit);
-        if (!response.ok) {
-            throw response;
-        }
-
-        return response.json();
-    }
-
-    private performXMLHttpRequest<T>(url: string, headers: Headers, body: Record<string, any> | string): T {
-        const xmlHttpRequest = new XMLHttpRequest();
-        xmlHttpRequest.open('POST', url, false);
-        headers.forEach((value: string, key: string) => {
-            xmlHttpRequest.setRequestHeader(key, value);
-        });
-        xmlHttpRequest.send(JSON.stringify(body));
-
-        return xmlHttpRequest.response.json();
-    }
-
-    /**
      * Async call for registering device by making a call to backend
      *
      * @param {DeviceAuthRequest} userAuthRequest contains credentials
@@ -248,6 +201,71 @@ export class HttpAPIService {
     }
 
     /**
+     * Set sdk token for headers.
+     *
+     * @param {string} token
+     */
+    setAPIToken(token: string): void {
+        this.apiToken = token ?? '';
+    }
+
+    /**
+     * Set user id for headers.
+     *
+     * @param {string} id
+     */
+    setUserID(id: string): void {
+        this.userID = id ?? '';
+    }
+
+    /**
+     * Make server call and reject promise if the response code is non 2xx.
+     *
+     * @param method The HTTP method to invoke.
+     * @param url URL to invoke.
+     * @param headers Custom headers to pass.
+     * @param body The JSON body for the request.
+     * @private
+     * @return The responded data <code>T</code> if successful.
+     * @see https://stackoverflow.com/a/66713599/2405040
+     */
+    private async doHTTP<T>(method: HttpMethod, url: string, headers: Headers, body?: Record<string, any> | string)
+        : Promise<T> {
+        if (!url.startsWith('http')) {
+            url = Constants.API_URL + url;
+        }
+
+        const browserSupportsKeepalive = 'keepalive' in new Request('');
+
+        if (body && !browserSupportsKeepalive && JSON.stringify(body).includes('CE App Background')) {
+            return this.performXMLHttpRequest<T>(url, headers, body);
+        }
+
+        const requestInit: RequestInit = {method, headers, keepalive: true};
+        if (body) {
+            requestInit.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(url, requestInit);
+        if (!response.ok) {
+            throw response;
+        }
+
+        return response.json();
+    }
+
+    private performXMLHttpRequest<T>(url: string, headers: Headers, body: Record<string, any> | string): T {
+        const xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.open('POST', url, false);
+        headers.forEach((value: string, key: string) => {
+            xmlHttpRequest.setRequestHeader(key, value);
+        });
+        xmlHttpRequest.send(JSON.stringify(body));
+
+        return xmlHttpRequest.response.json();
+    }
+
+    /**
      * Get all the default headers for the http calls.
      *
      * @private
@@ -274,24 +292,6 @@ export class HttpAPIService {
         }
 
         return headers;
-    }
-
-    /**
-     * Set sdk token for headers.
-     *
-     * @param {string} token
-     */
-    setAPIToken(token: string): void {
-        this.apiToken = token ?? '';
-    }
-
-    /**
-     * Set user id for headers.
-     *
-     * @param {string} id
-     */
-    setUserID(id: string): void {
-        this.userID = id ?? '';
     }
 
 }

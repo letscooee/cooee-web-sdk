@@ -33,8 +33,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
         this.screenHeight = this.renderer.getHeight();
     }
 
-    abstract render(): void;
-
     getHTMLElement(): HTMLElement {
         return this.inappHTMLEl;
     }
@@ -290,5 +288,7 @@ export abstract class BlockProcessor<T extends BaseElement> {
             this.renderer.setStyle(element, attribute, colour.rgba);
         }
     }
+
+    abstract render(): void;
 
 }

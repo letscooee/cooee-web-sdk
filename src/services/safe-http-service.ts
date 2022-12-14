@@ -4,6 +4,7 @@ import {NewSessionExecutor} from '../session/new-session-executor';
 import {HttpAPIService} from './http-api.service';
 import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
+import {ReferralUtils} from '../utils/referral-utils';
 
 /**
  * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.
@@ -46,7 +47,7 @@ export class SafeHttpService {
      */
     public sendEvent(event: Event): void {
         NewSessionExecutor.replaySubject.subscribe(() => {
-            this.addEventVariable(event);
+            this.addEventData(event);
             this.httpApiService.sendEvent(event);
         });
     }
@@ -68,6 +69,9 @@ export class SafeHttpService {
      * @param {Props} data user data and property.
      */
     public updateProfile(data: Props): void {
+        data = data ?? {};
+        ReferralUtils.addReferralData(data);
+
         NewSessionExecutor.replaySubject.subscribe(() => {
             this.httpApiService.updateUserData(data);
         });
@@ -107,11 +111,12 @@ export class SafeHttpService {
      * @param {Event} event
      * @private
      */
-    private addEventVariable(event: Event): void {
+    private addEventData(event: Event): void {
         event.screenName = RuntimeData.getInstance().getScreen();
         event.properties.path = location.pathname;
         event.sessionID = this.sessionManager.getCurrentSessionID();
         event.sessionNumber = this.sessionManager.getCurrentSessionNumber();
+        ReferralUtils.addReferralData(event.properties);
     }
 
 }

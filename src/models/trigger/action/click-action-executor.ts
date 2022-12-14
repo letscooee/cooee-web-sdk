@@ -17,9 +17,9 @@ import {TriggerContext} from '../trigger-context';
  */
 export class ClickActionExecutor {
 
+    protected readonly apiService: SafeHttpService;
     private readonly action: ClickAction;
     private readonly triggerContext: TriggerContext;
-    protected readonly apiService: SafeHttpService;
 
     /**
      * Constructor
@@ -210,6 +210,28 @@ export class ClickActionExecutor {
     }
 
     /**
+     * Performs share action i.e. share some url on CTA.
+     */
+    shareAction(): void {
+        // Navigator.share only works in mobile browsers and with https urls.
+        // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
+        if (!this.action.share) {
+            return;
+        }
+        // TODO test in mobile browsers
+        const share = navigator.share;
+
+        if (!share) {
+            Log.warning('Navigator.share is not compatible with this browser');
+            return;
+        }
+
+        navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
+            .then((r) => console.log(r))
+            .catch((e) => console.error(e));
+    }
+
+    /**
      * Checks of {@link ClickAction} contains CTA other than close.
      * @return {true} if CTA contains any other CTA other than close.
      * @private
@@ -238,28 +260,6 @@ export class ClickActionExecutor {
         }
 
         return Object.keys(record).length === 0;
-    }
-
-    /**
-     * Performs share action i.e. share some url on CTA.
-     */
-    shareAction(): void {
-        // Navigator.share only works in mobile browsers and with https urls.
-        // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
-        if (!this.action.share) {
-            return;
-        }
-        // TODO test in mobile browsers
-        const share = navigator.share;
-
-        if (!share) {
-            Log.warning('Navigator.share is not compatible with this browser');
-            return;
-        }
-
-        navigator.share({'text': this.action.share.text, 'title': 'Share'} as ShareData)
-            .then((r) => console.log(r))
-            .catch((e) => console.error(e));
     }
 
     /**

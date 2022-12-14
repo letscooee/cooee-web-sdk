@@ -7,6 +7,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ObjectId} from 'bson';
 import {detectIncognito} from 'detectincognitojs';
+import {ReferralUtils} from '../utils/referral-utils';
 
 /**
  * Service that deals with the user/device authentication.
@@ -72,6 +73,36 @@ export class UserAuthService {
     }
 
     /**
+     * Method will ensure that the SDK has acquired the token.
+     *
+     * @return {Promise} to confirm token is fetched
+     */
+    async acquireSDKToken(): Promise<void> {
+        if (this.hasToken()) {
+            return this.populateUserDataFromStorage();
+        }
+
+        Log.log('Attempt to acquire SDK token');
+
+        return this.getSDKTokenFromServer();
+    }
+
+    /**
+     * Save sdk token and user id to local storage and update for http calls.
+     *
+     * @param {DeviceAuthResponse} data contain user-id and token
+     */
+    saveUserDataInStorage(data: DeviceAuthResponse): void {
+        this.sdkToken = data.sdkToken;
+        this.userID = data.userID;
+
+        this.updateAPIClient();
+
+        LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
+        LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
+    }
+
+    /**
      * This method will pull user data (like SDK token & user ID) from the local storage
      * and populates it for further use.
      */
@@ -103,21 +134,6 @@ export class UserAuthService {
     }
 
     /**
-     * Method will ensure that the SDK has acquired the token.
-     *
-     * @return {Promise} to confirm token is fetched
-     */
-    async acquireSDKToken(): Promise<void> {
-        if (this.hasToken()) {
-            return this.populateUserDataFromStorage();
-        }
-
-        Log.log('Attempt to acquire SDK token');
-
-        return this.getSDKTokenFromServer();
-    }
-
-    /**
      * Make user registration with server (if not already) and acquire a SDK token
      * which will be later used to authenticate other endpoints.
      *
@@ -138,25 +154,11 @@ export class UserAuthService {
     }
 
     /**
-     * Save sdk token and user id to local storage and update for http calls.
-     *
-     * @param {DeviceAuthResponse} data contain user-id and token
-     */
-    saveUserDataInStorage(data: DeviceAuthResponse): void {
-        this.sdkToken = data.sdkToken;
-        this.userID = data.userID;
-
-        this.updateAPIClient();
-
-        LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
-        LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
-    }
-
-    /**
      * Get user auth request object.
      */
     private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
+        ReferralUtils.addReferralData(props);
         props['host'] = location.origin;
 
         try {
