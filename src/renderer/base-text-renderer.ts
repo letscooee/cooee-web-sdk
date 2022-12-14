@@ -15,8 +15,6 @@ export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
         super(parentElement, inAppElement, triggerContext);
     }
 
-    abstract render(): void;
-
     /**
      * Process all the common block in in-app.
      */

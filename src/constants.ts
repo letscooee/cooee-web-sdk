@@ -45,11 +45,6 @@ export class Constants {
     static IN_APP_CONTAINER_NAME: string = 'cooee-container';
     static IN_APP_DEFAULT_PADDING: number = 15; // 15px
 
-    static {
-        const rawCode = Constants.SDK_VERSION.split('.').map((item) => item.padStart(2, '0')).join('');
-        Constants.SDK_VERSION_CODE = parseInt(rawCode, 10);
-    }
-
     // region
     static readonly EVENT_SCREEN_VIEW: string = 'CE Screen View';
     static readonly EVENT_APP_INSTALLED: string = 'CE App Installed';
@@ -62,7 +57,7 @@ export class Constants {
     static readonly EVENT_TRIGGER_CLOSED: string = 'CE Trigger Closed';
     // endregion
 
-    private static BOT_USER_AGENTS_PATTERN: string = '(' +
+    static readonly BOT_USER_AGENTS_PATTERN: string = '(' +
         'googlebot\/|bot|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|' +
         'java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|' +
         'FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|' +
@@ -86,6 +81,11 @@ export class Constants {
         'Domain Re-Animator Bot|AddThis' +
         ')';
 
-    static BOT_UA_REGEX = new RegExp(this.BOT_USER_AGENTS_PATTERN, 'i');
+    static readonly BOT_UA_REGEX = new RegExp(this.BOT_USER_AGENTS_PATTERN, 'i');
+
+    static {
+        const rawCode = Constants.SDK_VERSION.split('.').map((item) => item.padStart(2, '0')).join('');
+        Constants.SDK_VERSION_CODE = parseInt(rawCode, 10);
+    }
 
 }

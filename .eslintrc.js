@@ -40,6 +40,7 @@ module.exports = {
         }],
         'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': 'error',
+        '@typescript-eslint/member-ordering': 'error',
         'prefer-promise-reject-errors': ['error', {'allowEmptyReject': true}],
         'max-len': ['error', {'code': 120}],
         'padded-blocks': ['error', {'classes': 'always', 'blocks': 'never'}],

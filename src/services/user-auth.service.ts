@@ -73,6 +73,36 @@ export class UserAuthService {
     }
 
     /**
+     * Method will ensure that the SDK has acquired the token.
+     *
+     * @return {Promise} to confirm token is fetched
+     */
+    async acquireSDKToken(): Promise<void> {
+        if (this.hasToken()) {
+            return this.populateUserDataFromStorage();
+        }
+
+        Log.log('Attempt to acquire SDK token');
+
+        return this.getSDKTokenFromServer();
+    }
+
+    /**
+     * Save sdk token and user id to local storage and update for http calls.
+     *
+     * @param {DeviceAuthResponse} data contain user-id and token
+     */
+    saveUserDataInStorage(data: DeviceAuthResponse): void {
+        this.sdkToken = data.sdkToken;
+        this.userID = data.userID;
+
+        this.updateAPIClient();
+
+        LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
+        LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
+    }
+
+    /**
      * This method will pull user data (like SDK token & user ID) from the local storage
      * and populates it for further use.
      */
@@ -104,21 +134,6 @@ export class UserAuthService {
     }
 
     /**
-     * Method will ensure that the SDK has acquired the token.
-     *
-     * @return {Promise} to confirm token is fetched
-     */
-    async acquireSDKToken(): Promise<void> {
-        if (this.hasToken()) {
-            return this.populateUserDataFromStorage();
-        }
-
-        Log.log('Attempt to acquire SDK token');
-
-        return this.getSDKTokenFromServer();
-    }
-
-    /**
      * Make user registration with server (if not already) and acquire a SDK token
      * which will be later used to authenticate other endpoints.
      *
@@ -136,21 +151,6 @@ export class UserAuthService {
             Log.error(error);
             throw error;
         }
-    }
-
-    /**
-     * Save sdk token and user id to local storage and update for http calls.
-     *
-     * @param {DeviceAuthResponse} data contain user-id and token
-     */
-    saveUserDataInStorage(data: DeviceAuthResponse): void {
-        this.sdkToken = data.sdkToken;
-        this.userID = data.userID;
-
-        this.updateAPIClient();
-
-        LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
-        LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
     }
 
     /**
