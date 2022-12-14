@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.1.4
+
+### Features
+
+1. Track the UTM parameters and referrals.
+
+### Fixes
+
+1. Bump session number before starting the session.
+
 ## 0.1.3
 
 ### Fixes
