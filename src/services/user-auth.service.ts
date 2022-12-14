@@ -7,6 +7,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {ObjectId} from 'bson';
 import {detectIncognito} from 'detectincognitojs';
+import {ReferralUtils} from '../utils/referral-utils';
 
 /**
  * Service that deals with the user/device authentication.
@@ -157,6 +158,7 @@ export class UserAuthService {
      */
     private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
+        ReferralUtils.addReferralData(props);
         props['host'] = location.origin;
 
         try {

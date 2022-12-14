@@ -11,7 +11,7 @@ import {Renderer} from '../renderer/renderer';
 export class DevicePropertiesCollector {
 
     private readonly parser: UAParser;
-    private readonly result: { [key: string]: any } = {};
+    private readonly result: Record<string, any> = {};
 
     constructor() {
         this.parser = Renderer.get().getUAParser();
