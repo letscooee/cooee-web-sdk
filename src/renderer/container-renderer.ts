@@ -24,6 +24,7 @@ export class ContainerRenderer extends BlockProcessor<Container> {
     render(): this {
         this.processCommonBlocks();
         this.renderer.setStyle(this.inappHTMLEl, 'position', 'relative');
+        this.renderer.setStyle(this.inappHTMLEl, 'overflow', 'hidden');
         this.inappHTMLEl.classList.add(Constants.IN_APP_CONTAINER_NAME);
         return this;
     }
