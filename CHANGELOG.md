@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.1.5
+
+### Features
+
+1. Allow background to be overridden for mobile.
+
+### Fixes
+
+1. Setting overflow for canva/container.
+
 ## 0.1.4
 
 ### Features
