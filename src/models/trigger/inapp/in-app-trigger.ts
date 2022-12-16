@@ -165,6 +165,7 @@ export class InAppTrigger extends InAppView {
         this.max = this.mob.max ?? this.max;
         this.cover = this.mob.cover ?? this.cover;
         this.gvt = this.mob.gvt ?? this.gvt;
+        this.bg = this.mob.bg ?? this.bg;
     }
 
 }
