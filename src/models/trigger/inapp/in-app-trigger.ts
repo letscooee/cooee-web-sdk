@@ -2,6 +2,7 @@ import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements'
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
 import {InAppView} from './inapp-view';
+import {AutoClose} from '../blocks/AutoClose';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -20,6 +21,7 @@ export class InAppTrigger extends InAppView {
      * @private
      */
     private mob: InAppView;
+    readonly atcl: AutoClose;
 
     constructor(data: Record<string, any>) {
         data = data ?? {};
@@ -31,6 +33,7 @@ export class InAppTrigger extends InAppView {
         this.max = this.max ??
             // This is for backward compatibility (remove after 31st May 2023)
             data.cont?.desk?.max;
+        this.atcl = new AutoClose(data.atcl);
 
         // Backward compatibility
         if (!this.bg) {

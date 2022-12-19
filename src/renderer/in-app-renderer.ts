@@ -24,6 +24,8 @@ export class InAppRenderer {
     private readonly parent: HTMLElement;
     private rootContainer: HTMLDivElement;
     private ian: InAppTrigger;
+    private triggerContext: TriggerContext;
+    private safeHTTP: SafeHttpService;
 
     /**
      * Public constructor.
@@ -33,6 +35,7 @@ export class InAppRenderer {
     constructor(parent?: HTMLElement) {
         this.parent = parent ?? document.body;
         this.renderer.setParentContainer(this.parent);
+        this.safeHTTP = SafeHttpService.getInstance();
     }
 
     /**
@@ -42,7 +45,11 @@ export class InAppRenderer {
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
 
-        const triggerContext = new TriggerContext(new Date(), triggerData);
+        this.triggerContext = new TriggerContext(new Date(), triggerData);
+
+        this.triggerContext.onClose((eventProps: Record<string, any>) => {
+            this.closeInApp(eventProps);
+        });
         this.ian = triggerData.ian!;
 
         if (this.renderer.isMobile() || triggerData.previewType === 'mobile') {
@@ -51,19 +58,35 @@ export class InAppRenderer {
 
         this.renderer.calculateScalingFactor(this.ian);
 
-        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
 
         try {
-            this.renderContainer(triggerContext);
+            this.renderContainer(this.triggerContext);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerContext.triggerData);
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, this.triggerContext.triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
             Log.error(e);
         }
+    }
+
+    /**
+     * Close InApp
+     * @param eventProps event props sent by the close callback
+     * @private
+     */
+    private closeInApp(eventProps: Record<string, any>): void {
+        if (this.triggerContext.autoCloseTimeInterval) {
+            // stop autoclose countdown timer as soon as close InApp triggers
+            clearInterval(this.triggerContext.autoCloseTimeInterval);
+        }
+
+        Renderer.get().removeInApp(this.triggerContext);
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
+        this.safeHTTP.sendEvent(event);
     }
 
     /**
@@ -105,6 +128,84 @@ export class InAppRenderer {
         this.ian.elems?.forEach(async (element: BaseElement) => {
             await this.renderElement(containerHTMLElement, element, triggerContext);
         });
+
+        this.addCountDownTimer(containerHTMLElement);
+    }
+
+    /**
+     * Create and add Countdown timer in container
+     * @param container {@link HTMLElement} in which timer should be added
+     * @since 0.0.36
+     * @private
+     */
+    private addCountDownTimer(container: HTMLElement): void {
+        if (!this.ian.atcl || !this.ian.atcl.sec) {
+            return;
+        }
+
+        const parentDiv = this.renderer.createElement('div');
+        const containerWidth = this.renderer.getStyle(container, 'width');
+        this.renderer.setStyle(parentDiv, 'width', containerWidth);
+        this.renderer.setStyle(parentDiv, 'height', this.renderer.getStyle(container, 'height'));
+        this.renderer.setStyle(parentDiv, 'display', 'flex');
+
+        const timerDiv = this.renderer.createElement('div');
+        this.renderer.setStyle(timerDiv, 'width', containerWidth);
+        this.renderer.setStyle(timerDiv, 'align-self', 'flex-end');
+
+        if (this.ian.atcl.v) {
+            this.renderer.setStyle(timerDiv, 'display', 'none');
+        }
+
+        const timerText = this.renderer.createElement('p');
+        timerText.innerText = `Closes in ${this.ian.atcl.sec ?? 0} seconds`;
+        this.renderer.setStyle(timerText, 'width', '30%');
+        this.renderer.setStyle(timerText, 'background-color', 'black');
+        this.renderer.setStyle(timerText, 'color', 'white');
+        this.renderer.setStyle(timerText, 'text-align', 'center');
+        this.renderer.setStyle(timerText, 'border-radius', '5px');
+        this.renderer.setStyle(timerText, 'font-size', '11px');
+
+        const timerProgress = this.renderer.createElement('div');
+        this.renderer.setStyle(timerProgress, 'width', containerWidth);
+        this.renderer.setStyle(timerProgress, 'height', '5px');
+        this.renderer.setStyle(timerProgress, 'background-color', this.ian.atcl.c ?? '#000');
+        this.renderer.setStyle(timerProgress, 'transition', 'all 1.2s');
+
+        this.renderer.appendChild(timerDiv, timerText);
+        this.renderer.appendChild(timerDiv, timerProgress);
+        this.renderer.appendChild(parentDiv, timerDiv);
+        this.renderer.appendChild(container, parentDiv);
+        this.startCountDownTimer(timerText, timerProgress, this.ian.atcl.sec ?? 0, containerWidth.slice(0, -2));
+    }
+
+    /**
+     * Starts a countdown timer and close InApp as soon as timer finished
+     * @param timerText timer text
+     * @param timer timer element
+     * @param seconds total seconds
+     * @param width container width
+     * @since 0.0.36
+     * @private
+     */
+    private startCountDownTimer(timerText: HTMLElement, timer: HTMLElement, seconds: number, width: string): void {
+        console.log(width);
+        let progress = Number(width);
+        let remaining = seconds;
+        const interval = setInterval(() => {
+            if (remaining > 0) {
+                remaining--;
+                timerText.innerText = `Closes in ${remaining} seconds`;
+                const percent = (remaining * 100) / seconds;
+                console.log('percent', percent);
+                progress = (percent * Number(width)) / 100;
+                console.log('progress', progress);
+                this.renderer.setStyle(timer, 'width', `${progress}px`);
+            } else {
+                this.triggerContext.setAutoCloseInterval(interval);
+                this.triggerContext.closeInApp('Auto');
+            }
+        }, 1000);
     }
 
 }
