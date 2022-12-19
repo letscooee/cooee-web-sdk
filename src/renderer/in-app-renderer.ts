@@ -135,7 +135,7 @@ export class InAppRenderer {
     /**
      * Create and add Countdown timer in container
      * @param container {@link HTMLElement} in which timer should be added
-     * @since 0.0.36
+     * @since 0.1.6
      * @private
      */
     private addCountDownTimer(container: HTMLElement): void {
@@ -145,13 +145,18 @@ export class InAppRenderer {
 
         const parentDiv = this.renderer.createElement('div');
         const containerWidth = this.renderer.getStyle(container, 'width');
-        this.renderer.setStyle(parentDiv, 'width', containerWidth);
-        this.renderer.setStyle(parentDiv, 'height', this.renderer.getStyle(container, 'height'));
-        this.renderer.setStyle(parentDiv, 'display', 'flex');
+
+        this.addElementStyles(parentDiv, {
+            'width': containerWidth,
+            'height': this.renderer.getStyle(container, 'height'),
+            'display': 'flex',
+        });
 
         const timerDiv = this.renderer.createElement('div');
-        this.renderer.setStyle(timerDiv, 'width', containerWidth);
-        this.renderer.setStyle(timerDiv, 'align-self', 'flex-end');
+        this.addElementStyles(timerDiv, {
+            'width': containerWidth,
+            'align-self': 'flex-end',
+        });
 
         if (this.ian.atcl.v) {
             this.renderer.setStyle(timerDiv, 'display', 'none');
@@ -159,21 +164,25 @@ export class InAppRenderer {
 
         const timerText = this.renderer.createElement('span');
         timerText.innerText = `Closes in ${this.ian.atcl.sec ?? 0} seconds`;
-        this.renderer.setStyle(timerText, 'width', '30%');
-        this.renderer.setStyle(timerText, 'background-color', 'black');
-        this.renderer.setStyle(timerText, 'color', 'white');
-        this.renderer.setStyle(timerText, 'text-align', 'center');
-        this.renderer.setStyle(timerText, 'border-radius', '5px');
-        this.renderer.setStyle(timerText, 'font-size', '11px');
-        this.renderer.setStyle(timerText, 'padding', '3px 0px');
-        this.renderer.setStyle(timerText, 'display', 'block');
-        this.renderer.setStyle(timerText, 'margin-bottom', '3px');
+        this.addElementStyles(timerText, {
+            'width': '30%',
+            'background-color': 'black',
+            'color': 'white',
+            'text-align': 'center',
+            'border-radius': '5px',
+            'font-size': '11px',
+            'padding': '3px 0px',
+            'display': 'block',
+            'margin-bottom': '3px',
+        });
 
         const timerProgress = this.renderer.createElement('div');
-        this.renderer.setStyle(timerProgress, 'width', containerWidth);
-        this.renderer.setStyle(timerProgress, 'height', '5px');
-        this.renderer.setStyle(timerProgress, 'background-color', this.ian.atcl.c ?? '#000');
-        this.renderer.setStyle(timerProgress, 'transition', 'all 1.2s');
+        this.addElementStyles(timerProgress, {
+            'width': containerWidth,
+            'height': '5px',
+            'background-color': this.ian.atcl.c ?? '#000',
+            'transition': 'all 1.2s',
+        });
 
         this.renderer.appendChild(timerDiv, timerText);
         this.renderer.appendChild(timerDiv, timerProgress);
@@ -188,7 +197,7 @@ export class InAppRenderer {
      * @param timer timer element
      * @param seconds total seconds
      * @param width container width
-     * @since 0.0.36
+     * @since 0.1.6
      * @private
      */
     private startCountDownTimer(timerText: HTMLElement, timer: HTMLElement, seconds: number, width: string): void {
@@ -206,6 +215,19 @@ export class InAppRenderer {
                 this.triggerContext.closeInApp('Auto');
             }
         }, 1000);
+    }
+
+    /**
+     * Loops style record and applies to element
+     * @param element {@link HTMLElement} on which style should be applied.
+     * @param style Record of style
+     * @since: 0.1.6
+     * @private
+     */
+    private addElementStyles(element: HTMLElement, style: Record<string, string>): void {
+        Object.keys(style).forEach((key) => {
+            this.renderer.setStyle(element, key, style[key]);
+        });
     }
 
 }

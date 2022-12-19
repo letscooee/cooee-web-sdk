@@ -157,7 +157,7 @@ export class Renderer {
      * @param styleName style name
      * @return {string} value of the style
      *
-     * @since 0.0.36
+     * @since 0.1.6
      */
     public getStyle(element: HTMLElement, styleName: string): string {
         // Return if style is null or undefined

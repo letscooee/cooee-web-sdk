@@ -2,7 +2,7 @@ import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements'
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
 import {InAppView} from './inapp-view';
-import {AutoClose} from '../blocks/AutoClose';
+import {AutoClose} from '../blocks/auto-close';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -14,6 +14,7 @@ export class InAppTrigger extends InAppView {
 
     readonly cont: Container;
     readonly elems: BaseElement[] = [];
+    readonly atcl: AutoClose; // Auto close
 
     /**
      * Do not use this property directly as the value of {@link #mob} is copied to {@link this} if the rendering
@@ -21,7 +22,6 @@ export class InAppTrigger extends InAppView {
      * @private
      */
     private mob: InAppView;
-    readonly atcl: AutoClose;
 
     constructor(data: Record<string, any>) {
         data = data ?? {};

@@ -10,7 +10,7 @@ import {Props} from '../../types';
  */
 export class TriggerContext {
 
-    private closeCallBack: (eventProps: Record<string, any>) => void;
+    private closeCallback: (eventProps: Record<string, any>) => void;
     private autoCloseInterval: NodeJS.Timer;
 
     constructor(
@@ -52,7 +52,7 @@ export class TriggerContext {
      * @param callBack callback function
      */
     onClose(callBack: (eventProps: Record<string, any>) => void): void {
-        this.closeCallBack = callBack;
+        this.closeCallback = callBack;
     }
 
     /**
@@ -68,8 +68,8 @@ export class TriggerContext {
             'duration': diffInSeconds,
         };
 
-        if (this.closeCallBack) {
-            this.closeCallBack(eventProps);
+        if (this.closeCallback) {
+            this.closeCallback(eventProps);
         }
     }
 

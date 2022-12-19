@@ -2,7 +2,7 @@
  * Holds InApp auto close details
  *
  * @author Ashish Gaikwad
- * @since: 0.0.36
+ * @since: 0.1.6
  */
 export class AutoClose {
 
