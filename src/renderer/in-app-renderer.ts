@@ -157,7 +157,7 @@ export class InAppRenderer {
             this.renderer.setStyle(timerDiv, 'display', 'none');
         }
 
-        const timerText = this.renderer.createElement('p');
+        const timerText = this.renderer.createElement('span');
         timerText.innerText = `Closes in ${this.ian.atcl.sec ?? 0} seconds`;
         this.renderer.setStyle(timerText, 'width', '30%');
         this.renderer.setStyle(timerText, 'background-color', 'black');
@@ -165,6 +165,9 @@ export class InAppRenderer {
         this.renderer.setStyle(timerText, 'text-align', 'center');
         this.renderer.setStyle(timerText, 'border-radius', '5px');
         this.renderer.setStyle(timerText, 'font-size', '11px');
+        this.renderer.setStyle(timerText, 'padding', '3px 0px');
+        this.renderer.setStyle(timerText, 'display', 'block');
+        this.renderer.setStyle(timerText, 'margin-bottom', '3px');
 
         const timerProgress = this.renderer.createElement('div');
         this.renderer.setStyle(timerProgress, 'width', containerWidth);
@@ -189,7 +192,6 @@ export class InAppRenderer {
      * @private
      */
     private startCountDownTimer(timerText: HTMLElement, timer: HTMLElement, seconds: number, width: string): void {
-        console.log(width);
         let progress = Number(width);
         let remaining = seconds;
         const interval = setInterval(() => {
@@ -197,9 +199,7 @@ export class InAppRenderer {
                 remaining--;
                 timerText.innerText = `Closes in ${remaining} seconds`;
                 const percent = (remaining * 100) / seconds;
-                console.log('percent', percent);
                 progress = (percent * Number(width)) / 100;
-                console.log('progress', progress);
                 this.renderer.setStyle(timer, 'width', `${progress}px`);
             } else {
                 this.triggerContext.setAutoCloseInterval(interval);
