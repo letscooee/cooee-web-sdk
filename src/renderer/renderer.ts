@@ -191,4 +191,15 @@ export class Renderer {
         return this.parentContainer !== document.body;
     }
 
+    /**
+     * Perform addition on given parameters.
+     * Maily used to get padding addition for InApp size and scalling factor
+     * @param value1 value1
+     * @param value2 value2
+     * @return addition of two numbers
+     */
+    sizeToBeAdded(value1: number, value2: number): number {
+        return (value1 ?? 0) + (value2 ?? 0);
+    }
+
 }
