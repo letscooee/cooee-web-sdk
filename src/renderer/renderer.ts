@@ -1,7 +1,6 @@
 import {TriggerContext} from '../models/trigger/trigger-context';
 import UAParser from 'ua-parser-js';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {Constants} from '../constants';
 
 /**
  * Utility class for creating and rendering elements.
@@ -85,6 +84,7 @@ export class Renderer {
         const max = inApp.max;
         const canvasWidth = inApp.cont.w;
         const canvasHeight = inApp.cont.h;
+        const spacing = inApp.spc;
 
         let screenWidth = Renderer.get().getWidth();
         let screenHeight = Renderer.get().getHeight();
@@ -96,8 +96,8 @@ export class Renderer {
 
         // In order to add padding at all four sides of the wrapper, we are subtracting the padding size from the
         // screen size so that the in-app can be resized accordingly
-        screenWidth -= Constants.IN_APP_DEFAULT_PADDING * 2;
-        screenHeight -= Constants.IN_APP_DEFAULT_PADDING * 2;
+        screenWidth -= this.sizeToBeAdded(spacing.pr, spacing.pl);
+        screenHeight -= this.sizeToBeAdded(spacing.pb, spacing.pt);
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;

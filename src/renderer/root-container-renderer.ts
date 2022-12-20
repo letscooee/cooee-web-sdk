@@ -61,8 +61,11 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'top', '0');
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
         } else {
-            const containerCalculatedWidth = this.getScaledSize(container.w) + (Constants.IN_APP_DEFAULT_PADDING * 2);
-            const containerCalculatedHeight = this.getScaledSize(container.h) + (Constants.IN_APP_DEFAULT_PADDING * 2);
+            const spc = this.inappElement.spc;
+            const containerCalculatedWidth = this.getScaledSize(container.w) +
+                this.renderer.sizeToBeAdded(spc?.pl, spc?.pr);
+            const containerCalculatedHeight = this.getScaledSize(container.h) +
+                this.renderer.sizeToBeAdded(spc?.pt, spc?.pb);
 
             this.renderer.setStyle(this.inappHTMLEl, 'width', containerCalculatedWidth + 'px');
             this.renderer.setStyle(this.inappHTMLEl, 'height', containerCalculatedHeight + 'px');
@@ -70,8 +73,12 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
     }
 
     protected override processSpaceBlock(): void {
-        // Adding some padding by default to avoid touching the screen
-        this.renderer.setStyle(this.inappHTMLEl, 'padding', Constants.IN_APP_DEFAULT_PADDING + 'px');
+        // Explicitly considering inappElement.spc optional for backwork compatibility
+        const spacing = this.inappElement.spc;
+        const paddingStyle = `${spacing?.pt ?? 0}px ${spacing?.pr ?? 0}px ` +
+            `${spacing?.pb ?? 0}px ${spacing?.pl ?? 0}px`;
+
+        this.renderer.setStyle(this.inappHTMLEl, 'padding', paddingStyle);
     }
 
     protected override processDisplay(): void {
