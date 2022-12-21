@@ -29,6 +29,7 @@ export abstract class BaseTextRenderer extends BlockProcessor<TextElement> {
      * Process font block of the element
      */
     protected processFontBlock(): void {
+        this.renderer.setStyle(this.inappHTMLEl, 'letter-spacing', 'normal');
         const font = this.inappElement.font;
         if (!font) {
             return;
