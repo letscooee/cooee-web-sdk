@@ -96,8 +96,8 @@ export class Renderer {
 
         // In order to add padding at all four sides of the wrapper, we are subtracting the padding size from the
         // screen size so that the in-app can be resized accordingly
-        screenWidth -= this.sizeToBeAdded(spacing.pr, spacing.pl);
-        screenHeight -= this.sizeToBeAdded(spacing.pb, spacing.pt);
+        screenWidth -= this.sizeToBeAdded(spacing?.pr, spacing?.pl);
+        screenHeight -= this.sizeToBeAdded(spacing?.pb, spacing?.pt);
 
         if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
             this.scalingFactor = screenWidth / canvasWidth;
