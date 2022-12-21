@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.6
+
+### Fixes
+
+1. Set default letter-spacing.
+
 ## 0.1.5
 
 ### Features
