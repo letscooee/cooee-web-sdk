@@ -62,23 +62,21 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
             this.renderer.setStyle(this.inappHTMLEl, 'left', '0');
         } else {
             const spc = this.inappElement.spc;
-            const containerCalculatedWidth = this.getScaledSize(container.w) +
-                this.renderer.sizeToBeAdded(spc?.pl, spc?.pr);
-            const containerCalculatedHeight = this.getScaledSize(container.h) +
-                this.renderer.sizeToBeAdded(spc?.pt, spc?.pb);
+            const containerCalculatedWidth = this.getScaledSize(container.w) + spc.getHorizontal();
+            const containerCalculatedHeight = this.getScaledSize(container.h) + spc.getVertical();
 
             this.renderer.setStyle(this.inappHTMLEl, 'width', containerCalculatedWidth + 'px');
             this.renderer.setStyle(this.inappHTMLEl, 'height', containerCalculatedHeight + 'px');
         }
     }
 
+    /**
+     * Overriding this method to prevent scaling factor calculation.
+     * @protected
+     */
     protected override processSpaceBlock(): void {
-        // Explicitly considering inappElement.spc optional for backwork compatibility
         const spacing = this.inappElement.spc;
-        const paddingStyle = `${spacing?.pt ?? 0}px ${spacing?.pr ?? 0}px ` +
-            `${spacing?.pb ?? 0}px ${spacing?.pl ?? 0}px`;
-
-        this.renderer.setStyle(this.inappHTMLEl, 'padding', paddingStyle);
+        this.renderer.setStyle(this.inappHTMLEl, 'padding', spacing.getPaddingCSS());
     }
 
     protected override processDisplay(): void {

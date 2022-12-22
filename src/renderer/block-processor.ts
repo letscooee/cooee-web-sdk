@@ -135,7 +135,6 @@ export abstract class BlockProcessor<T extends BaseElement> {
             return;
         }
 
-        if (space.p) this.renderer.setStyle(this.inappHTMLEl, 'padding', this.getSizePx(space.p));
         if (space.pt) this.renderer.setStyle(this.inappHTMLEl, 'padding-top', this.getSizePx(space.pt));
         if (space.pb) this.renderer.setStyle(this.inappHTMLEl, 'padding-bottom', this.getSizePx(space.pb));
         if (space.pl) this.renderer.setStyle(this.inappHTMLEl, 'padding-left', this.getSizePx(space.pl));
