@@ -21,9 +21,9 @@ export abstract class BaseElement {
         if (data.bg) this.bg = new Background(data.bg);
         if (data.br) this.br = new Border(data.br);
         if (data.shd) this.shd = new Shadow(data.shd);
+        if (data.spc) this.spc = new Spacing(data.spc);
         this.trf = new Transform(data.trf);
         this.clc = data.clc;
-        this.spc = data.spc;
         this.w = data.w;
         this.h = data.h;
         this.x = data.x;
