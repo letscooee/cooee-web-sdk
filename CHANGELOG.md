@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.0
+
+### Features
+
+1. Edge spacing for in-apps.
+
 ## 0.1.6
 
 ### Fixes
