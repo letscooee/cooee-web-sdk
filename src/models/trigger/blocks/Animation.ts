@@ -3,7 +3,7 @@ export class Animation {
     readonly en?: EnterAnimation;
     readonly ex?: ExitAnimation;
 
-    constructor(data: Partial<Animation>) {
+    constructor(data?: Partial<Animation>) {
         data = data ?? {};
         this.en = data.en;
         this.ex = data.ex;
@@ -51,11 +51,13 @@ export class Animation {
                     {transform: 'translate(100%, 100%)'},
                     {transform: 'translate(0%, 0%)'},
                 ];
-            default:
+            case EnterAnimation.POP:
                 return [
                     {transform: 'scale(0.1)'},
                     {transform: 'scale(1)'},
                 ];
+            default:
+                return [];
         }
     }
 
@@ -101,22 +103,26 @@ export class Animation {
                     {transform: 'translate(0%, 0%)'},
                     {transform: 'translate(100%, 100%)'},
                 ];
-            default:
+            case ExitAnimation.POP:
                 return [
                     {transform: 'scale(1)'},
                     {transform: 'scale(0)'},
                 ];
+            default:
+                return [];
         }
     }
 
 }
 
 export enum EnterAnimation {
+    NONE = 1,
     SLIDE_IN_TOP, SLIDE_IN_DOWN, SLIDE_IN_LEFT, SLIDE_IN_RIGHT,
-    SLIDE_IN_TOP_LEFT, SLIDE_IN_TOP_RIGHT, SLIDE_IN_BOTTOM_LEFT, SLIDE_IN_BOTTOM_RIGHT
+    SLIDE_IN_TOP_LEFT, SLIDE_IN_TOP_RIGHT, SLIDE_IN_BOTTOM_LEFT, SLIDE_IN_BOTTOM_RIGHT, POP
 }
 
 export enum ExitAnimation {
+    NONE = 1,
     SLIDE_OUT_TOP, SLIDE_OUT_DOWN, SLIDE_OUT_LEFT, SLIDE_OUT_RIGHT,
-    SLIDE_OUT_TOP_LEFT, SLIDE_OUT_TOP_RIGHT, SLIDE_OUT_BOTTOM_LEFT, SLIDE_OUT_BOTTOM_RIGHT
+    SLIDE_OUT_TOP_LEFT, SLIDE_OUT_TOP_RIGHT, SLIDE_OUT_BOTTOM_LEFT, SLIDE_OUT_BOTTOM_RIGHT, POP
 }

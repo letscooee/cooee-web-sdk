@@ -2,7 +2,6 @@ import {BaseElement, ImageElement, ShapeElement, TextElement} from '../elements'
 import {ElementType} from '../elements/base-element';
 import {Container} from './container';
 import {InAppView} from './inapp-view';
-import {Animation} from '../blocks/Animation';
 
 /**
  * Stores data present in ian (In App) block in {@link TriggerData}
@@ -14,7 +13,6 @@ export class InAppTrigger extends InAppView {
 
     readonly cont: Container;
     readonly elems: BaseElement[] = [];
-    readonly anim: Animation;
 
     /**
      * Do not use this property directly as the value of {@link #mob} is copied to {@link this} if the rendering
@@ -29,7 +27,6 @@ export class InAppTrigger extends InAppView {
         super(data);
         this.cont = new Container(data.cont);
         this.mob = new InAppView(data.mob);
-        this.anim = new Animation(data.anim);
 
         this.max = this.max ??
             // This is for backward compatibility (remove after 31st May 2023)
@@ -170,6 +167,7 @@ export class InAppTrigger extends InAppView {
         this.gvt = this.mob.gvt ?? this.gvt;
         this.bg = this.mob.bg ?? this.bg;
         this.spc = this.mob.spc ?? this.spc;
+        this.anim = this.mob.anim ?? this.anim;
     }
 
 }
