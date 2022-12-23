@@ -44,7 +44,8 @@ export default class CooeeSDK {
      */
     static init(appID: string): void {
         appID = appID?.trim();
-        if (!appID) {
+        if (!appID || appID === 'null' || appID === 'undefined') {
+            Log.warning('Cooee App ID is not configured');
             return;
         }
 
