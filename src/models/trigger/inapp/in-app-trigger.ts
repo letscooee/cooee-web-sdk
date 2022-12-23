@@ -109,7 +109,7 @@ export class InAppTrigger extends InAppView {
             };
         }
 
-        styles.overflow = 'hidden';
+        styles.overflow = 'visible';
         return styles;
     }
 
@@ -154,7 +154,7 @@ export class InAppTrigger extends InAppView {
 
         styles.alignItems = y;
         styles.justifyContent = x;
-        styles.overflow = 'hidden';
+        styles.overflow = 'visible';
         return styles;
     }
 

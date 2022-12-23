@@ -24,6 +24,7 @@ export class InAppRenderer {
     private readonly renderer: Renderer = Renderer.get();
     private readonly parent: HTMLElement;
     private rootContainer: HTMLDivElement;
+    private containerHTMLElement: HTMLElement;
     private ian: InAppTrigger;
     private triggerContext: TriggerContext;
     private safeHTTP: SafeHttpService;
@@ -61,7 +62,6 @@ export class InAppRenderer {
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
-        this.addEnterAnimation(this.ian.anim);
 
         try {
             this.renderContainer(this.triggerContext);
@@ -76,7 +76,7 @@ export class InAppRenderer {
     }
 
     private addEnterAnimation(anim: Animation): void {
-        this.rootContainer.animate(anim.getEnterAnimation(), {duration: 500});
+        this.containerHTMLElement.animate(anim.getEnterAnimation(), {duration: 500});
     }
 
     /**
@@ -108,7 +108,7 @@ export class InAppRenderer {
             return;
         }
 
-        const containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerContext)
+        this.containerHTMLElement = new ContainerRenderer(this.rootContainer, container, triggerContext)
             .render()
             .getHTMLElement();
 
@@ -116,8 +116,10 @@ export class InAppRenderer {
         new FontService().loadAllFonts(this.ian);
 
         this.ian.elems?.forEach(async (element: BaseElement) => {
-            await this.renderElement(containerHTMLElement, element, triggerContext);
+            await this.renderElement(this.containerHTMLElement, element, triggerContext);
         });
+
+        this.addEnterAnimation(this.ian.anim);
     }
 
     /**
@@ -128,7 +130,7 @@ export class InAppRenderer {
     private closeInApp(eventProps: Record<string, any>): void {
         const closeAnimation = this.ian.anim.getExitAnimation();
 
-        const animation = this.rootContainer.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
+        const animation = this.containerHTMLElement.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
         animation.onfinish = () => {
             Renderer.get().removeInApp(this.triggerContext);
             const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
