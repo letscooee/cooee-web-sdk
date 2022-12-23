@@ -1,12 +1,9 @@
-import {Constants} from '../../../constants';
 import {IFrameRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
 import {Props} from '../../../types';
 import {Log} from '../../../utils/log';
-import {Event} from '../../event/event';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
-import {Renderer} from '../../../renderer/renderer';
 import {TriggerContext} from '../trigger-context';
 
 /**
@@ -187,26 +184,14 @@ export class ClickActionExecutor {
             return;
         }
 
-        Renderer.get().removeInApp(this.triggerContext);
-
-        const startTime = this.triggerContext.startTime;
-
-        const diffInSeconds = (new Date().getTime() - startTime.getTime()) / 1000;
-
-        let closeBehaviour;
+        let closeBehaviour: string;
         if (this.containsCTA()) {
             closeBehaviour = 'CTA';
         } else {
             closeBehaviour = 'Close';
         }
 
-        const eventProps: Props = {
-            'closeBehaviour': closeBehaviour,
-            'duration': diffInSeconds,
-        };
-
-        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
-        this.apiService.sendEvent(event);
+        this.triggerContext.closeInApp(closeBehaviour);
     }
 
     /**

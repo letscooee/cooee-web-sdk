@@ -11,6 +11,7 @@ import {ImageRenderer, RootContainerRenderer, ShapeRenderer, TextRenderer} from 
 import {ContainerRenderer} from './container-renderer';
 import {Renderer} from './renderer';
 import {TriggerContext} from '../models/trigger/trigger-context';
+import {Animation} from '../models/trigger/blocks/Animation';
 
 /**
  * Renders In App trigger
@@ -24,6 +25,8 @@ export class InAppRenderer {
     private readonly parent: HTMLElement;
     private rootContainer: HTMLDivElement;
     private ian: InAppTrigger;
+    private triggerContext: TriggerContext;
+    private safeHTTP: SafeHttpService;
 
     /**
      * Public constructor.
@@ -33,6 +36,7 @@ export class InAppRenderer {
     constructor(parent?: HTMLElement) {
         this.parent = parent ?? document.body;
         this.renderer.setParentContainer(this.parent);
+        this.safeHTTP = SafeHttpService.getInstance();
     }
 
     /**
@@ -42,7 +46,11 @@ export class InAppRenderer {
     render(triggerData: TriggerData): void {
         triggerData = new TriggerData(triggerData);
 
-        const triggerContext = new TriggerContext(new Date(), triggerData);
+        this.triggerContext = new TriggerContext(new Date(), triggerData);
+        this.triggerContext.onClose((eventProps: Record<string, any>) => {
+            this.closeInApp(eventProps);
+        });
+
         this.ian = triggerData.ian!;
 
         if (this.renderer.isMobile() || triggerData.previewType === 'mobile') {
@@ -51,19 +59,24 @@ export class InAppRenderer {
 
         this.renderer.calculateScalingFactor(this.ian);
 
-        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, triggerContext)
+        this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
+        this.addEnterAnimation(this.ian.anim);
 
         try {
-            this.renderContainer(triggerContext);
+            this.renderContainer(this.triggerContext);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerContext.triggerData);
+            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerData);
             SafeHttpService.getInstance().sendEvent(event);
 
             TriggerHelper.storeActiveTrigger(triggerData);
         } catch (e) {
             Log.error(e);
         }
+    }
+
+    private addEnterAnimation(anim: Animation): void {
+        this.rootContainer.animate(anim.getEnterAnimation(), {duration: 500});
     }
 
     /**
@@ -105,6 +118,22 @@ export class InAppRenderer {
         this.ian.elems?.forEach(async (element: BaseElement) => {
             await this.renderElement(containerHTMLElement, element, triggerContext);
         });
+    }
+
+    /**
+     * Close InApp
+     * @param eventProps event props sent by the close callback
+     * @private
+     */
+    private closeInApp(eventProps: Record<string, any>): void {
+        const closeAnimation = this.ian.anim.getExitAnimation();
+
+        const animation = this.rootContainer.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
+        animation.onfinish = () => {
+            Renderer.get().removeInApp(this.triggerContext);
+            const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
+            this.safeHTTP.sendEvent(event);
+        };
     }
 
 }
