@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.0
+
+1. Animation feature.
+
 ## 0.2.0
 
 ### Features
