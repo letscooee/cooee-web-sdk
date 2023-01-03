@@ -9,6 +9,8 @@ import {Constants} from '../../constants';
  */
 export class TriggerContext {
 
+    private closeCallback: (eventProps: Record<string, any>) => void;
+
     constructor(
         private _startTime: Date,
         private _triggerData: TriggerData,
@@ -33,6 +35,33 @@ export class TriggerContext {
         }
 
         return Constants.IN_APP_WRAPPER_NAME + '-' + id;
+    }
+
+    /**
+     * InApp close callback.
+     * This callback will be triggered as soon as {@link closeInApp} method is called
+     * @param callBack callback function
+     */
+    onClose(callBack: (eventProps: Record<string, any>) => void): void {
+        this.closeCallback = callBack;
+    }
+
+    /**
+     * Calculate InApp display time and generate eventProperties by adding closeBehaviour to Record.
+     * Calls callback set by the {@link onClose}
+     * @param closeBehaviour Close behaviour of the InApp i.e. CTA, Close, Auto.
+     */
+    closeInApp(closeBehaviour: string): void {
+        const diffInSeconds = (new Date().getTime() - this.startTime.getTime()) / 1000;
+
+        const eventProps = {
+            'closeBehaviour': closeBehaviour,
+            'duration': diffInSeconds,
+        };
+
+        if (this.closeCallback) {
+            this.closeCallback(eventProps);
+        }
     }
 
 }
