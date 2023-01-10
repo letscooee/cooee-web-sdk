@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.1
+
+1. Fix: Handle non-24 characters app ID.
+
 ## 0.3.0
 
 1. Animation feature.
