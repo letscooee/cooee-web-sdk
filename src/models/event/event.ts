@@ -18,8 +18,9 @@ export class Event {
     public activeTriggers: EmbeddedTrigger[] = [];
     public trigger: EmbeddedTrigger;
 
+    readonly occurred: string;
+
     private readonly id: ObjectId;
-    private readonly occurred: string;
 
     /**
      * Public constructor
