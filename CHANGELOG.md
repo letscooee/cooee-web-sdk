@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.0
+
+1. Animation feature.
+
 ## 0.2.1
 
 1. Fix: Handle "null" or "undefined" string in App ID.
