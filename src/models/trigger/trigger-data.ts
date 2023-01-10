@@ -1,5 +1,6 @@
 import {Props} from '../../types';
 import {InAppTrigger} from './inapp/in-app-trigger';
+import {DisplayCriteria, DisplayCriteriaEnum} from './trigger-criteria';
 
 /**
  * This store the payload sent by server to render trigger.
@@ -21,6 +22,7 @@ export class TriggerData {
 
     pn?: Props;
     ian?: InAppTrigger;
+    criteria?: DisplayCriteria;
 
     /**
      * Public constructor
@@ -36,6 +38,11 @@ export class TriggerData {
         this.pn = data.pn;
         this.ian = new InAppTrigger(data.ian);
         this.previewType = data.previewType;
+        this.criteria = new DisplayCriteria(data.criteria);
+    }
+
+    shouldDelay(): boolean {
+        return this.criteria?.show === DisplayCriteriaEnum.AFTER_X_SECOND;
     }
 
 }
