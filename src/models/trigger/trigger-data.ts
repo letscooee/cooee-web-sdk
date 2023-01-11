@@ -21,6 +21,13 @@ export class TriggerData {
 
     pn?: Props;
     ian?: InAppTrigger;
+    delay: number;
+
+    /**
+     * This field will be added by http-api service to calculate
+     * delay time from the event occurrence.
+     */
+    occurred: string;
 
     /**
      * Public constructor
@@ -36,6 +43,19 @@ export class TriggerData {
         this.pn = data.pn;
         this.ian = new InAppTrigger(data.ian);
         this.previewType = data.previewType;
+        this.delay = data.delay ?? 0;
+        this.occurred = data.occurred ?? new Date().toISOString();
+    }
+
+    shouldDelay(): boolean {
+        return this.delay > 0;
+    }
+
+    getDelaySeconds(): number {
+        const occurredTime = new Date(this.occurred);
+        const currentTime = new Date();
+        const passedMilliseconds = currentTime.getTime() - occurredTime.getTime();
+        return (this.delay * 1000) - passedMilliseconds;
     }
 
 }

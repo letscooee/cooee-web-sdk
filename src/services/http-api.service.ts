@@ -81,6 +81,8 @@ export class HttpAPIService {
                 Log.log('Sent', event.name);
 
                 if (data.triggerData) {
+                    data.triggerData.occurred = event.occurred;
+
                     new InAppRenderer().render(data.triggerData);
                 }
 

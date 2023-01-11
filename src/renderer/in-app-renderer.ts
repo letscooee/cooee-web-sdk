@@ -60,6 +60,16 @@ export class InAppRenderer {
 
         this.renderer.calculateScalingFactor(this.ian);
 
+        if (triggerData.shouldDelay()) {
+            window.setTimeout(() => {
+                this.startRendering(triggerData);
+            }, triggerData.getDelaySeconds());
+        } else {
+            this.startRendering(triggerData);
+        }
+    }
+
+    private startRendering(triggerData: TriggerData): void {
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
 
