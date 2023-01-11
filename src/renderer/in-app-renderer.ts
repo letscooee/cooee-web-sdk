@@ -63,7 +63,7 @@ export class InAppRenderer {
         if (triggerData.shouldDelay()) {
             window.setTimeout(() => {
                 this.startRendering(triggerData);
-            }, triggerData.criteria?.getDelaySeconds());
+            }, triggerData.getDelaySeconds());
         } else {
             this.startRendering(triggerData);
         }
