@@ -20,12 +20,12 @@ export class EmbeddedTrigger {
         this.updateExpired();
     }
 
-    get isExpired(): boolean {
+    isExpired(): boolean {
         return this.expireAt < new Date().getTime();
     }
 
     updateExpired(): void {
-        if (this.isExpired) {
+        if (this.isExpired()) {
             this.expired = true;
         }
     }

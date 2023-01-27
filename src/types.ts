@@ -8,3 +8,5 @@ export type Props = {
 export type Map = {
     [key: string]: any
 }
+
+export type CloseBehaviour = 'CTA' | 'Close';

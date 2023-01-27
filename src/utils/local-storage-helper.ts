@@ -79,11 +79,11 @@ export class LocalStorageHelper {
      * @param {string} key key provided for the stored value.
      * @return {any} value stored.
      */
-    static getObject(key: string): Record<string, any> {
+    static getObject<T = Record<string, any>>(key: string): T {
         try {
             return JSON.parse(LocalStorageHelper.getString(key, ''));
         } catch (ignored) {
-            return {};
+            return {} as T;
         }
     }
 
@@ -94,9 +94,9 @@ export class LocalStorageHelper {
      * @param defaultValue The default value to return.
      * @return {any} value stored.
      */
-    static getArray(key: string, defaultValue: any[] = []): any[] {
+    static getArray<T>(key: string, defaultValue: T[] = []): T[] {
         try {
-            return JSON.parse(LocalStorageHelper.getString(key, ''));
+            return JSON.parse(LocalStorageHelper.getString(key, '')) || defaultValue;
         } catch (ignored) {
             return defaultValue;
         }

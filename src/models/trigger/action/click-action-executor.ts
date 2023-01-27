@@ -1,10 +1,11 @@
 import {IFrameRenderer} from '../../../renderer';
 import {SafeHttpService} from '../../../services/safe-http-service';
-import {Props} from '../../../types';
+import {CloseBehaviour, Props} from '../../../types';
 import {Log} from '../../../utils/log';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {TriggerContext} from '../trigger-context';
+import {TriggerHelper} from '../trigger-helper';
 
 /**
  * Performs click to action on in-app elements
@@ -79,7 +80,7 @@ export class ClickActionExecutor {
     /**
      * Performs external action where url is opened in new tab/window.
      */
-    externalAction(): void {
+    private externalAction(): void {
         if (this.action.ext?.u) {
             let url: string = this.action.ext.u;
 
@@ -97,7 +98,7 @@ export class ClickActionExecutor {
      * @param url {string} value to be checked.
      * @return boolean Returns true if url is valid and has protocol.
      */
-    isValidURL(url: string): boolean {
+    private isValidURL(url: string): boolean {
         try {
             new URL(url);
         } catch (e) {
@@ -110,7 +111,7 @@ export class ClickActionExecutor {
     /**
      * Opens URL in same tab by prepending protocol in the URL if not exist.
      */
-    gotoURLAction(): void {
+    private gotoURLAction(): void {
         if (this.action.gu?.u) {
             let url: string = this.action.gu.u;
 
@@ -125,7 +126,7 @@ export class ClickActionExecutor {
     /**
      * Performs in-app browser action i.e. open url in <code>iFrame</code>
      */
-    iabAction(): void {
+    private iabAction(): void {
         if (this.action.iab?.u) {
             let url: string = this.action.iab.u;
 
@@ -140,7 +141,7 @@ export class ClickActionExecutor {
     /**
      * Performs up action i.e. sending user properties back to server.
      */
-    upAction(): void {
+    private upAction(): void {
         if (this.action.up) {
             this.apiService.updateProfile(this.action.up);
         }
@@ -150,14 +151,14 @@ export class ClickActionExecutor {
      * Sends key-value pair to the application.
      * @param mergedKV KV to be sent on listener
      */
-    kvAction(mergedKV: Record<string, any> | undefined): void {
+    private kvAction(mergedKV: Record<string, any> | undefined): void {
         document.dispatchEvent(new CustomEvent('onCooeeCTA', {'detail': mergedKV}));
     }
 
     /**
      * Performs prompt action i.e. ask for permission for location and notification.
      */
-    prompt(): void {
+    private prompt(): void {
         const permission = this.action.pmpt;
         if (!permission) {
             return;
@@ -179,25 +180,24 @@ export class ClickActionExecutor {
     /**
      * Performs close action
      */
-    closeAction(): void {
-        if (!this.action.close) {
-            return;
-        }
-
-        let closeBehaviour: string;
+    private closeAction(): void {
+        let closeBehaviour: CloseBehaviour;
         if (this.containsCTA()) {
             closeBehaviour = 'CTA';
+            TriggerHelper.storeActiveTrigger(this.triggerContext.triggerData);
         } else {
             closeBehaviour = 'Close';
         }
 
-        this.triggerContext.closeInApp(closeBehaviour);
+        if (this.action.close) {
+            this.triggerContext.closeInApp(closeBehaviour);
+        }
     }
 
     /**
      * Performs share action i.e. share some url on CTA.
      */
-    shareAction(): void {
+    private shareAction(): void {
         // Navigator.share only works in mobile browsers and with https urls.
         // {@link https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share}
         if (!this.action.share) {
@@ -223,8 +223,8 @@ export class ClickActionExecutor {
      */
     private containsCTA(): boolean {
         /*
-        If this.action.at is present it means KV/EXT/IAB/GU/PMPT is present.
-        If this.action.at is not present we need to check for custKV and UP.
+         * If this.action.at is present it means KV/EXT/IAB/GU/PMPT is present.
+         * If this.action.at is not present we need to check for custKV and UP.
          */
         if (this.action.at) {
             return true;
