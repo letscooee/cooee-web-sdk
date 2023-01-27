@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.0
+
+1. Breaking Change: The attribution will now start when CTA is clicked instead of when trigger is displayed.
+2. Fix: Prevent double adding embedded trigger.
+
 ## 0.4.0
 
 1. Feat: Delayed in-app feature.
