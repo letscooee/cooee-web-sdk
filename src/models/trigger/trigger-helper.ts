@@ -13,27 +13,29 @@ export class TriggerHelper {
 
     /**
      * Store the current active trigger details in local storage for "late engagement tracking".
-     * @param triggerData trigger data
+     *
+     * @param triggerData The current trigger data.
+     * @return Current active triggers.
      */
-    static storeActiveTrigger(triggerData: TriggerData): void {
-        if (triggerData.id === 'test') {
-            return;
+    static storeActiveTrigger(triggerData: TriggerData): EmbeddedTrigger[] {
+        if (!triggerData.id || triggerData.id === 'test') {
+            return [];
         }
 
-        let activeTriggers = LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGERS) as EmbeddedTrigger[];
+        const activeTriggers = LocalStorageHelper.getArray<EmbeddedTrigger>(Constants.STORAGE_ACTIVE_TRIGGERS);
+        const embeddedTrigger = new EmbeddedTrigger(triggerData);
 
-        if (!activeTriggers) {
-            activeTriggers = [];
-        }
-
-        const embeddedTrigger: EmbeddedTrigger = new EmbeddedTrigger(triggerData);
-
-        if (!embeddedTrigger.isExpired) {
-            activeTriggers.push(embeddedTrigger);
+        if (!embeddedTrigger.isExpired()) {
+            const index = activeTriggers.findIndex((trigger) => trigger.triggerID === embeddedTrigger.triggerID);
+            // Prevent duplicate
+            if (index === -1) {
+                activeTriggers.push(embeddedTrigger);
+            }
         }
 
         LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGER, embeddedTrigger);
         LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
+        return activeTriggers;
     }
 
     /**
@@ -42,14 +44,10 @@ export class TriggerHelper {
      * @return EmbeddedTrigger[] list of active triggers
      */
     static getActiveTriggers(): EmbeddedTrigger[] {
-        const activeTriggers = LocalStorageHelper.getArray(Constants.STORAGE_ACTIVE_TRIGGERS) as EmbeddedTrigger[];
-
-        if (!activeTriggers) {
-            return [];
-        }
+        const activeTriggers = LocalStorageHelper.getArray<EmbeddedTrigger>(Constants.STORAGE_ACTIVE_TRIGGERS);
 
         activeTriggers.forEach((trigger, index, array) => {
-            if (new EmbeddedTrigger(trigger).isExpired) {
+            if (new EmbeddedTrigger(trigger).isExpired()) {
                 array.splice(index, 1);
             }
         });

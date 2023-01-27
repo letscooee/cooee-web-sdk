@@ -94,9 +94,9 @@ export class LocalStorageHelper {
      * @param defaultValue The default value to return.
      * @return {any} value stored.
      */
-    static getArray(key: string, defaultValue: any[] = []): any[] {
+    static getArray<T>(key: string, defaultValue: T[] = []): T[] {
         try {
-            return JSON.parse(LocalStorageHelper.getString(key, ''));
+            return JSON.parse(LocalStorageHelper.getString(key, '')) || defaultValue;
         } catch (ignored) {
             return defaultValue;
         }
