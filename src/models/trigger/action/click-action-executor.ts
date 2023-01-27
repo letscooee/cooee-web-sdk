@@ -5,6 +5,7 @@ import {Log} from '../../../utils/log';
 import {ClickAction} from '../blocks';
 import {ClickActionType, Permission} from '../blocks/click-action';
 import {TriggerContext} from '../trigger-context';
+import {TriggerHelper} from '../trigger-helper';
 
 /**
  * Performs click to action on in-app elements
@@ -180,6 +181,7 @@ export class ClickActionExecutor {
      * Performs close action
      */
     closeAction(): void {
+        TriggerHelper.storeActiveTrigger(this.triggerContext.triggerData);
         if (!this.action.close) {
             return;
         }
@@ -223,8 +225,8 @@ export class ClickActionExecutor {
      */
     private containsCTA(): boolean {
         /*
-        If this.action.at is present it means KV/EXT/IAB/GU/PMPT is present.
-        If this.action.at is not present we need to check for custKV and UP.
+         * If this.action.at is present it means KV/EXT/IAB/GU/PMPT is present.
+         * If this.action.at is not present we need to check for custKV and UP.
          */
         if (this.action.at) {
             return true;
