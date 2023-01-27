@@ -17,8 +17,8 @@ export class TriggerHelper {
      * @param triggerData The current trigger data.
      * @return Current active triggers.
      */
-    static storeActiveTrigger(triggerData: TriggerData): EmbeddedTrigger[] {
-        if (!triggerData.id || triggerData.id === 'test') {
+    static storeActiveTrigger(triggerData: TriggerData | undefined): EmbeddedTrigger[] {
+        if (!triggerData?.id || triggerData.id === 'test') {
             return [];
         }
 

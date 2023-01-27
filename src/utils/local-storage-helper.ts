@@ -79,11 +79,11 @@ export class LocalStorageHelper {
      * @param {string} key key provided for the stored value.
      * @return {any} value stored.
      */
-    static getObject(key: string): Record<string, any> {
+    static getObject<T = Record<string, any>>(key: string): T {
         try {
             return JSON.parse(LocalStorageHelper.getString(key, ''));
         } catch (ignored) {
-            return {};
+            return {} as T;
         }
     }
 

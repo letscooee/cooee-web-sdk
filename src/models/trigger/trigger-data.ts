@@ -41,7 +41,7 @@ export class TriggerData {
         this.engagementID = data.engagementID;
         this.internal = data.internal;
         this.pn = data.pn;
-        this.ian = new InAppTrigger(data.ian);
+        this.ian = data.ian ? new InAppTrigger(data.ian) : undefined;
         this.previewType = data.previewType;
         this.delay = data.delay ?? 0;
         this.occurred = data.occurred ?? new Date().toISOString();
