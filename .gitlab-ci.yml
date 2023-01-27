@@ -19,6 +19,7 @@ Lint Changes:
     - npm run lint
     - npx tsc
     - npm run build:production
+    - npm run test:ci
   only:
     - merge_requests
 

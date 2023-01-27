@@ -43,13 +43,13 @@ module.exports = function (config) {
             ]
         },
         preprocessors: {
-            [testCode]: ['webpack'],
+            [testCode]: ['webpack', 'coverage'],
         },
         reporters: ['progress', 'kjhtml'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
-        autoWatch: false,
+        autoWatch: true,
         browsers: ['ChromeHeadlessNoSandbox'],
         customLaunchers: {
             // https://github.com/karma-runner/karma-chrome-launcher/issues/158#issuecomment-339265457

@@ -1,7 +1,6 @@
 import {Constants} from '../../constants';
 import {DateUtils} from '../../utils/date-utils';
 import {LocalStorageHelper} from '../../utils/local-storage-helper';
-import {EmbeddedTrigger} from './embedded-trigger';
 import {TriggerData} from './trigger-data';
 import {TriggerHelper} from './trigger-helper';
 
@@ -20,18 +19,21 @@ describe('TriggerHelper', () => {
             const expireIn2Days = DateUtils.addDays(2);
             const triggerData = new TriggerData({id: '12345', expireAt: expireIn2Days});
 
+            spyOn(LocalStorageHelper, 'setArray');
+            spyOn(LocalStorageHelper, 'setObject');
+
             TriggerHelper.storeActiveTrigger(triggerData);
-            // Add twice the same value
+            // Store the same value twice
             const triggers = TriggerHelper.storeActiveTrigger(triggerData);
 
             expect(triggers.length).toEqual(1);
             expect(triggers[0].triggerID).toEqual('12345');
 
-            const storedTrigger = LocalStorageHelper.getObject<EmbeddedTrigger>(Constants.STORAGE_ACTIVE_TRIGGER);
-            const storedTriggers = LocalStorageHelper.getArray<EmbeddedTrigger>(Constants.STORAGE_ACTIVE_TRIGGERS);
+            expect(LocalStorageHelper.setArray).toHaveBeenCalledTimes(2);
+            expect(LocalStorageHelper.setArray).toHaveBeenCalledWith(Constants.STORAGE_ACTIVE_TRIGGERS, triggers);
 
-            expect(storedTrigger?.triggerID).toEqual('12345');
-            expect(storedTriggers.length).toEqual(1);
+            expect(LocalStorageHelper.setObject).toHaveBeenCalledTimes(2);
+            expect(LocalStorageHelper.setObject).toHaveBeenCalledWith(Constants.STORAGE_ACTIVE_TRIGGER, triggers[0]);
         });
     });
 });

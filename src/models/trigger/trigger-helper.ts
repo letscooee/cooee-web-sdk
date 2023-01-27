@@ -34,7 +34,7 @@ export class TriggerHelper {
         }
 
         LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGER, embeddedTrigger);
-        LocalStorageHelper.setObject(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
+        LocalStorageHelper.setArray(Constants.STORAGE_ACTIVE_TRIGGERS, activeTriggers);
         return activeTriggers;
     }
 
