@@ -34,6 +34,7 @@ export class ClickActionExecutor {
      * Execute CTAs on element click event
      */
     execute(): void {
+        this.closeAction();
         let mergedKV = this.action.custKV;
 
         switch (this.action.at) {
@@ -73,8 +74,6 @@ export class ClickActionExecutor {
          */
         this.upAction();
         this.kvAction(mergedKV);
-
-        this.closeAction();
     }
 
     /**
