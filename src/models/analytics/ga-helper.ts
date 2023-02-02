@@ -33,7 +33,7 @@ export class GAHelper {
             return;
         }
 
-        SafeHttpService.getInstance().updateDeviceProps({gaClientId: clientID});
+        SafeHttpService.getInstance().updateDeviceProps({gaClientID: clientID});
     }
 
     private static async getClientID(): Promise<string | undefined> {
