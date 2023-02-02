@@ -33,6 +33,9 @@ export class Constants {
     static STORAGE_ACTIVE_TRIGGER: string = 'at';
     static STORAGE_ACTIVE_TRIGGERS: string = 'ats';
     static STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT: string = 'spods';
+    static STORAGE_GA_ENABLED: string = 'gae';
+    static STORAGE_GA_CLIENT_ID: string = 'gacid';
+    static STORAGE_GA_MEASUREMENT_ID: string = 'gamid';
     // endregion
 
     // region Session Storage Keys
