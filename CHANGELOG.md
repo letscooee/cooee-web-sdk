@@ -1,10 +1,10 @@
 # Change Log
 
-## 1.0.1
+## 1.0.2
 
 1. Fix: Send the CTA before executing the click action.
 
-## 1.0.0
+## 1.0.0, 1.0.1
 
 1. Breaking Change: The attribution will now start when CTA is clicked instead of when trigger is displayed.
 2. Fix: Prevent double adding embedded trigger.
@@ -103,7 +103,7 @@
 
 ### Features:
 
-1. Deprecate `event.props.triggerID` for trigger events and use `event.trigger` instead. 
+1. Deprecate `event.props.triggerID` for trigger events and use `event.trigger` instead.
 2. Expose logout API.
 3. Track `host` as `location.origin` in device properties.
 
@@ -134,13 +134,13 @@
 
 ## 0.0.27
 
-### Feature: 
+### Feature:
 
 1. Added Go to URL CTA.
 
 ## 0.0.26
 
-1. Fix: Preview in case parent element is not body.\ 
+1. Fix: Preview in case parent element is not body.\
 
 ## 0.0.25
 
@@ -233,9 +233,11 @@
 ## 0.0.10 (unreleased)
 
 ### Improvement:
+
 1. Get trigger direction(gravity) for InAppTrigger.
 
 ### Fixes
+
 1. Rename `prompt` to `pmpt`.
 2. Use device api instead of user api to send device data.
 
