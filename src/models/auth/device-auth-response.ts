@@ -1,9 +1,9 @@
-import {Configurations} from '../app/configurations';
+import {AppConfiguration} from '../app/configuration';
 
 /**
  * Interface to store the response of UserAuthRequest.
  */
-export interface DeviceAuthResponse extends Configurations {
+export interface DeviceAuthResponse extends AppConfiguration {
 
     userID: string; // user-id from server
     sdkToken: string; // sdk-token from server

@@ -148,7 +148,7 @@ export class UserAuthService {
             const data = await <Promise<DeviceAuthResponse>>responseJson;
             Log.log('Register Device Response', data);
             this.saveUserDataInStorage(data);
-            await GAHelper.saveConfigurations(data);
+            GAHelper.processConfiguration(data);
         } catch (error) {
             Log.error(error);
             throw error;

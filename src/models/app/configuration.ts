@@ -1,4 +1,4 @@
-export class Configurations {
+export class AppConfiguration {
 
     gaEnabled?: boolean;
     gaMeasurementID?: string;

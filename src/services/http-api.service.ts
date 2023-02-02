@@ -11,7 +11,7 @@ import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {SessionManager} from '../session/session-manager';
-import {Configurations} from '../models/app/configurations';
+import {AppConfiguration} from '../models/app/configuration';
 import {GAHelper} from '../models/analytics/ga-helper';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -208,10 +208,10 @@ export class HttpAPIService {
         const headers = this.getDefaultHeaders();
 
         const appID = LocalStorageHelper.getString(Constants.STORAGE_APP_ID);
-        this.doHTTP<Configurations>('GET', `/v1/app/configuration/${appID}`, headers)
-            .then(async (json) => {
-                Log.log('Received app configurations');
-                await GAHelper.saveConfigurations(json);
+        this.doHTTP<AppConfiguration>('GET', `/v1/app/configuration/${appID}`, headers)
+            .then((json) => {
+                Log.log('Received app configuration');
+                GAHelper.processConfiguration(json);
             })
             .catch((error) => {
                 Log.error(error);
