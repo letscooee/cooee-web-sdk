@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.1
+
+1. Fix: Send the CTA before executing the click action.
+
 ## 1.0.0
 
 1. Breaking Change: The attribution will now start when CTA is clicked instead of when trigger is displayed.
