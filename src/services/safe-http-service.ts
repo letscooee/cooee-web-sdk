@@ -105,6 +105,12 @@ export class SafeHttpService {
         });
     }
 
+    public getAppConfigurations(): void {
+        NewSessionExecutor.replaySubject.subscribe(() => {
+            this.httpApiService.getAppConfigurations();
+        });
+    }
+
     /**
      * Add values to event variables.
      *

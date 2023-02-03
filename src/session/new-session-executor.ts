@@ -61,6 +61,7 @@ export class NewSessionExecutor {
         } else {
             // noinspection JSIgnoredPromiseFromCall
             this.sendSuccessiveLaunchEvent();
+            this.safeHttpCallService.getAppConfigurations();
         }
     }
 

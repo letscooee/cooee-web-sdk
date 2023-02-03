@@ -8,6 +8,7 @@ import {Log} from '../utils/log';
 import {ObjectId} from 'bson';
 import {detectIncognito} from 'detectincognitojs';
 import {ReferralUtils} from '../utils/referral-utils';
+import {GAHelper} from '../models/analytics/ga-helper';
 
 /**
  * Service that deals with the user/device authentication.
@@ -57,7 +58,7 @@ export class UserAuthService {
     /**
      * Check if localstorage has sdk token
      *
-     * @return {boolean} true, if token is there in local storage
+     * @return true, if token is there in local storage
      */
     hasToken(): boolean {
         return !!LocalStorageHelper.getString(Constants.STORAGE_SDK_TOKEN, '');
@@ -147,6 +148,7 @@ export class UserAuthService {
             const data = await <Promise<DeviceAuthResponse>>responseJson;
             Log.log('Register Device Response', data);
             this.saveUserDataInStorage(data);
+            GAHelper.processConfiguration(data);
         } catch (error) {
             Log.error(error);
             throw error;

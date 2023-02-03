@@ -5,5 +5,6 @@ export {};
 declare global {
     export interface Window {
         CooeeSDK: any;
+        gtag: any;
     }
 }
