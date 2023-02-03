@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0
+
+1. Feat: Store GA's clientId in server for GA integration.
+
 ## 1.0.2
 
 1. Fix: Send the CTA before executing the click action.
