@@ -1,5 +1,5 @@
-import {LocalStorageHelper} from './local-storage-helper';
 import {Constants} from '../constants';
+import {LocalStorageHelper} from './local-storage-helper';
 
 /**
  * A simple data holder class that contains runtime state of the application/SDK.
@@ -95,44 +95,38 @@ export class RuntimeData {
     }
 
     /**
-     * Check if it first active after web launch.
+     * Check if it is first active after web launch.
      *
-     * @return {boolean} true on web launch
+     * @return true on web launch
      */
     public isFirstActive(): boolean {
         return this.lastEnterInactive == null;
     }
 
     /**
-     * Get time of when last inactive occurred.
-     *
-     * @return {Date} when last inactive occurred
-     */
-    public getLastEnterInactive(): Date | null {
-        return this.lastEnterInactive;
-    }
-
-    /**
      * Get active time in seconds.
      *
-     * @return {number} total active seconds
+     * @return total active seconds
      */
     public getTimeForActiveInSeconds(): number {
-        // @ts-ignore
-        return ((this.lastEnterInactive?.getTime() - this.lastEnterActive?.getTime()) / 1000);
+        if (!this.lastEnterInactive || !this.lastEnterActive) {
+            return 0;
+        }
+
+        return Math.max((this.lastEnterInactive.getTime() - this.lastEnterActive.getTime()) / 1000, 0);
     }
 
     /**
      * Get inactive time in seconds.
      *
-     * @return {number} total inactive seconds
+     * @return total inactive seconds
      */
     public getTimeForInactiveInSeconds(): number {
-        if (this.lastEnterInactive == null) {
+        if (!this.lastEnterInactive) {
             return 0;
         }
 
-        return ((new Date().getTime() - this.lastEnterInactive.getTime()) / 1000);
+        return Math.max((new Date().getTime() - this.lastEnterInactive.getTime()) / 1000, 0);
     }
 
     /**
