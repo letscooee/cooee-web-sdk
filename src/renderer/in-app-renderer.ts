@@ -29,6 +29,12 @@ export class InAppRenderer {
     private safeHTTP: SafeHttpService;
 
     /**
+     * This is private variable to make event listener unique for multiple InApps
+     * @private
+     */
+    private readonly listener: EventListener;
+
+    /**
      * Public constructor.
      *
      * @param parent Place the in-app in the given parent instead of the document.body.
@@ -37,6 +43,7 @@ export class InAppRenderer {
         this.parent = parent ?? document.body;
         this.renderer.setParentContainer(this.parent);
         this.safeHTTP = SafeHttpService.getInstance();
+        this.listener = () => this.screenResized();
     }
 
     /**
@@ -57,26 +64,36 @@ export class InAppRenderer {
             this.ian.overrideForMobileView();
         }
 
-        this.renderer.calculateScalingFactor(this.ian);
-
         if (triggerData.shouldDelay()) {
             window.setTimeout(() => {
-                this.startRendering(triggerData);
+                this.startRendering(triggerData, true);
             }, triggerData.getDelaySeconds());
         } else {
-            this.startRendering(triggerData);
+            this.startRendering(triggerData, true);
         }
     }
 
-    private startRendering(triggerData: TriggerData): void {
+    /**
+     * Calculate scaling factor and start rending of the InApp.
+     * @param triggerData {@link TriggerData} to be displayed.
+     * @param shouldSendEvent flag to send <b>CE Trigger Displayed</b> event
+     * @private
+     */
+    private startRendering(triggerData: TriggerData, shouldSendEvent?: boolean): void {
+        this.renderer.calculateScalingFactor(this.ian);
+
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
 
         try {
             this.renderContainer(this.triggerContext);
 
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerData);
-            SafeHttpService.getInstance().sendEvent(event);
+            if (shouldSendEvent) {
+                const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerData);
+                SafeHttpService.getInstance().sendEvent(event);
+
+                window.addEventListener('resize', this.listener);
+            }
         } catch (e) {
             Log.error(e);
         }
@@ -139,10 +156,33 @@ export class InAppRenderer {
 
         const animation = this.containerHTMLElement.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
         animation.onfinish = () => {
-            Renderer.get().removeInApp(this.triggerContext);
+            this.removeInApp();
             const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
             this.safeHTTP.sendEvent(event);
+
+            /**
+             * Removes event listener only for this instance of the InApp
+             */
+            window.removeEventListener('resize', this.listener);
         };
+    }
+
+    /**
+     * Called when window gets resized.
+     * <p>This function removes currently displaying InApp and re-render same InApp without sending an event
+     * @private
+     */
+    private screenResized(): void {
+        this.removeInApp();
+        this.startRendering(this.triggerContext.triggerData);
+    }
+
+    /**
+     * Removes currently displaying trigger from UI
+     * @private
+     */
+    private removeInApp(): void {
+        Renderer.get().removeInApp(this.triggerContext);
     }
 
 }
