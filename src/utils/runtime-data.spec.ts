@@ -13,7 +13,7 @@ describe('RuntimeData', () => {
                 runtimeData.lastEnterActive = null;
                 // @ts-ignore
                 runtimeData.lastEnterInactive = null;
-            }.bind(runtimeData));
+            });
 
             runtimeData.setInactive();
             expect(runtimeData.getTimeForActiveInSeconds()).toBe(0);
@@ -27,7 +27,7 @@ describe('RuntimeData', () => {
             spyOn(runtimeData, 'setInactive').and.callFake(function () {
                 // @ts-ignore
                 runtimeData.lastEnterInactive = inactiveDate;
-            }.bind(runtimeData));
+            });
 
             runtimeData.setInactive();
             expect(runtimeData.getTimeForActiveInSeconds()).toBe(0);
@@ -42,7 +42,7 @@ describe('RuntimeData', () => {
             spyOn(runtimeData, 'setInactive').and.callFake(function () {
                 // @ts-ignore
                 runtimeData.lastEnterInactive = inactiveDate;
-            }.bind(runtimeData));
+            });
 
             runtimeData.setInactive();
             expect(runtimeData.getTimeForInactiveInSeconds()).toBe(0);
