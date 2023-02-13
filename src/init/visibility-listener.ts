@@ -56,9 +56,7 @@ export class VisibilityListener {
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
-        const event = new Event(Constants.EVENT_APP_FOREGROUND, props);
-        event.deviceProps = await new DevicePropertiesCollector().get();
-        this.apiService.sendEvent(event);
+        this.apiService.sendEvent(new Event(Constants.EVENT_APP_FOREGROUND, props));
     }
 
     /**
