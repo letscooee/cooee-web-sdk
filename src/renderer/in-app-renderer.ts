@@ -29,6 +29,13 @@ export class InAppRenderer {
     private safeHTTP: SafeHttpService;
 
     /**
+     * This is private variable to make event listener unique for multiple in-apps.
+     *
+     * @private
+     */
+    private readonly resizeListener: EventListener;
+
+    /**
      * Public constructor.
      *
      * @param parent Place the in-app in the given parent instead of the document.body.
@@ -37,6 +44,7 @@ export class InAppRenderer {
         this.parent = parent ?? document.body;
         this.renderer.setParentContainer(this.parent);
         this.safeHTTP = SafeHttpService.getInstance();
+        this.resizeListener = () => this.screenResized();
     }
 
     /**
@@ -57,29 +65,59 @@ export class InAppRenderer {
             this.ian.overrideForMobileView();
         }
 
-        this.renderer.calculateScalingFactor(this.ian);
-
         if (triggerData.shouldDelay()) {
             window.setTimeout(() => {
-                this.startRendering(triggerData);
+                this.startRenderingOnce();
             }, triggerData.getDelaySeconds());
         } else {
-            this.startRendering(triggerData);
+            this.startRenderingOnce();
         }
     }
 
-    private startRendering(triggerData: TriggerData): void {
+    /**
+     * Start rendering the in-app and register the window resize event.
+     *
+     * @private
+     */
+    private startRenderingOnce(): void {
+        try {
+            this.startRendering();
+        } catch (e) {
+            return;
+        }
+
+        this.sendTriggerDisplayed();
+        window.addEventListener('resize', this.resizeListener);
+    }
+
+    /**
+     * Calculate scaling factor and start rending of the InApp. This method may be called multiple times if the
+     * window screen is resized.
+     *
+     * @private
+     */
+    private startRendering(): void {
+        this.renderer.calculateScalingFactor(this.ian);
+
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
             .render() as HTMLDivElement;
 
         try {
             this.renderContainer(this.triggerContext);
-
-            const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerData);
-            SafeHttpService.getInstance().sendEvent(event);
         } catch (e) {
             Log.error(e);
+            throw e;
         }
+    }
+
+    private sendTriggerDisplayed(): void {
+        const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, this.triggerContext.triggerData);
+        this.safeHTTP.sendEvent(event);
+    }
+
+    private sendTriggerClosed(eventProps: Record<string, any>): void {
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
+        this.safeHTTP.sendEvent(event);
     }
 
     private addEnterAnimation(anim: Animation): void {
@@ -139,10 +177,32 @@ export class InAppRenderer {
 
         const animation = this.containerHTMLElement.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
         animation.onfinish = () => {
-            Renderer.get().removeInApp(this.triggerContext);
-            const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
-            this.safeHTTP.sendEvent(event);
+            this.removeInApp();
+            this.sendTriggerClosed(eventProps);
+
+            /**
+             * Removes event listener only for this instance of the InApp
+             */
+            window.removeEventListener('resize', this.resizeListener);
         };
+    }
+
+    /**
+     * Called when window gets resized.
+     * <p>This function removes currently displaying InApp and re-render same InApp without sending an event
+     * @private
+     */
+    private screenResized(): void {
+        this.removeInApp();
+        this.startRendering();
+    }
+
+    /**
+     * Removes currently displaying trigger from UI
+     * @private
+     */
+    private removeInApp(): void {
+        Renderer.get().removeInApp(this.triggerContext);
     }
 
 }
