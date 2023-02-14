@@ -29,10 +29,11 @@ export class InAppRenderer {
     private safeHTTP: SafeHttpService;
 
     /**
-     * This is private variable to make event listener unique for multiple InApps
+     * This is private variable to make event listener unique for multiple in-apps.
+     *
      * @private
      */
-    private readonly listener: EventListener;
+    private readonly resizeListener: EventListener;
 
     /**
      * Public constructor.
@@ -43,7 +44,7 @@ export class InAppRenderer {
         this.parent = parent ?? document.body;
         this.renderer.setParentContainer(this.parent);
         this.safeHTTP = SafeHttpService.getInstance();
-        this.listener = () => this.screenResized();
+        this.resizeListener = () => this.screenResized();
     }
 
     /**
@@ -66,20 +67,36 @@ export class InAppRenderer {
 
         if (triggerData.shouldDelay()) {
             window.setTimeout(() => {
-                this.startRendering(triggerData, true);
+                this.startRenderingOnce();
             }, triggerData.getDelaySeconds());
         } else {
-            this.startRendering(triggerData, true);
+            this.startRenderingOnce();
         }
     }
 
     /**
-     * Calculate scaling factor and start rending of the InApp.
-     * @param triggerData {@link TriggerData} to be displayed.
-     * @param shouldSendEvent flag to send <b>CE Trigger Displayed</b> event
+     * Start rendering the in-app and register the window resize event.
+     *
      * @private
      */
-    private startRendering(triggerData: TriggerData, shouldSendEvent?: boolean): void {
+    private startRenderingOnce(): void {
+        try {
+            this.startRendering();
+        } catch (e) {
+            return;
+        }
+
+        this.sendTriggerDisplayed();
+        window.addEventListener('resize', this.resizeListener);
+    }
+
+    /**
+     * Calculate scaling factor and start rending of the InApp. This method may be called multiple times if the
+     * window screen is resized.
+     *
+     * @private
+     */
+    private startRendering(): void {
         this.renderer.calculateScalingFactor(this.ian);
 
         this.rootContainer = new RootContainerRenderer(this.parent, this.ian, this.triggerContext)
@@ -87,16 +104,20 @@ export class InAppRenderer {
 
         try {
             this.renderContainer(this.triggerContext);
-
-            if (shouldSendEvent) {
-                const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, triggerData);
-                SafeHttpService.getInstance().sendEvent(event);
-
-                window.addEventListener('resize', this.listener);
-            }
         } catch (e) {
             Log.error(e);
+            throw e;
         }
+    }
+
+    private sendTriggerDisplayed(): void {
+        const event: Event = new Event(Constants.EVENT_TRIGGER_DISPLAYED, {}, this.triggerContext.triggerData);
+        this.safeHTTP.sendEvent(event);
+    }
+
+    private sendTriggerClosed(eventProps: Record<string, any>): void {
+        const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
+        this.safeHTTP.sendEvent(event);
     }
 
     private addEnterAnimation(anim: Animation): void {
@@ -157,13 +178,12 @@ export class InAppRenderer {
         const animation = this.containerHTMLElement.animate(closeAnimation, {duration: 500, easing: 'ease-in-out'});
         animation.onfinish = () => {
             this.removeInApp();
-            const event = new Event(Constants.EVENT_TRIGGER_CLOSED, eventProps, this.triggerContext.triggerData);
-            this.safeHTTP.sendEvent(event);
+            this.sendTriggerClosed(eventProps);
 
             /**
              * Removes event listener only for this instance of the InApp
              */
-            window.removeEventListener('resize', this.listener);
+            window.removeEventListener('resize', this.resizeListener);
         };
     }
 
@@ -174,7 +194,7 @@ export class InAppRenderer {
      */
     private screenResized(): void {
         this.removeInApp();
-        this.startRendering(this.triggerContext.triggerData);
+        this.startRendering();
     }
 
     /**
