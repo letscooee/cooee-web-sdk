@@ -3,6 +3,7 @@ import {Event} from '../models/event/event';
 import {Animation} from '../models/trigger/blocks/Animation';
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {ScreenPosition} from '../models/trigger/inapp/inapp-view';
 import {TriggerContext} from '../models/trigger/trigger-context';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {FontService} from '../services/font.service';
@@ -21,12 +22,13 @@ import {Renderer} from './renderer';
 export class InAppRenderer {
 
     private readonly renderer: Renderer = Renderer.get();
-    private readonly parent: HTMLElement;
+    private readonly safeHTTP: SafeHttpService;
+
+    private parent: HTMLElement;
     private rootContainer: HTMLDivElement;
     private containerHTMLElement: HTMLElement;
     private ian: InAppTrigger;
     private triggerContext: TriggerContext;
-    private safeHTTP: SafeHttpService;
 
     /**
      * This is private variable to make event listener unique for multiple in-apps.
@@ -41,18 +43,22 @@ export class InAppRenderer {
      * @param parent Place the in-app in the given parent instead of the document.body.
      */
     constructor(parent?: HTMLElement) {
-        this.parent = parent ?? document.body;
-        this.renderer.setParentContainer(this.parent);
         this.safeHTTP = SafeHttpService.getInstance();
         this.resizeListener = () => this.screenResized();
+        this.setParentContainer(parent);
+    }
+
+    setParentContainer(parent?: HTMLElement): void {
+        this.parent = parent ?? document.body;
+        this.renderer.setParentContainer(this.parent);
     }
 
     /**
      * Renders in-app trigger from payload received
-     * @param {TriggerData} triggerData {@link TriggerData}
+     * @param data The trigger data to render.
      */
-    render(triggerData: TriggerData): void {
-        triggerData = new TriggerData(triggerData);
+    render(data: Partial<TriggerData>): void {
+        const triggerData = new TriggerData(data);
 
         this.triggerContext = new TriggerContext(new Date(), triggerData);
         this.triggerContext.onClose((eventProps: Record<string, any>) => {
@@ -63,6 +69,11 @@ export class InAppRenderer {
 
         if (this.renderer.isMobile() || triggerData.previewType === 'mobile') {
             this.ian.overrideForMobileView();
+        }
+
+        if (this.ian.position === ScreenPosition.EMBEDDED && this.ian.embedded) {
+            const element = document.querySelector(this.ian.embedded) as HTMLElement;
+            this.setParentContainer(element);
         }
 
         if (triggerData.shouldDelay()) {
