@@ -41,4 +41,8 @@ export class InAppView extends BaseElement {
         }
     }
 
+    isEmbedded(): boolean {
+        return this.position === ScreenPosition.EMBEDDED && !!this.embedded;
+    }
+
 }

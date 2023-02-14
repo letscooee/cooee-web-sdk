@@ -1,5 +1,4 @@
 import {Constants} from '../constants';
-import {ScreenPosition} from '../enums';
 import {Event} from '../models/event/event';
 import {Animation} from '../models/trigger/blocks/Animation';
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
@@ -71,8 +70,8 @@ export class InAppRenderer {
             this.ian.overrideForMobileView();
         }
 
-        if (this.ian.position === ScreenPosition.EMBEDDED && this.ian.embedded) {
-            const element = document.querySelector(this.ian.embedded) as HTMLElement;
+        if (this.ian.isEmbedded()) {
+            const element = document.querySelector(`.${this.ian.embedded}`) as HTMLElement;
             this.setParentContainer(element);
         }
 

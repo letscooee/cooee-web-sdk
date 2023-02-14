@@ -1,6 +1,6 @@
-import {TriggerContext} from '../models/trigger/trigger-context';
 import UAParser from 'ua-parser-js';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {TriggerContext} from '../models/trigger/trigger-context';
 
 /**
  * Utility class for creating and rendering elements.
@@ -86,28 +86,28 @@ export class Renderer {
         const canvasHeight = inApp.cont.h;
         const spacing = inApp.spc;
 
-        let screenWidth = Renderer.get().getWidth();
-        let screenHeight = Renderer.get().getHeight();
+        let parentContainerWidth = Renderer.get().getWidth();
+        let parentContainerHeight = Renderer.get().getHeight();
 
         if (max) {
-            screenWidth = Math.min(screenWidth, max);
-            screenHeight = Math.min(screenHeight, max);
+            parentContainerWidth = parentContainerWidth ? Math.min(parentContainerWidth, max) : max;
+            parentContainerHeight = parentContainerHeight ? Math.min(parentContainerHeight, max) : max;
         }
 
-        if (!screenHeight) {
+        if (!parentContainerHeight) {
             // Do not calculate scaling factor
             return;
         }
 
         // In order to add padding at all four sides of the wrapper, we are subtracting the padding size from the
         // screen size so that the in-app can be resized accordingly
-        screenWidth -= spacing.getHorizontal();
-        screenHeight -= spacing.getVertical();
+        parentContainerWidth -= spacing.getHorizontal();
+        parentContainerHeight -= spacing.getVertical();
 
-        if (screenWidth / screenHeight < canvasWidth / canvasHeight) {
-            this.scalingFactor = screenWidth / canvasWidth;
+        if (parentContainerWidth / parentContainerHeight < canvasWidth / canvasHeight) {
+            this.scalingFactor = parentContainerWidth / canvasWidth;
         } else {
-            this.scalingFactor = screenHeight / canvasHeight;
+            this.scalingFactor = parentContainerHeight / canvasHeight;
         }
 
         // The in-app should not scale beyond 100%
@@ -184,6 +184,10 @@ export class Renderer {
      */
     setParentContainer(container: HTMLElement): void {
         this.parentContainer = container;
+
+        if (this.parentContainer && this.isParentNotBody()) {
+            this.setStyle(this.parentContainer, 'position', 'relative');
+        }
     }
 
     /**

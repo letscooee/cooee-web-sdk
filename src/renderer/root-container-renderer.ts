@@ -1,8 +1,8 @@
-import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {BlockProcessor} from './block-processor';
-import {TriggerContext} from '../models/trigger/trigger-context';
 import {Constants} from '../constants';
 import {ClickActionExecutor} from '../models/trigger/action/click-action-executor';
+import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
+import {TriggerContext} from '../models/trigger/trigger-context';
+import {BlockProcessor} from './block-processor';
 
 /**
  * Renders root container.
@@ -88,6 +88,11 @@ export class RootContainerRenderer extends BlockProcessor<InAppTrigger> {
 
     protected override processPositionBlock(): void {
         if (this.renderer.isParentNotBody()) {
+            if (this.triggerContext.triggerData.ian?.isEmbedded()) {
+                this.renderer.setStyle(this.inappHTMLEl, 'position', 'block');
+                return;
+            }
+
             this.renderer.setStyle(this.inappHTMLEl, 'position', 'absolute');
         } else {
             this.renderer.setStyle(this.inappHTMLEl, 'position', 'fixed');
