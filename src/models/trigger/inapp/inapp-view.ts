@@ -45,4 +45,8 @@ export class InAppView extends BaseElement {
         return this.position === ScreenPosition.EMBEDDED && !!this.embedded;
     }
 
+    getEmbeddedSelector(): string {
+        return `.letscooee-engagement.container-${this.embedded}`;
+    }
+
 }

@@ -71,7 +71,7 @@ export class InAppRenderer {
         }
 
         if (this.ian.isEmbedded()) {
-            const element = document.querySelector(`.${this.ian.embedded}`) as HTMLElement;
+            const element = document.querySelector(this.ian.getEmbeddedSelector()) as HTMLElement;
             this.setParentContainer(element);
         }
 
