@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.2.0
+
+1. Feat: Ability to embed in-app within an element.
+2. Feat: Resize in-app on window resize.
+3. Chore: Do not send device props in foreground event.
+4. Fix: Prevent sending negative durations.
+
 ## 1.1.0
 
 1. Feat: Store GA's clientId in server for GA integration.
