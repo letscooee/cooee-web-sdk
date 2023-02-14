@@ -14,7 +14,7 @@ export class Renderer {
     private static _instance: Renderer;
 
     private parentContainer: HTMLElement;
-    private scalingFactor: number;
+    private scalingFactor: number = 1;
     private readonly doc: Document = document;
     private readonly parser = new UAParser();
 
@@ -92,6 +92,11 @@ export class Renderer {
         if (max) {
             screenWidth = Math.min(screenWidth, max);
             screenHeight = Math.min(screenHeight, max);
+        }
+
+        if (!screenHeight) {
+            // Do not calculate scaling factor
+            return;
         }
 
         // In order to add padding at all four sides of the wrapper, we are subtracting the padding size from the
