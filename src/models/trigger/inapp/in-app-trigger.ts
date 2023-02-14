@@ -168,6 +168,8 @@ export class InAppTrigger extends InAppView {
         this.bg = this.mob.bg ?? this.bg;
         this.spc = this.mob.spc ?? this.spc;
         this.anim = this.mob.anim ?? this.anim;
+        this.position = this.mob.position ?? this.position;
+        this.embedded = this.mob.embedded ?? this.embedded;
     }
 
 }

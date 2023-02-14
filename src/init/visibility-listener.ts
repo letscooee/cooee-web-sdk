@@ -1,11 +1,10 @@
 import {Constants} from '../constants';
-import {SessionManager} from '../session/session-manager';
-import {NewSessionExecutor} from '../session/new-session-executor';
 import {Event} from '../models/event/event';
-import {DevicePropertiesCollector} from '../device/properties-collector';
 import {SafeHttpService} from '../services/safe-http-service';
-import {RuntimeData} from '../utils/runtime-data';
+import {NewSessionExecutor} from '../session/new-session-executor';
+import {SessionManager} from '../session/session-manager';
 import {Props} from '../types';
+import {RuntimeData} from '../utils/runtime-data';
 
 /**
  * Listen for the visibility of the document. It is useful to know if the document is in the background or an
@@ -56,9 +55,7 @@ export class VisibilityListener {
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
-        const event = new Event(Constants.EVENT_APP_FOREGROUND, props);
-        event.deviceProps = await new DevicePropertiesCollector().get();
-        this.apiService.sendEvent(event);
+        this.apiService.sendEvent(new Event(Constants.EVENT_APP_FOREGROUND, props));
     }
 
     /**

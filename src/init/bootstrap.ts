@@ -35,13 +35,13 @@ export class Bootstrap {
         `;
 
         let text = '\n';
-        text += '📣 Engage every customer uniquely\n';
-        text += '📈 Incremental increase in online sales\n';
-        text += '🤖 AI-powered creative automation via a Canva style editor\n';
+        text += '📣 Boost your conversions\n';
+        text += '📈 Increase purchases & repeat purchases\n';
+        text += '🤖 AI-powered creative automation via an easy to use Canva style editor\n';
         text += '\n\n';
         text += 'Learn more: https://www.letscooee.com\n';
 
-        console.group('%c 1-to-1 personalised notifications powered by Cooee ', styles);
+        console.group('%c 1-to-1 personalised engagement for ecommerce success powered by Cooee ', styles);
         console.log(`%c${text}`, 'font-size: 13px; line-height: 1.8;');
         console.groupEnd();
     }

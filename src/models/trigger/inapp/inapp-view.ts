@@ -1,8 +1,9 @@
+import {Constants} from '../../../constants';
+import {ScreenPosition} from '../../../enums';
+import {Spacing} from '../blocks';
+import {Animation} from '../blocks/Animation';
 import {BaseElement} from '../elements';
 import {ContainerOrigin} from './in-app-trigger';
-import {Spacing} from '../blocks';
-import {Constants} from '../../../constants';
-import {Animation} from '../blocks/Animation';
 
 /**
  * Holds InApp customisation data
@@ -16,6 +17,8 @@ export class InAppView extends BaseElement {
     max: number;
     cover: boolean;
     anim: Animation;
+    embedded: string | undefined;
+    position: ScreenPosition;
 
     constructor(data: Partial<InAppView>) {
         data = data ?? {};
@@ -25,6 +28,8 @@ export class InAppView extends BaseElement {
         this.max = data.max as number;
         this.cover = data.cover ?? true;
         this.anim = new Animation(data.anim);
+        this.embedded = data.embedded;
+        this.position = data.position ?? ScreenPosition.ABOVE_PAGE;
 
         if (!this.spc) {
             this.spc = new Spacing({
@@ -34,6 +39,10 @@ export class InAppView extends BaseElement {
                 pb: Constants.IN_APP_DEFAULT_PADDING,
             });
         }
+    }
+
+    isEmbedded(): boolean {
+        return this.position === ScreenPosition.EMBEDDED && !!this.embedded;
     }
 
 }
