@@ -1,9 +1,9 @@
 import {Constants} from '../constants';
+import {ScreenPosition} from '../enums';
 import {Event} from '../models/event/event';
 import {Animation} from '../models/trigger/blocks/Animation';
 import {BaseElement, ImageElement, ShapeElement, TextElement} from '../models/trigger/elements/';
 import {InAppTrigger} from '../models/trigger/inapp/in-app-trigger';
-import {ScreenPosition} from '../models/trigger/inapp/inapp-view';
 import {TriggerContext} from '../models/trigger/trigger-context';
 import {TriggerData} from '../models/trigger/trigger-data';
 import {FontService} from '../services/font.service';

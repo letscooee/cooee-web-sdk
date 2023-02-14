@@ -1,4 +1,5 @@
 import {Constants} from '../../../constants';
+import {ScreenPosition} from '../../../enums';
 import {Spacing} from '../blocks';
 import {Animation} from '../blocks/Animation';
 import {BaseElement} from '../elements';
@@ -39,12 +40,5 @@ export class InAppView extends BaseElement {
             });
         }
     }
-
-}
-
-export enum ScreenPosition {
-
-    ABOVE_PAGE = 1,
-    EMBEDDED = 2,
 
 }
