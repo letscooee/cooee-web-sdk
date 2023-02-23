@@ -60,6 +60,7 @@
         "detectincognitojs": "^1.1.2",
         "hex-rgb": "^5.0.0",
         "hex-to-rgba": "^2.0.1",
+        "js-logger": "^1.6.1",
         "rxjs": "^7.3.0",
         "stream-browserify": "^3.0.0",
         "ua-parser-js": "^1.0.32",
