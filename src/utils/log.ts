@@ -1,4 +1,4 @@
-import {Constants} from '../constants';
+import Logger from 'js-logger';
 
 /**
  * Utility class for printing different log messages.
@@ -14,7 +14,7 @@ export class Log {
      * @param {any} messages
      */
     static log(...messages: any): void {
-        console.log(Constants.LOG_PREFIX, ':', ...messages);
+        Logger.info(...messages);
     }
 
     /**
@@ -23,7 +23,7 @@ export class Log {
      * @param {any} messages
      */
     static error(...messages: any): void {
-        console.error(Constants.LOG_PREFIX, ':', ...messages);
+        Logger.error(...messages);
     }
 
     /**
@@ -32,7 +32,7 @@ export class Log {
      * @param {any} messages
      */
     static warning(...messages: any): void {
-        console.warn(Constants.LOG_PREFIX, ':', ...messages);
+        Logger.warn(...messages);
     }
 
 }
