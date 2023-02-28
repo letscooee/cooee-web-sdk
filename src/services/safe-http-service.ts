@@ -1,10 +1,10 @@
 import {Event} from '../models/event/event';
-import {SessionManager} from '../session/session-manager';
 import {NewSessionExecutor} from '../session/new-session-executor';
-import {HttpAPIService} from './http-api.service';
+import {SessionManager} from '../session/session-manager';
 import {Props} from '../types';
-import {RuntimeData} from '../utils/runtime-data';
 import {ReferralUtils} from '../utils/referral-utils';
+import {RuntimeData} from '../utils/runtime-data';
+import {HttpAPIService} from './http-api.service';
 
 /**
  * A safe HTTP service which queues the data till the sdk token is fetched via call or from storage.
@@ -49,17 +49,6 @@ export class SafeHttpService {
         NewSessionExecutor.replaySubject.subscribe(() => {
             this.addEventData(event);
             this.httpApiService.sendEvent(event);
-        });
-    }
-
-    /**
-     * Queue shopify data call till the sdk token is fetch for safe call.
-     *
-     * @param pastOrdersData
-     */
-    public sendPastOrders(pastOrdersData: Record<string, any>[]): void {
-        NewSessionExecutor.replaySubject.subscribe(() => {
-            this.httpApiService.sendPastOrders(pastOrdersData);
         });
     }
 

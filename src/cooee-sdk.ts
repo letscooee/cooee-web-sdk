@@ -127,27 +127,6 @@ export default class CooeeSDK {
         this.INSTANCE.safeHttpCallService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, props));
     }
 
-    /**
-     * Send shopify past order data to the server
-     *
-     * @param pastOrdersData
-     */
-    static sendShopifyPastOrders(pastOrdersData: Record<string, any>[]): void {
-        // Check if the website is Shopify store
-        if (!(window.Shopify && window.Shopify.shop)) {
-            Log.error('This is not a Shopify store');
-            return;
-        }
-
-        // Check if data is already sent
-        if (LocalStorageHelper.getBoolean(Constants.STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT, false)) {
-            // TODO: Should we show log message?
-            return;
-        }
-
-        this.INSTANCE.safeHttpCallService.sendPastOrders(pastOrdersData);
-    }
-
     static logout(): void {
         this.INSTANCE.safeHttpCallService.logout();
     }

@@ -98,26 +98,6 @@ export class HttpAPIService {
     }
 
     /**
-     * Send shopify past order data to the server.
-     *
-     * @param pastOrdersData past order data of the user
-     */
-    sendPastOrders(pastOrdersData: Record<string, any>[]): void {
-        const headers = this.getDefaultHeaders();
-
-        const body = {pastOrdersData};
-
-        this.doHTTP<EventResponse>('POST', '/v1/event/trackPastOrders', headers, body)
-            .then(() => {
-                Log.log('Sent Past Orders');
-                LocalStorageHelper.setBoolean(Constants.STORAGE_SHOPIFY_PAST_ORDERS_DATA_SENT, true);
-            })
-            .catch((error) => {
-                Log.error('Error sending event', error);
-            });
-    }
-
-    /**
      * Create/Send user data/property call to the server.
      *
      * @param {Props} data user data and property.
