@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.2
+
+1. Chore: Print SDK version in logs.
+
 ## 1.2.1
 
 1. Chore: Use configurable logger.
