@@ -47,7 +47,7 @@ export class Log {
             // @ts-ignore
             Logger.setLevel(Logger[localStorage.cooeeLogLevel]);
         } else {
-            Logger.setLevel(Logger.ERROR);
+            Logger.setLevel(Logger.OFF);
         }
     }
 
