@@ -1,4 +1,5 @@
 import Logger from 'js-logger';
+import {Constants} from '../constants';
 
 /**
  * Utility class for printing different log messages.
@@ -33,6 +34,21 @@ export class Log {
      */
     static warning(...messages: any): void {
         Logger.warn(...messages);
+    }
+
+    static configure(): void {
+        Logger.useDefaults({
+            formatter: function (messages) {
+                messages.unshift(`${Constants.LOG_PREFIX}:`);
+            },
+        });
+
+        if (localStorage.cooeeLogLevel) {
+            // @ts-ignore
+            Logger.setLevel(Logger[localStorage.cooeeLogLevel]);
+        } else {
+            Logger.setLevel(Logger.ERROR);
+        }
     }
 
 }

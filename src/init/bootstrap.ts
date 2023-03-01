@@ -1,8 +1,7 @@
+import {Log} from '../utils/log';
 import {CommonListeners} from './common-listeners';
 import {ObjectMeddler} from './object-meddler';
 import {VisibilityListener} from './visibility-listener';
-import Logger from 'js-logger';
-import {Constants} from '../constants';
 
 /**
  * A one time initializer class which initialises the SDK. This is used internally by the SDK
@@ -18,28 +17,13 @@ export class Bootstrap {
      */
     init(): void {
         this.logBrand();
-        this.configureLogger();
         new VisibilityListener().listen();
         // @ts-ignore
         if (!window['disableLegacyCooeeScreenView']) {
             new CommonListeners().listen();
         }
         new ObjectMeddler().meddle();
-    }
-
-    private configureLogger(): void {
-        Logger.useDefaults({
-            formatter: function (messages) {
-                messages.unshift(`${Constants.LOG_PREFIX}:`);
-            },
-        });
-
-        if (localStorage.cooeeLogLevel) {
-            // @ts-ignore
-            Logger.setLevel(Logger[localStorage.cooeeLogLevel]);
-        } else {
-            Logger.setLevel(Logger.ERROR);
-        }
+        Log.configure();
     }
 
     private logBrand(): void {
