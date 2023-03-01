@@ -39,7 +39,7 @@ export class Log {
     static configure(): void {
         Logger.useDefaults({
             formatter: function (messages) {
-                messages.unshift(`${Constants.LOG_PREFIX}:`);
+                messages.unshift(`${Constants.LOG_PREFIX} (v${Constants.SDK_VERSION}):`);
             },
         });
 

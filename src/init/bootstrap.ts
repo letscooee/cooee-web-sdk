@@ -1,3 +1,4 @@
+import {Constants} from '../constants';
 import {Log} from '../utils/log';
 import {CommonListeners} from './common-listeners';
 import {ObjectMeddler} from './object-meddler';
@@ -41,7 +42,7 @@ export class Bootstrap {
         text += '📈 Increase purchases & repeat purchases\n';
         text += '🤖 AI-powered creative automation via an easy to use Canva style editor\n';
         text += '\n\n';
-        text += 'Learn more: https://www.letscooee.com\n';
+        text += `Learn more: https://www.letscooee.com\nCooee SDK: v${Constants.SDK_VERSION}`;
 
         console.group('%c 1-to-1 personalised engagement for ecommerce success powered by Cooee ', styles);
         console.log(`%c${text}`, 'font-size: 13px; line-height: 1.8;');
