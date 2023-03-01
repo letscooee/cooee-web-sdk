@@ -1,7 +1,7 @@
 {
     "name": "@letscooee/web-sdk",
     "description": "AI driven Personalized Notifications for Better Customer Engagement",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "scripts": {
         "lint": "eslint 'src/**'",
         "integrity": "./scripts/validate-integrity.sh",

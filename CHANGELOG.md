@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.2.1
+
+1. Chore: Use configurable logger.
+2. Chore: Remove tracking of past orders.
+
 ## 1.2.0
 
 1. Feat: Ability to embed in-app within an element.
