@@ -9,6 +9,7 @@ import {ObjectId} from 'bson';
 import {detectIncognito} from 'detectincognitojs';
 import {ReferralUtils} from '../utils/referral-utils';
 import {GAHelper} from '../models/analytics/ga-helper';
+import {ShopifyContext} from '../init/shopify-context';
 
 /**
  * Service that deals with the user/device authentication.
@@ -25,6 +26,7 @@ export class UserAuthService {
     private sdkToken: string = '';
     private userID: string = '';
     private appID: string = '';
+    private shop: string | undefined = '';
 
     /**
      * Private constructor to make this class singleton.
@@ -46,11 +48,12 @@ export class UserAuthService {
     /**
      * Initialize the service with credentials to be sent on http call.
      *
-     * @param {string} appID provided to client
+     * @param data
      * @return {Promise} to confirm token is fetched
      */
-    init(appID: string): Promise<void> {
-        this.appID = appID;
+    init(data: Record<string, any>): Promise<void> {
+        this.appID = data.appID;
+        this.shop = ShopifyContext.getShopName();
 
         return this.acquireSDKToken();
     }
@@ -101,6 +104,10 @@ export class UserAuthService {
 
         LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
         LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
+
+        if (data.appID) {
+            LocalStorageHelper.setString(Constants.STORAGE_APP_ID, data.appID);
+        }
     }
 
     /**
@@ -174,6 +181,7 @@ export class UserAuthService {
 
         return new DeviceAuthRequest(
             this.appID,
+            this.shop,
             this.getOrCreateUUID(),
             props,
         );

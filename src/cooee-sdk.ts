@@ -40,16 +40,18 @@ export default class CooeeSDK {
     /**
      * Initialize the SDK with credentials.
      *
-     * @param {string} appID total active seconds
+     * @param data
      */
-    static init(appID: string): void {
+    static init(data: Record<string, any>): void {
+        let {appID, shop} = data;
         appID = appID?.trim();
-        if (!appID || appID === 'null' || appID === 'undefined' || appID.length !== 24) {
-            Log.warning('Cooee App ID is not configured');
+        if ((!appID || appID === 'null' || appID === 'undefined' || appID.length !== 24) &&
+            (!shop || shop === 'null' || shop === 'undefined')) {
+            Log.warning('Cooee App ID or Shop name is not configured');
             return;
         }
 
-        this.INSTANCE.newSessionExecutor.init(appID);
+        this.INSTANCE.newSessionExecutor.init(data);
         LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
     }
 

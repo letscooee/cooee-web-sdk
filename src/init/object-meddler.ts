@@ -122,9 +122,9 @@ export class ObjectMeddler {
         if (!data) return;
 
         const keys = Object.keys(data);
-        if (keys.includes('appID')) {
+        if (keys.includes('appID') || keys.includes('shop')) {
             this.appIDReceived = true;
-            CooeeSDK.init(data.appID);
+            CooeeSDK.init(data);
         } else if (keys.includes('appVersion')) {
             CooeeSDK.setWebAppVersion(data.appVersion);
         } else if (keys.includes('debug')) {

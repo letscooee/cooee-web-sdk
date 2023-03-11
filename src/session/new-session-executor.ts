@@ -26,15 +26,15 @@ export class NewSessionExecutor {
     /**
      * Initialize the SDK using credentials.
      *
-     * @param {string} appID provided to client
+     * @param data
      */
-    init(appID: string): void {
+    init(data: Record<string, any>): void {
         if (Constants.BOT_UA_REGEX.test(navigator.userAgent)) {
             Log.log('This seems to be a bot. Disabling SDK');
             return;
         }
 
-        this.userAuthService.init(appID)
+        this.userAuthService.init(data)
             .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
@@ -42,7 +42,7 @@ export class NewSessionExecutor {
             .catch(() => {
                 // Reattempt authentication in 30 seconds
                 setTimeout(() => {
-                    this.init(appID);
+                    this.init(data);
                 }, 30 * 1000);
             });
 
