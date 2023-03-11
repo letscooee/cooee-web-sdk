@@ -7,6 +7,7 @@ import {Props} from './types';
 import {LocalStorageHelper} from './utils/local-storage-helper';
 import {Log} from './utils/log';
 import {RuntimeData} from './utils/runtime-data';
+import {ShopifyContext} from './init/shopify-context';
 
 declare global {
     interface Window {
@@ -54,6 +55,11 @@ export default class CooeeSDK {
         this.INSTANCE.newSessionExecutor.init(data);
         if (appID) {
             LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
+        }
+
+        const screenName = ShopifyContext.getScreenName();
+        if (screenName) {
+            window.CooeeSDK.screen.push(screenName);
         }
     }
 
@@ -140,7 +146,7 @@ export default class CooeeSDK {
 /**
  * Self executing function to initialize the SDK.
  */
-(function (): void {
+(() => {
     if (!window.cooeeMainScriptLoaded) {
         window.cooeeMainScriptLoaded = true;
         new Bootstrap().init();
