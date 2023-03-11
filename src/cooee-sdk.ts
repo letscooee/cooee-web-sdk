@@ -52,7 +52,9 @@ export default class CooeeSDK {
         }
 
         this.INSTANCE.newSessionExecutor.init(data);
-        LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
+        if (appID) {
+            LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
+        }
     }
 
     /**

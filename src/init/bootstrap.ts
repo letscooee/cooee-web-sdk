@@ -13,6 +13,20 @@ import {VisibilityListener} from './visibility-listener';
  */
 export class Bootstrap {
 
+    static getAppIDFromScript(): string | null | undefined {
+        const scriptName = 'https://cdn.jsdelivr.net/npm/@letscooee/web-sdk/dist/sdk.min.js';
+        const scripts = document.getElementsByTagName('script');
+
+        for (let i = 0; i < scripts.length; i++) {
+            const src = scripts[i].src;
+            if (src.includes(scriptName)) {
+                const url = new URL(src);
+                console.log(url);
+                return url.searchParams.get('appID');
+            }
+        }
+    }
+
     /**
      * Initialize the document/window level workers.
      */
@@ -47,6 +61,13 @@ export class Bootstrap {
         console.group('%c 1-to-1 personalised engagement for ecommerce success powered by Cooee ', styles);
         console.log(`%c${text}`, 'font-size: 13px; line-height: 1.8;');
         console.groupEnd();
+    }
+
+    static {
+        const appID = this.getAppIDFromScript();
+        if (appID) {
+            window.Shopify.account.push({appID});
+        }
     }
 
 }
