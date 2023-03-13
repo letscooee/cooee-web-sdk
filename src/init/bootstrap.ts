@@ -20,9 +20,7 @@ export class Bootstrap {
         for (let i = 0; i < scripts.length; i++) {
             const src = scripts[i].src;
             if (src.includes(scriptName)) {
-                const url = new URL(src);
-                console.log(url);
-                return url.searchParams.get('appID');
+                return new URL(src).searchParams.get('appID');
             }
         }
     }

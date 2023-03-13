@@ -17,9 +17,9 @@ import {ShopifyContext} from '../init/shopify-context';
  * @author Abhishek Taparia
  * @version 0.0.1
  */
-export class UserAuthService {
+export class DeviceAuthService {
 
-    private static readonly INSTANCE = new UserAuthService();
+    private static readonly INSTANCE = new DeviceAuthService();
 
     private readonly apiService = HttpAPIService.getInstance();
 
@@ -41,7 +41,7 @@ export class UserAuthService {
      *
      * @return {RuntimeData}
      */
-    public static getInstance(): UserAuthService {
+    public static getInstance(): DeviceAuthService {
         return this.INSTANCE;
     }
 

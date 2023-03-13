@@ -3,7 +3,7 @@ import {Constants} from '../constants';
 import {DevicePropertiesCollector} from '../device/properties-collector';
 import {Event} from '../models/event/event';
 import {SafeHttpService} from '../services/safe-http-service';
-import {UserAuthService} from '../services/user-auth.service';
+import {DeviceAuthService} from '../services/device-auth.service';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {SessionManager} from './session-manager';
@@ -21,7 +21,7 @@ export class NewSessionExecutor {
 
     private readonly sessionManager = SessionManager.getInstance();
     private readonly safeHttpCallService = SafeHttpService.getInstance();
-    private readonly userAuthService = UserAuthService.getInstance();
+    private readonly deviceAuthService = DeviceAuthService.getInstance();
 
     /**
      * Initialize the SDK using credentials.
@@ -34,7 +34,7 @@ export class NewSessionExecutor {
             return;
         }
 
-        this.userAuthService.init(data)
+        this.deviceAuthService.init(data)
             .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
