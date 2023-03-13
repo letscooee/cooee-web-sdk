@@ -9,7 +9,6 @@ import {ObjectId} from 'bson';
 import {detectIncognito} from 'detectincognitojs';
 import {ReferralUtils} from '../utils/referral-utils';
 import {GAHelper} from '../models/analytics/ga-helper';
-import {ShopifyContext} from '../init/shopify-context';
 
 /**
  * Service that deals with the user/device authentication.
@@ -26,7 +25,7 @@ export class DeviceAuthService {
     private sdkToken: string = '';
     private userID: string = '';
     private appID: string = '';
-    private shop: string | undefined = '';
+    private shopifyShop: string | undefined = '';
 
     /**
      * Private constructor to make this class singleton.
@@ -53,7 +52,7 @@ export class DeviceAuthService {
      */
     init(data: Record<string, any>): Promise<void> {
         this.appID = data.appID;
-        this.shop = ShopifyContext.getShopName();
+        this.shopifyShop = data.shopifyShop;
 
         return this.acquireSDKToken();
     }
@@ -181,7 +180,7 @@ export class DeviceAuthService {
 
         return new DeviceAuthRequest(
             this.appID,
-            this.shop,
+            this.shopifyShop,
             this.getOrCreateUUID(),
             props,
         );

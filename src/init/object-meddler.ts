@@ -56,7 +56,7 @@ export class ObjectMeddler {
         const shopName = ShopifyContext.getShopName();
 
         if (appIDFromScript || shopName) {
-            CooeeSDK.init({appID: appIDFromScript, shop: shopName});
+            CooeeSDK.init({appID: appIDFromScript, shopifyShop: shopName});
         }
 
         const screenName = ShopifyContext.getScreenName();
@@ -129,7 +129,7 @@ export class ObjectMeddler {
         if (!data) return;
 
         const keys = Object.keys(data);
-        if (keys.includes('appID') || keys.includes('shop')) {
+        if (data.appID || data.shopifyShop) {
             this.appIDReceived = true;
             CooeeSDK.init(data);
         } else if (keys.includes('appVersion')) {
