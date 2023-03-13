@@ -1,7 +1,7 @@
-import {Constants} from '../constants';
 import CooeeSDK from '../cooee-sdk';
 import {Map} from '../types';
-import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Bootstrap} from './bootstrap';
+import {ShopifyContext} from './shopify-context';
 
 /**
  * To use the Web SDK in a website where there is no build system (like NodeJS/WebPack) and where the web SDK is
@@ -52,9 +52,16 @@ export class ObjectMeddler {
         this.existingSDKObject.profile.forEach(this.processProfile.bind(this));
         this.existingSDKObject.screen.forEach(this.processScreen.bind(this));
 
-        const lastAppID = LocalStorageHelper.getString(Constants.STORAGE_APP_ID);
-        if (!this.appIDReceived && lastAppID) {
-            this.existingSDKObject.account.push({appID: lastAppID});
+        const appIDFromScript = Bootstrap.getAppIDFromScript();
+        const shopName = ShopifyContext.getShopName();
+
+        if (appIDFromScript || shopName) {
+            CooeeSDK.init({appID: appIDFromScript, shopifyShop: shopName});
+        }
+
+        const screenName = ShopifyContext.getScreenName();
+        if (screenName) {
+            CooeeSDK.setScreen(screenName);
         }
     }
 
@@ -122,9 +129,9 @@ export class ObjectMeddler {
         if (!data) return;
 
         const keys = Object.keys(data);
-        if (keys.includes('appID')) {
+        if (data.appID || data.shopifyShop) {
             this.appIDReceived = true;
-            CooeeSDK.init(data.appID);
+            CooeeSDK.init(data);
         } else if (keys.includes('appVersion')) {
             CooeeSDK.setWebAppVersion(data.appVersion);
         } else if (keys.includes('debug')) {

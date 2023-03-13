@@ -16,15 +16,16 @@ import {GAHelper} from '../models/analytics/ga-helper';
  * @author Abhishek Taparia
  * @version 0.0.1
  */
-export class UserAuthService {
+export class DeviceAuthService {
 
-    private static readonly INSTANCE = new UserAuthService();
+    private static readonly INSTANCE = new DeviceAuthService();
 
     private readonly apiService = HttpAPIService.getInstance();
 
     private sdkToken: string = '';
     private userID: string = '';
     private appID: string = '';
+    private shopifyShop: string | undefined = '';
 
     /**
      * Private constructor to make this class singleton.
@@ -39,18 +40,19 @@ export class UserAuthService {
      *
      * @return {RuntimeData}
      */
-    public static getInstance(): UserAuthService {
+    public static getInstance(): DeviceAuthService {
         return this.INSTANCE;
     }
 
     /**
      * Initialize the service with credentials to be sent on http call.
      *
-     * @param {string} appID provided to client
+     * @param data
      * @return {Promise} to confirm token is fetched
      */
-    init(appID: string): Promise<void> {
-        this.appID = appID;
+    init(data: Record<string, any>): Promise<void> {
+        this.appID = data.appID;
+        this.shopifyShop = data.shopifyShop;
 
         return this.acquireSDKToken();
     }
@@ -101,6 +103,10 @@ export class UserAuthService {
 
         LocalStorageHelper.setString(Constants.STORAGE_SDK_TOKEN, this.sdkToken);
         LocalStorageHelper.setString(Constants.STORAGE_USER_ID, this.userID);
+
+        if (data.appID) {
+            LocalStorageHelper.setString(Constants.STORAGE_APP_ID, data.appID);
+        }
     }
 
     /**
@@ -141,7 +147,7 @@ export class UserAuthService {
      * @return {Promise} to confirm token is fetched
      */
     private async getSDKTokenFromServer(): Promise<void> {
-        const userAuthRequest = await this.getUserAuthRequest();
+        const userAuthRequest = await this.getDeviceAuthRequest();
         const responseJson = this.apiService.registerDevice(userAuthRequest);
 
         try {
@@ -158,7 +164,7 @@ export class UserAuthService {
     /**
      * Get user auth request object.
      */
-    private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
+    private async getDeviceAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
         ReferralUtils.addReferralData(props);
         props['host'] = location.origin;
@@ -174,6 +180,7 @@ export class UserAuthService {
 
         return new DeviceAuthRequest(
             this.appID,
+            this.shopifyShop,
             this.getOrCreateUUID(),
             props,
         );

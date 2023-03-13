@@ -15,11 +15,13 @@ export class DeviceAuthRequest {
      * Public constructor
      *
      * @param {string} appID provided to the client.
+     * @param shopifyShop
      * @param {string} uuid UUID of the device/browser.
      * @param {Props} props Different properties collected by SDK.
      */
     constructor(
-        readonly appID: string,
+        readonly appID: string | undefined,
+        readonly shopifyShop: string | undefined,
         readonly uuid: string,
         readonly props: Props,
     ) {

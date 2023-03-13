@@ -13,6 +13,15 @@ import {VisibilityListener} from './visibility-listener';
  */
 export class Bootstrap {
 
+    static getAppIDFromScript(): string | null | undefined {
+        const src = (document.currentScript as HTMLScriptElement)?.src;
+        if (!src) {
+            return;
+        }
+
+        return new URL(src).searchParams.get('appID');
+    }
+
     /**
      * Initialize the document/window level workers.
      */
