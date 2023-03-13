@@ -7,7 +7,7 @@ import {Props} from './types';
 import {LocalStorageHelper} from './utils/local-storage-helper';
 import {Log} from './utils/log';
 import {RuntimeData} from './utils/runtime-data';
-import {ShopifyContext} from './init/shopify-context';
+import {CommonUtils} from './utils/common.utils';
 
 declare global {
     interface Window {
@@ -26,6 +26,7 @@ export default class CooeeSDK {
 
     private static readonly INSTANCE = new CooeeSDK();
 
+    private static initialized: boolean;
     private readonly runtimeData = RuntimeData.getInstance();
     private readonly safeHttpCallService = SafeHttpService.getInstance();
     private readonly newSessionExecutor = new NewSessionExecutor();
@@ -44,22 +45,22 @@ export default class CooeeSDK {
      * @param data
      */
     static init(data: Record<string, any>): void {
+        if (this.initialized) {
+            return;
+        }
+
         let {appID, shop} = data;
         appID = appID?.trim();
-        if ((!appID || appID === 'null' || appID === 'undefined' || appID.length !== 24) &&
-            (!shop || shop === 'null' || shop === 'undefined')) {
+        if ((CommonUtils.isNull(appID) || appID.length !== 24) && CommonUtils.isNull(shop)) {
             Log.warning('Cooee App ID or Shop name is not configured');
             return;
         }
 
         this.INSTANCE.newSessionExecutor.init(data);
+        this.initialized = true;
+
         if (appID) {
             LocalStorageHelper.setString(Constants.STORAGE_APP_ID, appID);
-        }
-
-        const screenName = ShopifyContext.getScreenName();
-        if (screenName) {
-            window.CooeeSDK.screen.push(screenName);
         }
     }
 
@@ -127,6 +128,11 @@ export default class CooeeSDK {
         const runtime = RuntimeData.getInstance();
 
         const previousScreen = runtime.getScreen();
+        // TODO to be deleted after 3 days of release.
+        if (screenName === previousScreen) {
+            return;
+        }
+
         runtime.setScreen(screenName);
 
         const props: Record<string, any> = {};

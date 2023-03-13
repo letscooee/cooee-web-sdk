@@ -17,28 +17,17 @@ export class ShopifyContext {
             return;
         }
 
-        const currentURL = new URL(window.location.href);
+        const path = new URL(window.location.href).pathname.slice(1);
 
-        let path = '';
-        if (currentURL.pathname[0] === '/') {
-            path = currentURL.pathname.slice(1);
-        }
-
-        if (path === '') {
+        const screenName = path.split('/')[0];
+        if (screenName === '') {
             return 'home';
-        } else if (path.split('/')[0] === 'collections') {
+        } else if (screenName === 'collections') {
             return 'collections';
-        } else if (path.split('/')[0] === 'products') {
+        } else if (screenName === 'products') {
             return 'products';
-        } else if (path.split('/')[0] === 'cart') {
+        } else if (screenName === 'cart') {
             return 'cart';
-        }
-    }
-
-    static {
-        const shop = this.getShopName();
-        if (shop) {
-            window.CooeeSDK.account.push({shop});
         }
     }
 

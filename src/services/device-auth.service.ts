@@ -148,7 +148,7 @@ export class DeviceAuthService {
      * @return {Promise} to confirm token is fetched
      */
     private async getSDKTokenFromServer(): Promise<void> {
-        const userAuthRequest = await this.getUserAuthRequest();
+        const userAuthRequest = await this.getDeviceAuthRequest();
         const responseJson = this.apiService.registerDevice(userAuthRequest);
 
         try {
@@ -165,7 +165,7 @@ export class DeviceAuthService {
     /**
      * Get user auth request object.
      */
-    private async getUserAuthRequest(): Promise<DeviceAuthRequest> {
+    private async getDeviceAuthRequest(): Promise<DeviceAuthRequest> {
         const props = await new DevicePropertiesCollector().get();
         ReferralUtils.addReferralData(props);
         props['host'] = location.origin;
