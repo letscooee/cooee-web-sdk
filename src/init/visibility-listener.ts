@@ -52,10 +52,12 @@ export class VisibilityListener {
             new NewSessionExecutor().execute();
         }
 
+        /*
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
         this.apiService.sendEvent(new Event(Constants.EVENT_APP_FOREGROUND, props));
+        */
     }
 
     /**
