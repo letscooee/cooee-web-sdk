@@ -23,9 +23,9 @@ export class ShopifyContext {
         if (screenName === '') {
             return 'home';
         } else if (screenName === 'collections') {
-            return 'collections';
+            return 'collection';
         } else if (screenName === 'products') {
-            return 'products';
+            return 'product';
         } else if (screenName === 'cart') {
             return 'cart';
         }
