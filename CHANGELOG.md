@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.2.3
+
+1. Initialize shopify automatically.
+2. Stop sending `CE Foreground` event.
+
 ## 1.2.2
 
 1. Chore: Print SDK version in logs.
