@@ -3,7 +3,7 @@
 [![GitHub version](https://badge.fury.io/gh/letscooee%2Fcooee-web-sdk.svg)](https://badge.fury.io/gh/letscooee%2Fcooee-web-sdk)
 ![NPM](https://img.shields.io/npm/l/@letscooee/web-sdk)
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/@letscooee/web-sdk)
-![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/@letscooee/web-sdk)
+[![](https://data.jsdelivr.com/v1/package/npm/@letscooee/web-sdk/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@letscooee/web-sdk)
 
 ## 👋 What is Cooee?
 
