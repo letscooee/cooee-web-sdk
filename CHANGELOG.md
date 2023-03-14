@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.4
+
+1. Fix: Send singular form of Shopify screen name.
+
 ## 1.2.3
 
 1. Initialize shopify automatically.
