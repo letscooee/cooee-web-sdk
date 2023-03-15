@@ -35,7 +35,7 @@ export class CommonListeners {
 
             if (!ticking) {
                 window.requestAnimationFrame(this.debounce(() => {
-                    this.doSomething(lastKnownScrollPosition);
+                    this.sendScroll(lastKnownScrollPosition);
                     ticking = false;
                 }, 4000));
 
@@ -44,7 +44,7 @@ export class CommonListeners {
         });
     }
 
-    doSomething(scrollPos: number): void {
+    sendScroll(scrollPos: number): void {
         const params = {
             per: this.getPercentScrolled(scrollPos),
             time: new Date().getTime() - CommonListeners.LAST_SCREEN_OR_SCROLL.getTime(),
