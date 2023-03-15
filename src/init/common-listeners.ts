@@ -11,18 +11,19 @@ import {SessionStorageHelper} from '../utils/session-storage-helper';
  */
 export class CommonListeners {
 
-    private readonly apiService = SafeHttpService.getInstance();
+    static LAST_SCREEN_OR_SCROLL: Date = new Date();
 
-    private readonly height = window.document.body.scrollHeight;
-    private readonly wHeight = window.innerHeight;
+    private readonly apiService = SafeHttpService.getInstance();
 
     /**
      * Start listing to common events.
      */
     listen(): void {
         window.onpageshow = () => {
-            this.apiService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, {'screenName': location.pathname}));
+            const event = new Event(Constants.EVENT_SCREEN_VIEW, {'screenName': location.pathname});
+            this.apiService.sendEvent(event);
             SessionStorageHelper.remove(Constants.SESSION_STORAGE_SCROLL_ID);
+            CommonListeners.LAST_SCREEN_OR_SCROLL = new Date(event.occurred);
         };
     }
 
@@ -47,13 +48,14 @@ export class CommonListeners {
         console.log(scrollPos);
         const params = {
             per: this.getPercentScrolled(scrollPos),
-            time: 0,
+            time: new Date().getTime() - CommonListeners.LAST_SCREEN_OR_SCROLL.getTime(),
         };
 
         const scrollEventID = SessionStorageHelper.getString(Constants.SESSION_STORAGE_SCROLL_ID, '');
         const event = new Event(Constants.EVENT_SCROLL, params, null, scrollEventID);
         this.apiService.sendEvent(event);
         SessionStorageHelper.setString(Constants.SESSION_STORAGE_SCROLL_ID, event.id.toHexString());
+        CommonListeners.LAST_SCREEN_OR_SCROLL = new Date(event.occurred);
     }
 
     getPercentScrolled(position: number): number {
