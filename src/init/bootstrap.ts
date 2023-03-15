@@ -1,6 +1,6 @@
 import {Constants} from '../constants';
 import {Log} from '../utils/log';
-import {CommonListeners} from './common-listeners';
+import {ScrollListener} from './scroll-listener';
 import {ObjectMeddler} from './object-meddler';
 import {VisibilityListener} from './visibility-listener';
 import {ShopifyContext} from './shopify-context';
@@ -29,13 +29,7 @@ export class Bootstrap {
     init(): void {
         this.logBrand();
         new VisibilityListener().listen();
-        const commonListeners = new CommonListeners();
-        // @ts-ignore
-        if (!window['disableLegacyCooeeScreenView']) {
-            commonListeners.listen();
-        }
-
-        commonListeners.scroll();
+        new ScrollListener().listen();
         new ObjectMeddler().meddle();
         ShopifyContext.sendCartToken();
         Log.configure();
