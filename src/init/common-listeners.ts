@@ -22,6 +22,7 @@ export class CommonListeners {
     listen(): void {
         window.onpageshow = () => {
             this.apiService.sendEvent(new Event(Constants.EVENT_SCREEN_VIEW, {'screenName': location.pathname}));
+            SessionStorageHelper.remove(Constants.SESSION_STORAGE_SCROLL_ID);
         };
     }
 
