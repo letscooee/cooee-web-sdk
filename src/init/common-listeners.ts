@@ -45,7 +45,7 @@ export class CommonListeners {
     doSomething(scrollPos: number): void {
         console.log(scrollPos);
         const params = {
-            per: 0,
+            per: this.getPercentScrolled(scrollPos),
             time: 0,
         };
 
@@ -53,6 +53,13 @@ export class CommonListeners {
         const event = new Event(Constants.EVENT_SCROLL, params, null, scrollEventID);
         this.apiService.sendEvent(event);
         SessionStorageHelper.setString(Constants.SESSION_STORAGE_SCROLL_ID, event.id.toHexString());
+    }
+
+    getPercentScrolled(position: number): number {
+        const scrollHeight = window.document.body.scrollHeight;
+        const innerHeight = window.innerHeight;
+
+        return Math.ceil((position + innerHeight) / scrollHeight * 100);
     }
 
     throttle(fn: Function, wait: number): any {
