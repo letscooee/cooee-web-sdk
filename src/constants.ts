@@ -40,6 +40,7 @@ export class Constants {
 
     // region Session Storage Keys
     static SESSION_STORAGE_TAB_OPENED: string = 'tabop';
+    static SESSION_STORAGE_SCROLL_ID: string = 'sleid';
     // endregion
 
     static IDLE_TIME_IN_SECONDS: number = 30 * 60;
@@ -58,6 +59,7 @@ export class Constants {
     static readonly EVENT_APP_BACKGROUND: string = 'CE App Background';
     static readonly EVENT_TRIGGER_DISPLAYED: string = 'CE Trigger Displayed';
     static readonly EVENT_TRIGGER_CLOSED: string = 'CE Trigger Closed';
+    static readonly EVENT_SCROLL: string = 'CE Scroll';
 
     static readonly EVENT_ADD_TO_CART: string = 'Add To Cart';
     // endregion

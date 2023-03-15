@@ -20,7 +20,7 @@ export class Event {
 
     readonly occurred: string;
 
-    private readonly id: ObjectId;
+    readonly id: ObjectId;
 
     /**
      * Public constructor
@@ -28,13 +28,15 @@ export class Event {
      * @param {string} name event name
      * @param {props} properties event properties.
      * @param triggerData trigger data.
+     * @param id
      */
     constructor(
         readonly name: string,
         readonly properties: Props = {},
-        triggerData?: TriggerData,
+        triggerData?: TriggerData | null,
+        id?: string,
     ) {
-        this.id = new ObjectId();
+        this.id = id ? new ObjectId(id) : new ObjectId();
         this.occurred = new Date().toISOString();
 
         if (triggerData) {

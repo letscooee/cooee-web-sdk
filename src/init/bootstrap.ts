@@ -29,10 +29,13 @@ export class Bootstrap {
     init(): void {
         this.logBrand();
         new VisibilityListener().listen();
+        const commonListeners = new CommonListeners();
         // @ts-ignore
         if (!window['disableLegacyCooeeScreenView']) {
-            new CommonListeners().listen();
+            commonListeners.listen();
         }
+
+        commonListeners.scroll();
         new ObjectMeddler().meddle();
         ShopifyContext.sendCartToken();
         Log.configure();
