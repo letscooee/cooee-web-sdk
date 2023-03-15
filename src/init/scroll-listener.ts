@@ -12,7 +12,7 @@ import {debounceTime, fromEvent, map} from 'rxjs';
  */
 export class ScrollListener {
 
-    static readonly DEBOUNCE_TIME = 2000; // ms
+    static readonly DEBOUNCE_TIME = 1000; // ms
     static readonly THRESHOLD = 10;
     static LAST_SCREEN_OR_SCROLL: Date = new Date();
     static LAST_PERCENT = 0;
@@ -34,7 +34,7 @@ export class ScrollListener {
         });
     }
 
-    sendScroll(percent: number | undefined): void {
+    private sendScroll(percent: number | undefined): void {
         if (percent == null) {
             return;
         }
@@ -51,16 +51,6 @@ export class ScrollListener {
         this.apiService.sendEvent(event);
         SessionStorageHelper.setString(Constants.SESSION_STORAGE_SCROLL_ID, event.id.toHexString());
         ScrollListener.LAST_SCREEN_OR_SCROLL = new Date(event.occurred);
-    }
-
-    debounce(func: Function, timeout = 300): any {
-        let timer: any;
-        return (...args: any[]) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                func.apply(this, args);
-            }, timeout);
-        };
     }
 
     private getPercentScrolled(position: number): number {
