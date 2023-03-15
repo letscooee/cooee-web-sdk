@@ -34,10 +34,10 @@ export class CommonListeners {
             lastKnownScrollPosition = window.scrollY;
 
             if (!ticking) {
-                window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(this.debounce(() => {
                     this.doSomething(lastKnownScrollPosition);
                     ticking = false;
-                });
+                }, 4000));
 
                 ticking = true;
             }
@@ -45,7 +45,6 @@ export class CommonListeners {
     }
 
     doSomething(scrollPos: number): void {
-        console.log(scrollPos);
         const params = {
             per: this.getPercentScrolled(scrollPos),
             time: new Date().getTime() - CommonListeners.LAST_SCREEN_OR_SCROLL.getTime(),
@@ -65,25 +64,7 @@ export class CommonListeners {
         return Math.ceil((position + innerHeight) / scrollHeight * 100);
     }
 
-    throttle(fn: Function, wait: number): any {
-        let time = Date.now();
-        return () => {
-            if ((time + wait - Date.now()) < 0) {
-                fn();
-                time = Date.now();
-            }
-        };
-    }
-
-    debounce(method: any, delay = 2000): void {
-        clearTimeout(method._tId);
-        method._tId = setTimeout(() => {
-            method();
-        }, delay);
-    }
-
-    debounce2(func: any, timeout = 300): any {
-        console.log('Test');
+    debounce(func: Function, timeout = 300): any {
         let timer: any;
         return (...args: any[]) => {
             clearTimeout(timer);
@@ -92,16 +73,5 @@ export class CommonListeners {
             }, timeout);
         };
     }
-
-    /*
-    debounce(fn: Function, ms = 300): Function {
-        let timeoutId: ReturnType<typeof setTimeout>;
-        return function (this: any, ...args: any[]) {
-            clearTimeout(timeoutId);
-            // eslint-disable-next-line no-invalid-this
-            timeoutId = setTimeout(() => fn.apply(this, args), ms);
-        };
-    };
-    */
 
 }
