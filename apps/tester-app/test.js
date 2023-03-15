@@ -16,6 +16,8 @@ CooeeSDK.profile.push({
     },
 });
 
+CooeeSDK.screen.push('index');
+
 document.addEventListener('onCooeeCTA', function (event) {
     const payload = event.detail;
     console.log('Payload', payload);

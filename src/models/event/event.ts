@@ -21,6 +21,7 @@ export class Event {
     readonly occurred: string;
 
     readonly id: ObjectId;
+    readonly newEvent: boolean;
 
     /**
      * Public constructor
@@ -42,6 +43,7 @@ export class Event {
         if (triggerData) {
             this.trigger = new EmbeddedTrigger(triggerData);
         }
+        this.newEvent = !id;
     }
 
 }

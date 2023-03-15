@@ -2,6 +2,7 @@ import {Event} from '../models/event/event';
 import {SafeHttpService} from '../services/safe-http-service';
 import {Constants} from '../constants';
 import {SessionStorageHelper} from '../utils/session-storage-helper';
+import {debounceTime, fromEvent, map} from 'rxjs';
 
 /**
  * Add the common listeners globally.
@@ -11,32 +12,39 @@ import {SessionStorageHelper} from '../utils/session-storage-helper';
  */
 export class ScrollListener {
 
+    static readonly DEBOUNCE_TIME = 2000; // ms
+    static readonly THRESHOLD = 10;
     static LAST_SCREEN_OR_SCROLL: Date = new Date();
+    static LAST_PERCENT = 0;
 
     private readonly apiService = SafeHttpService.getInstance();
 
     listen(): void {
-        let lastKnownScrollPosition = 0;
-        let ticking = false;
-        document.addEventListener('scroll', () => {
-            lastKnownScrollPosition = window.scrollY;
-
-            if (!ticking) {
-                window.requestAnimationFrame(this.debounce(() => {
-                    this.sendScroll(lastKnownScrollPosition);
-                    ticking = false;
-                }, 4000));
-
-                ticking = true;
-            }
+        fromEvent(window, 'scroll')
+            .pipe(
+                debounceTime(ScrollListener.DEBOUNCE_TIME),
+                map(() => {
+                    const percent = this.getPercentScrolled(window.scrollY);
+                    if (Math.abs(ScrollListener.LAST_PERCENT - percent) >= ScrollListener.THRESHOLD) {
+                        return percent;
+                    }
+                }),
+            ).subscribe((percent) => {
+            this.sendScroll(percent);
         });
     }
 
-    sendScroll(scrollPos: number): void {
+    sendScroll(percent: number | undefined): void {
+        if (percent == null) {
+            return;
+        }
+
         const params = {
-            per: this.getPercentScrolled(scrollPos),
-            time: new Date().getTime() - ScrollListener.LAST_SCREEN_OR_SCROLL.getTime(),
+            per: percent,
+            timeMS: new Date().getTime() - ScrollListener.LAST_SCREEN_OR_SCROLL.getTime(),
         };
+
+        ScrollListener.LAST_PERCENT = percent;
 
         const scrollEventID = SessionStorageHelper.getString(Constants.SESSION_STORAGE_SCROLL_ID, '');
         const event = new Event(Constants.EVENT_SCROLL, params, null, scrollEventID);
