@@ -40,14 +40,13 @@ export class ShopifyContext {
             return;
         }
 
-        let response;
+        let data;
         try {
-            response = await fetch('/cart.js');
+            data = await (await fetch('/cart.js')).json();
         } catch {
             return;
         }
 
-        const data = await response.json();
         const storedToken = LocalStorageHelper.getString(Constants.STORAGE_SHOPIFY_CART_TOKEN);
         if (data?.token && data.items?.length && data.token != storedToken) {
             // Send to Device

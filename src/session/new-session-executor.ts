@@ -35,7 +35,7 @@ export class NewSessionExecutor {
         }
 
         this.deviceAuthService.init(data)
-            .then(async () => {
+            .then(() => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
             })
