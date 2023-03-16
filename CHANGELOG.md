@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.2.5
+
+1. Feat: Track scroll event.
+2. Feat: Track shopify cart token.
+
 ## 1.2.4
 
 1. Fix: Send singular form of Shopify screen name.
