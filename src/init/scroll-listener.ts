@@ -12,26 +12,55 @@ import {debounceTime, fromEvent, map} from 'rxjs';
  */
 export class ScrollListener {
 
-    static readonly DEBOUNCE_TIME = 1000; // ms
-    static readonly THRESHOLD = 10;
-    static LAST_SCREEN_OR_SCROLL: Date = new Date();
-    static LAST_PERCENT = 0;
+    private static INSTANCE: ScrollListener;
+
+    private static readonly DEBOUNCE_TIME = 1000; // ms
+    private static readonly THRESHOLD = 10;
 
     private readonly apiService = SafeHttpService.getInstance();
+
+    private _lastScreenOrScroll: Date = new Date();
+    private lastPercent = 0;
+
+    /**
+     * Private constructor to make this class singleton.
+     * @private
+     */
+    private constructor() {
+        // This class is singleton
+    }
+
+    set lastScreenOrScroll(value: Date) {
+        this._lastScreenOrScroll = value;
+    }
+
+    /**
+     * Get instance of the class.
+     *
+     * @return {ScrollListener}
+     */
+    public static getInstance(): ScrollListener {
+        if (!this.INSTANCE) {
+            this.INSTANCE = new ScrollListener();
+        }
+
+        return this.INSTANCE;
+    }
 
     listen(): void {
         fromEvent(window, 'scroll')
             .pipe(
                 debounceTime(ScrollListener.DEBOUNCE_TIME),
                 map(() => {
-                    const percent = this.getPercentScrolled(window.scrollY);
-                    if (Math.abs(ScrollListener.LAST_PERCENT - percent) >= ScrollListener.THRESHOLD) {
+                    const percent = this.getPercentScrolledY(window.scrollY);
+                    if (Math.abs(this.lastPercent - percent) >= ScrollListener.THRESHOLD || percent === 100) {
                         return percent;
                     }
                 }),
-            ).subscribe((percent) => {
-            this.sendScroll(percent);
-        });
+            )
+            .subscribe((percent) => {
+                this.sendScroll(percent);
+            });
     }
 
     private sendScroll(percent: number | undefined): void {
@@ -40,24 +69,24 @@ export class ScrollListener {
         }
 
         const params = {
-            per: percent,
-            timeMS: new Date().getTime() - ScrollListener.LAST_SCREEN_OR_SCROLL.getTime(),
+            percent,
+            timeMS: new Date().getTime() - this._lastScreenOrScroll.getTime(),
         };
 
-        ScrollListener.LAST_PERCENT = percent;
+        this.lastPercent = percent;
 
         const scrollEventID = SessionStorageHelper.getString(Constants.SESSION_STORAGE_SCROLL_ID, '');
         const event = new Event(Constants.EVENT_SCROLL, params, null, scrollEventID);
         this.apiService.sendEvent(event);
         SessionStorageHelper.setString(Constants.SESSION_STORAGE_SCROLL_ID, event.id.toHexString());
-        ScrollListener.LAST_SCREEN_OR_SCROLL = new Date(event.occurred);
+        this._lastScreenOrScroll = new Date(event.occurred);
     }
 
-    private getPercentScrolled(position: number): number {
+    private getPercentScrolledY(currentScrollY: number): number {
         const scrollHeight = window.document.body.scrollHeight;
         const innerHeight = window.innerHeight;
 
-        return Math.ceil((position + innerHeight) / scrollHeight * 100);
+        return Math.ceil((currentScrollY + innerHeight) / scrollHeight * 100);
     }
 
 }

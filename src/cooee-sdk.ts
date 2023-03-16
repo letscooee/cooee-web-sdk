@@ -9,7 +9,6 @@ import {Log} from './utils/log';
 import {RuntimeData} from './utils/runtime-data';
 import {CommonUtils} from './utils/common.utils';
 import {SessionStorageHelper} from './utils/session-storage-helper';
-import {CommonListeners} from './init/common-listeners';
 import {ShopifyContext} from './init/shopify-context';
 import {ScrollListener} from './init/scroll-listener';
 
@@ -151,7 +150,7 @@ export default class CooeeSDK {
         const event = new Event(Constants.EVENT_SCREEN_VIEW, props);
         this.INSTANCE.safeHttpCallService.sendEvent(event);
         SessionStorageHelper.remove(Constants.SESSION_STORAGE_SCROLL_ID);
-        ScrollListener.LAST_SCREEN_OR_SCROLL = new Date(event.occurred);
+        ScrollListener.getInstance().lastScreenOrScroll = new Date(event.occurred);
     }
 
     static logout(): void {

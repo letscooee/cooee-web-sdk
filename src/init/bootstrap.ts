@@ -29,7 +29,7 @@ export class Bootstrap {
     init(): void {
         this.logBrand();
         new VisibilityListener().listen();
-        new ScrollListener().listen();
+        ScrollListener.getInstance().listen();
         new ObjectMeddler().meddle();
         ShopifyContext.sendCartToken();
         Log.configure();
