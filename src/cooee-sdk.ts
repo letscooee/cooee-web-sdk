@@ -8,6 +8,7 @@ import {LocalStorageHelper} from './utils/local-storage-helper';
 import {Log} from './utils/log';
 import {RuntimeData} from './utils/runtime-data';
 import {CommonUtils} from './utils/common.utils';
+import {ShopifyContext} from './init/shopify-context';
 
 declare global {
     interface Window {
@@ -95,6 +96,10 @@ export default class CooeeSDK {
                 // eslint-disable-next-line no-throw-literal
                 throw new Error('Event property name cannot start with \'CE \'');
             }
+        }
+
+        if (name === Constants.EVENT_ADD_TO_CART) {
+            ShopifyContext.sendCartToken();
         }
 
         this.INSTANCE.safeHttpCallService.sendEvent(new Event(name, props));

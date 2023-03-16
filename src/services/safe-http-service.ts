@@ -69,11 +69,13 @@ export class SafeHttpService {
     /**
      * Queue sending device property till the sdk token is fetch for safe call.
      *
-     * @param {Props} data device property.
+     * @param {Props} properties device property.
+     * @param cart
      */
-    public updateDeviceProps(data: Props): void {
+    public updateDeviceProps(properties: Record<string, any>, cart?: { token: string, items: Record<string, any>[] })
+        : void {
         NewSessionExecutor.replaySubject.subscribe(() => {
-            this.httpApiService.updateDeviceProps({'props': data});
+            this.httpApiService.updateDeviceProps({'props': properties, cart});
         });
     }
 

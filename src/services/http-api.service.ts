@@ -150,6 +150,9 @@ export class HttpAPIService {
             })
             .catch((error) => {
                 Log.error('Error saving device property', error);
+                if (data?.cart?.token) {
+                    LocalStorageHelper.remove(Constants.STORAGE_SHOPIFY_CART_TOKEN);
+                }
             });
     }
 

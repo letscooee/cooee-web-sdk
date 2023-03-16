@@ -1,3 +1,7 @@
+import {SafeHttpService} from '../services/safe-http-service';
+import {LocalStorageHelper} from '../utils/local-storage-helper';
+import {Constants} from '../constants';
+
 export class ShopifyContext {
 
     static isShopify(): boolean {
@@ -28,6 +32,31 @@ export class ShopifyContext {
             return 'product';
         } else if (screenName === 'cart') {
             return 'cart';
+        }
+    }
+
+    static async sendCartToken(): Promise<void> {
+        if (!this.isShopify()) {
+            return;
+        }
+
+        let response;
+        try {
+            response = await fetch('/cart.js');
+        } catch {
+            return;
+        }
+
+        const data = await response.json();
+        const storedToken = LocalStorageHelper.getString(Constants.STORAGE_SHOPIFY_CART_TOKEN);
+        if (data?.token && data.items?.length && data.token != storedToken) {
+            // Send to Device
+            SafeHttpService.getInstance().updateDeviceProps(
+                {},
+                {token: data.token, items: data.items},
+            );
+
+            LocalStorageHelper.setString(Constants.STORAGE_SHOPIFY_CART_TOKEN, data.token);
         }
     }
 

@@ -8,6 +8,7 @@ import {LocalStorageHelper} from '../utils/local-storage-helper';
 import {Log} from '../utils/log';
 import {SessionManager} from './session-manager';
 import {SessionStorageHelper} from '../utils/session-storage-helper';
+import {ShopifyContext} from '../init/shopify-context';
 
 /**
  * PostLaunchActivity initialized when app is launched
@@ -35,9 +36,10 @@ export class NewSessionExecutor {
         }
 
         this.deviceAuthService.init(data)
-            .then(() => {
+            .then(async () => {
                 NewSessionExecutor.replaySubject.next(true);
                 NewSessionExecutor.replaySubject.complete();
+                await ShopifyContext.sendCartToken();
             })
             .catch(() => {
                 // Reattempt authentication in 30 seconds

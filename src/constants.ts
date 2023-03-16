@@ -35,6 +35,7 @@ export class Constants {
     static STORAGE_GA_ENABLED: string = 'gae';
     static STORAGE_GA_CLIENT_ID: string = 'gacid';
     static STORAGE_GA_MEASUREMENT_ID: string = 'gamid';
+    static STORAGE_SHOPIFY_CART_TOKEN: string = 'ct';
     // endregion
 
     // region Session Storage Keys
@@ -57,6 +58,8 @@ export class Constants {
     static readonly EVENT_APP_BACKGROUND: string = 'CE App Background';
     static readonly EVENT_TRIGGER_DISPLAYED: string = 'CE Trigger Displayed';
     static readonly EVENT_TRIGGER_CLOSED: string = 'CE Trigger Closed';
+
+    static readonly EVENT_ADD_TO_CART: string = 'Add To Cart';
     // endregion
 
     static readonly BOT_USER_AGENTS_PATTERN: string = '(' +
