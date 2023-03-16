@@ -20,6 +20,10 @@ export class SessionStorageHelper {
         this.setItem(key, value);
     }
 
+    static remove(key: string): void {
+        this.removeItem(key);
+    }
+
     private static getItem(key: string): string | null {
         return this.SESSION_STORAGE.getItem(
             this.SESSION_STORAGE_KEY_PREFIX.concat(key),
@@ -30,6 +34,12 @@ export class SessionStorageHelper {
         this.SESSION_STORAGE.setItem(
             this.SESSION_STORAGE_KEY_PREFIX.concat(key),
             value,
+        );
+    }
+
+    private static removeItem(key: string): void {
+        this.SESSION_STORAGE.removeItem(
+            this.SESSION_STORAGE_KEY_PREFIX.concat(key),
         );
     }
 
