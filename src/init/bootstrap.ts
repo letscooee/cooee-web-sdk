@@ -3,6 +3,7 @@ import {Log} from '../utils/log';
 import {CommonListeners} from './common-listeners';
 import {ObjectMeddler} from './object-meddler';
 import {VisibilityListener} from './visibility-listener';
+import {ShopifyContext} from './shopify-context';
 
 /**
  * A one time initializer class which initialises the SDK. This is used internally by the SDK
@@ -33,6 +34,7 @@ export class Bootstrap {
             new CommonListeners().listen();
         }
         new ObjectMeddler().meddle();
+        ShopifyContext.sendCartToken();
         Log.configure();
     }
 

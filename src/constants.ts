@@ -35,7 +35,7 @@ export class Constants {
     static STORAGE_GA_ENABLED: string = 'gae';
     static STORAGE_GA_CLIENT_ID: string = 'gacid';
     static STORAGE_GA_MEASUREMENT_ID: string = 'gamid';
-    static STORAGE_SHOPIFY_CART_TOKEN: string = 'ct';
+    static STORAGE_SHOPIFY_CART_TOKEN: string = 'coosct';
     // endregion
 
     // region Session Storage Keys

@@ -150,6 +150,8 @@ export class HttpAPIService {
             })
             .catch((error) => {
                 Log.error('Error saving device property', error);
+
+                // Removing cart token when it is sent to server but error is received as response
                 if (data?.cart?.token) {
                     LocalStorageHelper.remove(Constants.STORAGE_SHOPIFY_CART_TOKEN);
                 }
