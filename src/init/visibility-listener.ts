@@ -1,8 +1,6 @@
 import {Constants} from '../constants';
 import {Event} from '../models/event/event';
 import {SafeHttpService} from '../services/safe-http-service';
-import {NewSessionExecutor} from '../session/new-session-executor';
-import {SessionManager} from '../session/session-manager';
 import {Props} from '../types';
 import {RuntimeData} from '../utils/runtime-data';
 
@@ -44,6 +42,7 @@ export class VisibilityListener {
      */
     private async onVisible(): Promise<void> {
         this.runtimeData.setActive();
+        /*
         const duration = this.runtimeData.getTimeForInactiveInSeconds();
 
         if (duration > Constants.IDLE_TIME_IN_SECONDS) {
@@ -52,7 +51,6 @@ export class VisibilityListener {
             new NewSessionExecutor().execute();
         }
 
-        /*
         const props: Props = {};
         props[VisibilityListener.INACTIVE_DURATION] = duration;
 
