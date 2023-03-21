@@ -6,7 +6,7 @@
  */
 export class Constants {
 
-    static API_URL: string = 'https://api.sdk.letscooee.com';
+    static API_URL: string = 'http://localhost:3003';
     static readonly SDK_VERSION: string = require('../package.json').version;
     static SDK_VERSION_CODE: number;
     static SDK_DEBUG: boolean = false;
@@ -62,6 +62,8 @@ export class Constants {
     static readonly EVENT_SCROLL: string = 'CE Scroll';
 
     static readonly EVENT_ADD_TO_CART: string = 'Add To Cart';
+    static readonly EVENT_VIEW_ITEM: string = 'View Item';
+    static readonly EVENT_VIEW_CART: string = 'View Cart';
     // endregion
 
     static readonly BOT_USER_AGENTS_PATTERN: string = '(' +

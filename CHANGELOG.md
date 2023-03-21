@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.6
+
+1. Feat: Track shopify cart token on view item and view cart event as well.
+
 ## 1.2.5
 
 1. Feat: Track scroll event.
