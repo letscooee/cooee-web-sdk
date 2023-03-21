@@ -100,7 +100,7 @@ export default class CooeeSDK {
             }
         }
 
-        if (name === Constants.EVENT_ADD_TO_CART) {
+        if ([Constants.EVENT_ADD_TO_CART, Constants.EVENT_VIEW_CART, Constants.EVENT_VIEW_ITEM].includes(name)) {
             ShopifyContext.sendCartToken();
         }
 
