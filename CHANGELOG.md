@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.7
+
+1. Fix: Use correct backend url.
+
 ## 1.2.6
 
 1. Feat: Track shopify cart token on view item and view cart event as well.
