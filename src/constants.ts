@@ -6,7 +6,7 @@
  */
 export class Constants {
 
-    static API_URL: string = 'http://localhost:3003';
+    static API_URL: string = 'https://api.sdk.letscooee.com';
     static readonly SDK_VERSION: string = require('../package.json').version;
     static SDK_VERSION_CODE: number;
     static SDK_DEBUG: boolean = false;
