@@ -7,7 +7,6 @@ import {RuntimeData} from '../utils/runtime-data';
 import {EventResponse} from '../models/event/event-response';
 import {InAppRenderer} from '../renderer/in-app-renderer';
 import {LocalStorageHelper} from '../utils/local-storage-helper';
-import {TriggerHelper} from '../models/trigger/trigger-helper';
 import {EmbeddedTrigger} from '../models/trigger/embedded-trigger';
 import {DeviceAuthResponse} from '../models/auth/device-auth-response';
 import {SessionManager} from '../session/session-manager';
@@ -64,8 +63,6 @@ export class HttpAPIService {
      */
     sendEvent(event: Event): void {
         const headers = this.getDefaultHeaders();
-
-        event.activeTriggers = TriggerHelper.getActiveTriggers();
 
         const trigger = new EmbeddedTrigger(LocalStorageHelper.getObject(Constants.STORAGE_ACTIVE_TRIGGER));
 
