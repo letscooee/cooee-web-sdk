@@ -31,7 +31,6 @@ export class Constants {
     static STORAGE_FIRST_TIME_LAUNCH: string = 'ifl';
     static STORAGE_LAST_ACTIVE: string = 'la';
     static STORAGE_ACTIVE_TRIGGER: string = 'at';
-    static STORAGE_ACTIVE_TRIGGERS: string = 'ats';
     static STORAGE_GA_ENABLED: string = 'gae';
     static STORAGE_GA_CLIENT_ID: string = 'gacid';
     static STORAGE_GA_MEASUREMENT_ID: string = 'gamid';
