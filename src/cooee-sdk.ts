@@ -55,7 +55,7 @@ export default class CooeeSDK {
         let {appID, shopifyShop} = data;
         appID = appID?.trim();
         if ((CommonUtils.isNull(appID) || appID.length !== 24) && CommonUtils.isNull(shopifyShop)) {
-            Log.warning('Cooee App ID or Shop name is not configured');
+            Log.warn('Cooee App ID or Shop name is not configured');
             return;
         }
 

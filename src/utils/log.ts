@@ -32,7 +32,7 @@ export class Log {
      *
      * @param {any} messages
      */
-    static warning(...messages: any): void {
+    static warn(...messages: any): void {
         Logger.warn(...messages);
     }
 
